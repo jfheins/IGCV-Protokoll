@@ -14,6 +14,11 @@ variables.css.map
 *.suo
 *.user
 *.sln.docstates
+*.userosscache
+*.userprefs
+
+# Visual Studio 2015 cache/options directory
+.vs/
 
 # Build results
 
