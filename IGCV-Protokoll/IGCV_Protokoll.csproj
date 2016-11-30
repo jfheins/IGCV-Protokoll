@@ -434,9 +434,6 @@
     <Content Include="Content\bootstrap-multiselect\bootstrap-multiselect.css">
       <DependentUpon>bootstrap-multiselect.less</DependentUpon>
     </Content>
-    <Content Include="Content\bootstrap-multiselect\bootstrap-multiselect.min.css">
-      <DependentUpon>bootstrap-multiselect.css</DependentUpon>
-    </Content>
     <Content Include="Content\fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Content\images\animated-overlay.gif" />
     <Content Include="Content\images\ui-bg_flat_0_aaaaaa_40x100.png" />
@@ -453,9 +450,6 @@
     <Content Include="Content\images\ui-icons_888888_256x240.png" />
     <Content Include="Content\images\ui-icons_AF0331_256x240.png" />
     <Content Include="Content\images\ui-icons_DDD_256x240.png" />
-    <Content Include="Content\iwbTheme.min.css">
-      <DependentUpon>iwbTheme.css</DependentUpon>
-    </Content>
     <Content Include="Content\other\colpick.css" />
     <Content Include="Content\other\jquery.rtResponsiveTables.css" />
     <Content Include="Content\rmvTheme.css">
@@ -463,9 +457,6 @@
     </Content>
     <Content Include="Content\iwbTheme.css">
       <DependentUpon>iwbTheme.less</DependentUpon>
-    </Content>
-    <Content Include="Content\rmvTheme.min.css">
-      <DependentUpon>rmvTheme.css</DependentUpon>
     </Content>
     <Content Include="Content\themes\base\accordion.css" />
     <Content Include="Content\themes\base\all.css" />
