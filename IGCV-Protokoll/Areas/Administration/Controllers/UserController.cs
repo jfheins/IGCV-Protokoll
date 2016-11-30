@@ -139,6 +139,7 @@ namespace ILK_Protokoll.Areas.Administration.Controllers
 		[NotNull]
 		public static User GetUser(DataContext db, IPrincipal userPrincipal)
 		{
+            return new ILK_Protokoll.Models.User(userPrincipal.Identity.Name);
 			string fullName = userPrincipal.Identity.Name;
 			string shortName = fullName.Split('\\').Last();
 
