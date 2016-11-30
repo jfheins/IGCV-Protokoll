@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Drawing;
 
-namespace ILK_Protokoll.Models
+namespace IGCV_Protokoll.Models
 {
 	public class Tag
 	{

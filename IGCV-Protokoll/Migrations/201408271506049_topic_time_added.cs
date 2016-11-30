@@ -1,6 +1,6 @@
 using System.Data.Entity.Migrations;
 
-namespace ILK_Protokoll.Migrations
+namespace IGCV_Protokoll.Migrations
 {
 	public partial class topic_time_added : DbMigration
 	{

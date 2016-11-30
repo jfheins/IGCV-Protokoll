@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using ILK_Protokoll.Models;
-using ILK_Protokoll.util;
+using IGCV_Protokoll.Models;
+using IGCV_Protokoll.util;
 
-namespace ILK_Protokoll.ViewModels
+namespace IGCV_Protokoll.ViewModels
 {
 	public class TopicHistoryViewModel
 	{

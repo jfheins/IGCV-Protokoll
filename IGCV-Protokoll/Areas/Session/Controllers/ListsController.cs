@@ -1,6 +1,6 @@
 ﻿using System.Web.Mvc;
 
-namespace ILK_Protokoll.Areas.Session.Controllers
+namespace IGCV_Protokoll.Areas.Session.Controllers
 {
 	public class ListsController : SessionBaseController
 	{

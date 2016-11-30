@@ -3,10 +3,10 @@ using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Web.Mvc;
-using ILK_Protokoll.Controllers;
-using ILK_Protokoll.Models;
+using IGCV_Protokoll.Controllers;
+using IGCV_Protokoll.Models;
 
-namespace ILK_Protokoll.Areas.Administration.Controllers
+namespace IGCV_Protokoll.Areas.Administration.Controllers
 {
 	[DisplayName("Tags")]
 	public class TagsController : BaseController

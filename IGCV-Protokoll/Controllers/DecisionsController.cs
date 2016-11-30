@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Web.Mvc;
-using ILK_Protokoll.Models;
-using ILK_Protokoll.ViewModels;
+using IGCV_Protokoll.Models;
+using IGCV_Protokoll.ViewModels;
 
-namespace ILK_Protokoll.Controllers
+namespace IGCV_Protokoll.Controllers
 {
 	public class DecisionsController : BaseController
 	{

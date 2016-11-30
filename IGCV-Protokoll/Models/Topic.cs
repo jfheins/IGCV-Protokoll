@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
-using ILK_Protokoll.Areas.Administration.Models;
-using ILK_Protokoll.Areas.Session.Models;
-using ILK_Protokoll.ViewModels;
+using IGCV_Protokoll.Areas.Administration.Models;
+using IGCV_Protokoll.Areas.Session.Models;
+using IGCV_Protokoll.ViewModels;
 
-namespace ILK_Protokoll.Models
+namespace IGCV_Protokoll.Models
 {
 	public class Topic
 	{

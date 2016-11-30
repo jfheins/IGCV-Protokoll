@@ -8,7 +8,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Web.Mvc;
 
-namespace ILK_Protokoll.util
+namespace IGCV_Protokoll.util
 {
 	public static class AttributeHelperMethods
 	{

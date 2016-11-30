@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration.Conventions;
 using System.Linq;
-using ILK_Protokoll.Areas.Administration.Models;
-using ILK_Protokoll.Areas.Session.Models;
-using ILK_Protokoll.Areas.Session.Models.Lists;
-using ILK_Protokoll.Models;
-using ILK_Protokoll.util;
+using IGCV_Protokoll.Areas.Administration.Models;
+using IGCV_Protokoll.Areas.Session.Models;
+using IGCV_Protokoll.Areas.Session.Models.Lists;
+using IGCV_Protokoll.Models;
+using IGCV_Protokoll.util;
 using JetBrains.Annotations;
 
-namespace ILK_Protokoll.DataLayer
+namespace IGCV_Protokoll.DataLayer
 {
 	public class DataContext : DbContext
 	{

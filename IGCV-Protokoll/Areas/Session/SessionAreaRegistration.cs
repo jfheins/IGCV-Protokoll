@@ -1,6 +1,6 @@
 ﻿using System.Web.Mvc;
 
-namespace ILK_Protokoll.Areas.Session
+namespace IGCV_Protokoll.Areas.Session
 {
 	public class SessionAreaRegistration : AreaRegistration
 	{

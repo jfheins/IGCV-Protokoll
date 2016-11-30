@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using ILK_Protokoll.Models;
+using IGCV_Protokoll.Models;
 
-namespace ILK_Protokoll.ViewModels
+namespace IGCV_Protokoll.ViewModels
 {
 	public class DashBoard
 	{

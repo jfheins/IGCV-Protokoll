@@ -11,8 +11,8 @@
     <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ILK_Protokoll</RootNamespace>
-    <AssemblyName>ILK_Protokoll</AssemblyName>
+    <RootNamespace>IGCV_Protokoll</RootNamespace>
+    <AssemblyName>IGCV_Protokoll</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>true</UseIISExpress>
@@ -434,6 +434,9 @@
     <Content Include="Content\bootstrap-multiselect\bootstrap-multiselect.css">
       <DependentUpon>bootstrap-multiselect.less</DependentUpon>
     </Content>
+    <Content Include="Content\bootstrap-multiselect\bootstrap-multiselect.min.css">
+      <DependentUpon>bootstrap-multiselect.css</DependentUpon>
+    </Content>
     <Content Include="Content\fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Content\images\animated-overlay.gif" />
     <Content Include="Content\images\ui-bg_flat_0_aaaaaa_40x100.png" />
@@ -450,6 +453,9 @@
     <Content Include="Content\images\ui-icons_888888_256x240.png" />
     <Content Include="Content\images\ui-icons_AF0331_256x240.png" />
     <Content Include="Content\images\ui-icons_DDD_256x240.png" />
+    <Content Include="Content\iwbTheme.min.css">
+      <DependentUpon>iwbTheme.css</DependentUpon>
+    </Content>
     <Content Include="Content\other\colpick.css" />
     <Content Include="Content\other\jquery.rtResponsiveTables.css" />
     <Content Include="Content\rmvTheme.css">
@@ -457,6 +463,9 @@
     </Content>
     <Content Include="Content\iwbTheme.css">
       <DependentUpon>iwbTheme.less</DependentUpon>
+    </Content>
+    <Content Include="Content\rmvTheme.min.css">
+      <DependentUpon>rmvTheme.css</DependentUpon>
     </Content>
     <Content Include="Content\themes\base\accordion.css" />
     <Content Include="Content\themes\base\all.css" />

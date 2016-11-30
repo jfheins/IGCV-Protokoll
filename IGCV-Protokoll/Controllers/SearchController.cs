@@ -6,13 +6,13 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Web.Mvc;
-using ILK_Protokoll.Areas.Session.Models.Lists;
-using ILK_Protokoll.Models;
-using ILK_Protokoll.util;
-using ILK_Protokoll.ViewModels;
+using IGCV_Protokoll.Areas.Session.Models.Lists;
+using IGCV_Protokoll.Models;
+using IGCV_Protokoll.util;
+using IGCV_Protokoll.ViewModels;
 using StackExchange.Profiling;
 
-namespace ILK_Protokoll.Controllers
+namespace IGCV_Protokoll.Controllers
 {
 	/// <summary>
 	///    Die Suche ermöglicht es, auch alte Diskussionen und Beschlüsse wieder zu finden. Suchbegriffe werden standardmäßig

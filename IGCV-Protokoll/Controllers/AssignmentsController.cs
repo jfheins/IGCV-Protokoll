@@ -6,13 +6,13 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Mvc;
-using ILK_Protokoll.DataLayer;
-using ILK_Protokoll.Mailers;
-using ILK_Protokoll.Models;
-using ILK_Protokoll.util;
-using ILK_Protokoll.ViewModels;
+using IGCV_Protokoll.DataLayer;
+using IGCV_Protokoll.Mailers;
+using IGCV_Protokoll.Models;
+using IGCV_Protokoll.util;
+using IGCV_Protokoll.ViewModels;
 
-namespace ILK_Protokoll.Controllers
+namespace IGCV_Protokoll.Controllers
 {
 	public class AssignmentsController : BaseController
 	{

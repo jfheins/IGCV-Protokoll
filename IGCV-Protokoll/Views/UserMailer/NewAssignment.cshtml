@@ -1,8 +1,8 @@
-@using ILK_Protokoll.util
-@model ILK_Protokoll.Models.Assignment
+@using IGCV_Protokoll.util
+@model IGCV_Protokoll.Models.Assignment
 
 <p>
-	Für Sie wurde eine neue Aufgabe im ILK-Protokoll hinterlegt, deren Erledigung bis zum <b>@Model.DueDate.ToString("d")</b> erfolgen sollte.
+	Für Sie wurde eine neue Aufgabe im IGCV-Protokoll hinterlegt, deren Erledigung bis zum <b>@Model.DueDate.ToString("d")</b> erfolgen sollte.
 </p>
 
 <a href="@ViewBag.Host@Url.Action("Details", "Assignments", new {id = Model.ID, Area = ""})">Detailseite</a><br/>

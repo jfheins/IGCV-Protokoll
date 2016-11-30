@@ -7,13 +7,13 @@ using System.Net;
 using System.Security.Authentication;
 using System.Security.Principal;
 using System.Web.Mvc;
-using ILK_Protokoll.Controllers;
-using ILK_Protokoll.DataLayer;
-using ILK_Protokoll.Mailers;
-using ILK_Protokoll.Models;
+using IGCV_Protokoll.Controllers;
+using IGCV_Protokoll.DataLayer;
+using IGCV_Protokoll.Mailers;
+using IGCV_Protokoll.Models;
 using JetBrains.Annotations;
 
-namespace ILK_Protokoll.Areas.Administration.Controllers
+namespace IGCV_Protokoll.Areas.Administration.Controllers
 {
 	/// <summary>
 	///    Der UserController umfasst alle Funktionen der Benutzerverwaltung.
@@ -48,7 +48,7 @@ namespace ILK_Protokoll.Areas.Administration.Controllers
 
 		// AJAX: Administration/User/Sync
 		/// <summary>
-		///    Hier werden die Benutzer des ILK-Protokolls abgeglichen. Das heißt, Benutzer die Autorisiert sind, werden in die
+		///    Hier werden die Benutzer des IGCV-Protokolls abgeglichen. Das heißt, Benutzer die Autorisiert sind, werden in die
 		///    Datenbank aufgenommen und können demzufolge in den Auswahllisten ausgewählt werden. Es findet keine Autorisirung
 		///    statt; diese erfolgt bereits früher in Form des globelen Filters mit dem AuthorizeAttribute in FilterConfig.cs.
 		///    Falls Benutzer nicht mehr in den autorisierten Gruppen sind, werden Sie inaktiv geschaltet. Das bedeutet, dass sie
@@ -139,7 +139,7 @@ namespace ILK_Protokoll.Areas.Administration.Controllers
 		[NotNull]
 		public static User GetUser(DataContext db, IPrincipal userPrincipal)
 		{
-            return new ILK_Protokoll.Models.User(userPrincipal.Identity.Name);
+            return new IGCV_Protokoll.Models.User(userPrincipal.Identity.Name);
 			string fullName = userPrincipal.Identity.Name;
 			string shortName = fullName.Split('\\').Last();
 

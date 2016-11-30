@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
-using ILK_Protokoll.Areas.Session.Models.Lists;
-using ILK_Protokoll.DataLayer;
+using IGCV_Protokoll.Areas.Session.Models.Lists;
+using IGCV_Protokoll.DataLayer;
 
-namespace ILK_Protokoll.Models
+namespace IGCV_Protokoll.Models
 {
 	[DisplayColumn("DisplayName")]
 	public class Document

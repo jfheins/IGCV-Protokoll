@@ -1,6 +1,6 @@
 ﻿using System.Web.Mvc;
 
-namespace ILK_Protokoll
+namespace IGCV_Protokoll
 {
 	public class FilterConfig
 	{

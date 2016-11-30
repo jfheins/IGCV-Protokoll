@@ -9,7 +9,7 @@ using System.Web.Mvc;
 using System.Web.Mvc.Html;
 using System.Web.Routing;
 
-namespace ILK_Protokoll.util
+namespace IGCV_Protokoll.util
 {
 	public static class HtmlHelperMethods
 	{

@@ -1,6 +1,6 @@
 using System.Data.Entity.Migrations;
 
-namespace ILK_Protokoll.Migrations
+namespace IGCV_Protokoll.Migrations
 {
 	public partial class Topiclock_req : DbMigration
 	{

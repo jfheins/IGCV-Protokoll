@@ -4,9 +4,9 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics.CodeAnalysis;
-using ILK_Protokoll.Models;
+using IGCV_Protokoll.Models;
 
-namespace ILK_Protokoll.Areas.Session.Models.Lists
+namespace IGCV_Protokoll.Areas.Session.Models.Lists
 {
 	/// <summary>
 	///    Mitarbeiterpräsentation

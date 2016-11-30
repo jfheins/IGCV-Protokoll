@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace ILK_Protokoll.ViewModels
+namespace IGCV_Protokoll.ViewModels
 {
 	public class SearchResultList : IEnumerable<SearchResult>
 	{

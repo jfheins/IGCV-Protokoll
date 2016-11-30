@@ -9,11 +9,11 @@ using System.Net;
 using System.Web.Mvc;
 using System.Web.Routing;
 using EntityFramework.Extensions;
-using ILK_Protokoll.Models;
-using ILK_Protokoll.util;
-using ILK_Protokoll.ViewModels;
+using IGCV_Protokoll.Models;
+using IGCV_Protokoll.util;
+using IGCV_Protokoll.ViewModels;
 
-namespace ILK_Protokoll.Controllers
+namespace IGCV_Protokoll.Controllers
 {
 	public class TopicsController : BaseController
 	{

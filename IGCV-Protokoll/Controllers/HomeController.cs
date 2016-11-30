@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Web.Mvc;
-using ILK_Protokoll.Models;
-using ILK_Protokoll.ViewModels;
+using IGCV_Protokoll.Models;
+using IGCV_Protokoll.ViewModels;
 using StackExchange.Profiling;
 
-namespace ILK_Protokoll.Controllers
+namespace IGCV_Protokoll.Controllers
 {
 	/// <summary>
 	///    Dies ist die Startseite, deren Index()-methode auch ohne Angabe des Controllers ausgelöst werden kann. ~/ verweist
@@ -18,7 +18,7 @@ namespace ILK_Protokoll.Controllers
 	{
 		// GET: Home/Index/
 		/// <summary>
-		///    Hier wird das Dashboard generiert. Das Dashboard ist die Startseite des ILK-Protokolls und der Ausgangspunkt für
+		///    Hier wird das Dashboard generiert. Das Dashboard ist die Startseite des IGCV-Protokolls und der Ausgangspunkt für
 		///    alle weiteren Aktionenn des Nutzers. Es wird das ViewModel <see cref="DashBoard" /> genutzt, um die Daten zu
 		///    verpacken. Wird verzögertes Laden eingesetzt, muss die Property <see cref="DashBoard.MyTopics" /> auf null gesetzt
 		///    werden. Die View generiert dann Code, der die Themen nachträglich von der Methode <see cref="_FetchTopics" />
@@ -91,7 +91,7 @@ namespace ILK_Protokoll.Controllers
 		}
 
 		/// <summary>
-		///    Grundlegende Informationen über das ILK-Protokoll. Diese Seite ist nicht verlinkt.
+		///    Grundlegende Informationen über das IGCV-Protokoll. Diese Seite ist nicht verlinkt.
 		/// </summary>
 		public ActionResult About()
 		{

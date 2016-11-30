@@ -1,6 +1,6 @@
 using System.Data.Entity.Migrations;
 
-namespace ILK_Protokoll.Migrations
+namespace IGCV_Protokoll.Migrations
 {
 	public partial class activeSession_sessiontypeid_added : DbMigration
 	{

@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
-using ILK_Protokoll.Models;
+using IGCV_Protokoll.Models;
 
-namespace ILK_Protokoll.Controllers
+namespace IGCV_Protokoll.Controllers
 {
 	public class StatisticsController : BaseController
 	{

@@ -8,13 +8,13 @@ using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
-using ILK_Protokoll.Areas.Administration.Controllers;
-using ILK_Protokoll.Areas.Session.Models;
-using ILK_Protokoll.DataLayer;
-using ILK_Protokoll.Models;
+using IGCV_Protokoll.Areas.Administration.Controllers;
+using IGCV_Protokoll.Areas.Session.Models;
+using IGCV_Protokoll.DataLayer;
+using IGCV_Protokoll.Models;
 using JetBrains.Annotations;
 
-namespace ILK_Protokoll.Controllers
+namespace IGCV_Protokoll.Controllers
 {
 	/// <summary>
 	///    Der Basiscontroller, von dem alle anderen Controller abgeleitet sind. Er stellt die Datenbankverbindung her und

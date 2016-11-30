@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ILK_Protokoll.Models
+namespace IGCV_Protokoll.Models
 {
 	public enum Priority
 	{

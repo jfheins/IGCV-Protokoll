@@ -1,4 +1,4 @@
-namespace ILK_Protokoll.Migrations
+namespace IGCV_Protokoll.Migrations
 {
 	using System;
 	using System.Data.Entity.Migrations;

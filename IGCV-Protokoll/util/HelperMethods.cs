@@ -6,7 +6,7 @@ using System.Web.Mvc;
 using JetBrains.Annotations;
 using TuesPechkin;
 
-namespace ILK_Protokoll.util
+namespace IGCV_Protokoll.util
 {
 	public static class HelperMethods
 	{

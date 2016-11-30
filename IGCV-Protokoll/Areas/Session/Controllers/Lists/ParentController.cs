@@ -7,11 +7,11 @@ using System.Web.Mvc;
 using DDay.iCal;
 using DDay.iCal.Serialization.iCalendar;
 using EntityFramework.Extensions;
-using ILK_Protokoll.Areas.Session.Models.Lists;
-using ILK_Protokoll.Controllers;
+using IGCV_Protokoll.Areas.Session.Models.Lists;
+using IGCV_Protokoll.Controllers;
 using Event = DDay.iCal.Event;
 
-namespace ILK_Protokoll.Areas.Session.Controllers.Lists
+namespace IGCV_Protokoll.Areas.Session.Controllers.Lists
 {
 	// ReSharper disable Mvc.PartialViewNotResolved
 	/// <summary>
@@ -212,7 +212,7 @@ namespace ILK_Protokoll.Areas.Session.Controllers.Lists
 			evt.Location = location;
 			evt.IsAllDay = allDayEvent;
 			evt.UID = eventId;
-			evt.Organizer = new Organizer {CommonName = "ILK-Protokoll", Value = new Uri("mailto:no-reply@iwb.tum.de")};
+			evt.Organizer = new Organizer {CommonName = "IGCV-Protokoll", Value = new Uri("mailto:no-reply@iwb.tum.de")};
 			evt.Alarms.Add(new Alarm
 			{
 				Duration = new TimeSpan(0, 15, 0),

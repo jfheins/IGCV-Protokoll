@@ -2,9 +2,9 @@
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using ILK_Protokoll.Models;
+using IGCV_Protokoll.Models;
 
-namespace ILK_Protokoll.Areas.Session.Models.Lists
+namespace IGCV_Protokoll.Areas.Session.Models.Lists
 {
 	/// <summary>
 	///    ILK-Urlaub

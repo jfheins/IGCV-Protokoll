@@ -4,9 +4,9 @@ using System.Data.Entity.Validation;
 using System.Linq;
 using System.Net;
 using System.Web.Mvc;
-using ILK_Protokoll.Areas.Session.Models.Lists;
+using IGCV_Protokoll.Areas.Session.Models.Lists;
 
-namespace ILK_Protokoll.Areas.Session.Controllers.Lists
+namespace IGCV_Protokoll.Areas.Session.Controllers.Lists
 {
 	public class LEmployeePresentationsController : ParentController<EmployeePresentation>
 	{

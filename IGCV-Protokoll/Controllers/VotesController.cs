@@ -2,11 +2,11 @@
 using System.Linq;
 using System.Net;
 using System.Web.Mvc;
-using ILK_Protokoll.Models;
-using ILK_Protokoll.util;
-using ILK_Protokoll.ViewModels;
+using IGCV_Protokoll.Models;
+using IGCV_Protokoll.util;
+using IGCV_Protokoll.ViewModels;
 
-namespace ILK_Protokoll.Controllers
+namespace IGCV_Protokoll.Controllers
 {
 	public class VotesController : BaseController
 	{

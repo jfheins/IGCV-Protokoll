@@ -2,9 +2,9 @@
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using ILK_Protokoll.ViewModels;
+using IGCV_Protokoll.ViewModels;
 
-namespace ILK_Protokoll.Models
+namespace IGCV_Protokoll.Models
 {
 	public class Assignment
 	{

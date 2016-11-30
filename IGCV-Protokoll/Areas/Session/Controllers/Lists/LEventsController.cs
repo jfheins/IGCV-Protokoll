@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Web.Mvc;
-using ILK_Protokoll.Areas.Session.Models.Lists;
-using ILK_Protokoll.util;
+using IGCV_Protokoll.Areas.Session.Models.Lists;
+using IGCV_Protokoll.util;
 
-namespace ILK_Protokoll.Areas.Session.Controllers.Lists
+namespace IGCV_Protokoll.Areas.Session.Controllers.Lists
 {
 	public class LEventsController : ParentController<Event>
 	{

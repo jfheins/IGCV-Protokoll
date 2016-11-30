@@ -4,7 +4,7 @@ using System.IO;
 using System.Text;
 using System.Web.Mvc;
 
-namespace ILK_Protokoll.util
+namespace IGCV_Protokoll.util
 {
 	public static class HtmlRenderExtensions
 	{

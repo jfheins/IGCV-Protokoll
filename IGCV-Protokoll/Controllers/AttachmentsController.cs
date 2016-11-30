@@ -12,11 +12,11 @@ using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Mvc;
 using EntityFramework.Extensions;
-using ILK_Protokoll.DataLayer;
-using ILK_Protokoll.Models;
+using IGCV_Protokoll.DataLayer;
+using IGCV_Protokoll.Models;
 using JetBrains.Annotations;
 
-namespace ILK_Protokoll.Controllers
+namespace IGCV_Protokoll.Controllers
 {
 	public class AttachmentsController : BaseController
 	{
@@ -49,12 +49,12 @@ namespace ILK_Protokoll.Controllers
 
 		private static string Serverpath
 		{
-			get { return @"C:\ILK-Protokoll_Uploads\"; }
+			get { return @"C:\IGCV-Protokoll_Uploads\"; }
 		}
 
 		private static string TemporaryServerpath
 		{
-			get { return @"C:\ILK-Protokoll_Temp\"; }
+			get { return @"C:\IGCV-Protokoll_Temp\"; }
 		}
 
 #if DEBUG

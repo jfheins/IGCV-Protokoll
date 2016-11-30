@@ -3,10 +3,10 @@ using System.ComponentModel;
 using System.Linq;
 using System.Net;
 using System.Web.Mvc;
-using ILK_Protokoll.Areas.Administration.Models;
-using ILK_Protokoll.Controllers;
+using IGCV_Protokoll.Areas.Administration.Models;
+using IGCV_Protokoll.Controllers;
 
-namespace ILK_Protokoll.Areas.Administration.Controllers
+namespace IGCV_Protokoll.Areas.Administration.Controllers
 {
 	[DisplayName("Sitzungstypen")]
 	public class SessionTypesController : BaseController

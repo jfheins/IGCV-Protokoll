@@ -4,13 +4,13 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
-using ILK_Protokoll.DataLayer;
-using ILK_Protokoll.Migrations;
+using IGCV_Protokoll.DataLayer;
+using IGCV_Protokoll.Migrations;
 using StackExchange.Profiling;
 using StackExchange.Profiling.EntityFramework6;
 using StackExchange.Profiling.SqlFormatters;
 
-namespace ILK_Protokoll
+namespace IGCV_Protokoll
 {
 	public class MvcApplication : HttpApplication
 	{

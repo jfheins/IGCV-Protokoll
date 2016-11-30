@@ -1,7 +1,7 @@
 ﻿using System.Linq;
-using ILK_Protokoll.Areas.Session.Models.Lists;
+using IGCV_Protokoll.Areas.Session.Models.Lists;
 
-namespace ILK_Protokoll.Areas.Session.Controllers.Lists
+namespace IGCV_Protokoll.Areas.Session.Controllers.Lists
 {
 	public class LOpeningsController : ParentController<Opening>
 	{

@@ -1,6 +1,6 @@
 ﻿using System.Web.Mvc;
 
-namespace ILK_Protokoll.Areas.Administration
+namespace IGCV_Protokoll.Areas.Administration
 {
 	public class AdministrationAreaRegistration : AreaRegistration
 	{

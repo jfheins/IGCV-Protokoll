@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="NameAndType">
-  <Class Name="ILK_Protokoll.Models.Topic">
+  <Class Name="IGCV_Protokoll.Models.Topic">
     <Position X="1.25" Y="2.5" Width="2.75" />
-    <AssociationLine Name="Comments" Type="ILK_Protokoll.Models.Comment" FixedFromPoint="true" FixedToPoint="true">
+    <AssociationLine Name="Comments" Type="IGCV_Protokoll.Models.Comment" FixedFromPoint="true" FixedToPoint="true">
       <Path>
         <Point X="4" Y="5.265" />
         <Point X="5.875" Y="5.265" />
@@ -12,7 +12,7 @@
         <Position X="-0.826" Y="0.326" Height="0.182" Width="2.653" />
       </MemberNameLabel>
     </AssociationLine>
-    <AssociationLine Name="Documents" Type="ILK_Protokoll.Models.Document" FixedFromPoint="true" FixedToPoint="true">
+    <AssociationLine Name="Documents" Type="IGCV_Protokoll.Models.Document" FixedFromPoint="true" FixedToPoint="true">
       <Path>
         <Point X="4" Y="7.478" />
         <Point X="6.25" Y="7.478" />
@@ -22,7 +22,7 @@
         <Position X="-0.491" Y="0.613" Height="0.182" Width="2.668" />
       </MemberNameLabel>
     </AssociationLine>
-    <AssociationLine Name="Assignments" Type="ILK_Protokoll.Models.Assignment" FixedFromPoint="true" FixedToPoint="true">
+    <AssociationLine Name="Assignments" Type="IGCV_Protokoll.Models.Assignment" FixedFromPoint="true" FixedToPoint="true">
       <Path>
         <Point X="4" Y="4" />
         <Point X="5.812" Y="4" />
@@ -47,14 +47,14 @@
       <Property Name="Assignments" />
     </ShowAsCollectionAssociation>
   </Class>
-  <Class Name="ILK_Protokoll.Models.Vote" Collapsed="true">
+  <Class Name="IGCV_Protokoll.Models.Vote" Collapsed="true">
     <Position X="3.5" Y="1.25" Width="2" />
-    <AssociationLine Name="Voter" Type="ILK_Protokoll.Models.User">
+    <AssociationLine Name="Voter" Type="IGCV_Protokoll.Models.User">
       <MemberNameLabel ManuallyPlaced="true">
         <Position X="0.098" Y="0.503" />
       </MemberNameLabel>
     </AssociationLine>
-    <AssociationLine Name="Topic" Type="ILK_Protokoll.Models.Topic">
+    <AssociationLine Name="Topic" Type="IGCV_Protokoll.Models.Topic">
       <MemberNameLabel ManuallyPlaced="true">
         <Position X="-0.695" Y="0.11" />
       </MemberNameLabel>
@@ -68,7 +68,7 @@
       <Property Name="Topic" />
     </ShowAsAssociation>
   </Class>
-  <Class Name="ILK_Protokoll.Models.User" Collapsed="true">
+  <Class Name="IGCV_Protokoll.Models.User" Collapsed="true">
     <Position X="5.75" Y="2.75" Width="3" />
     <Compartments>
       <Compartment Name="Methods" Collapsed="true" />
@@ -79,9 +79,9 @@
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
-  <Class Name="ILK_Protokoll.Models.Comment" Collapsed="true">
+  <Class Name="IGCV_Protokoll.Models.Comment" Collapsed="true">
     <Position X="5.75" Y="5.5" Width="1.75" />
-    <AssociationLine Name="Author" Type="ILK_Protokoll.Models.User">
+    <AssociationLine Name="Author" Type="IGCV_Protokoll.Models.User">
       <MemberNameLabel ManuallyPlaced="true">
         <Position X="0.122" Y="0.108" />
       </MemberNameLabel>
@@ -94,9 +94,9 @@
       <Property Name="Author" />
     </ShowAsAssociation>
   </Class>
-  <Class Name="ILK_Protokoll.Models.Document" Collapsed="true">
+  <Class Name="IGCV_Protokoll.Models.Document" Collapsed="true">
     <Position X="5.25" Y="8" Width="2" />
-    <AssociationLine Name="Revisions" Type="ILK_Protokoll.Models.Revision">
+    <AssociationLine Name="Revisions" Type="IGCV_Protokoll.Models.Revision">
       <MemberNameLabel ManuallyPlaced="true">
         <Position X="0.254" Y="0.132" />
       </MemberNameLabel>
@@ -109,7 +109,7 @@
       <Property Name="Revisions" />
     </ShowAsCollectionAssociation>
   </Class>
-  <Class Name="ILK_Protokoll.Models.Revision">
+  <Class Name="IGCV_Protokoll.Models.Revision">
     <Position X="9" Y="5.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AABAABACAAgAgABAAAAAAAAAAAAAAQQAAAAAAQBCAAA=</HashCode>
@@ -119,7 +119,7 @@
       <Property Name="Uploader" />
     </ShowAsAssociation>
   </Class>
-  <Class Name="ILK_Protokoll.Models.Assignment" Collapsed="true">
+  <Class Name="IGCV_Protokoll.Models.Assignment" Collapsed="true">
     <Position X="5.75" Y="4.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAACCAAEAgiGAAkAAAAAAAAAEAAgAAAQAAACAAAAA=</HashCode>
@@ -129,9 +129,9 @@
       <Property Name="Owner" />
     </ShowAsAssociation>
   </Class>
-  <Class Name="ILK_Protokoll.Areas.Administration.Models.SessionType" Collapsed="true">
+  <Class Name="IGCV_Protokoll.Areas.Administration.Models.SessionType" Collapsed="true">
     <Position X="7" Y="6.25" Width="1.5" />
-    <AssociationLine Name="Attendees" Type="ILK_Protokoll.Models.User">
+    <AssociationLine Name="Attendees" Type="IGCV_Protokoll.Models.User">
       <MemberNameLabel ManuallyPlaced="true" ManuallySized="true">
         <Position X="-1.591" Y="0.587" Height="0.182" Width="2.039" />
       </MemberNameLabel>

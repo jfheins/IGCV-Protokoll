@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ILK_Protokoll.Areas.Session.Models.Lists
+namespace IGCV_Protokoll.Areas.Session.Models.Lists
 {
 	public enum Approval
 	{

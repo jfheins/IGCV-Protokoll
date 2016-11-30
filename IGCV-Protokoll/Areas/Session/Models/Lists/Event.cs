@@ -3,7 +3,7 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace ILK_Protokoll.Areas.Session.Models.Lists
+namespace IGCV_Protokoll.Areas.Session.Models.Lists
 {
 	/// <summary>
 	///    Termine und Veranstaltungen, die das ganze Institut betreffen

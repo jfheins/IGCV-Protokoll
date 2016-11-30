@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace ILK_Protokoll.util
+namespace IGCV_Protokoll.util
 {
 	public class FutureDateAttribute : ValidationAttribute
 	{

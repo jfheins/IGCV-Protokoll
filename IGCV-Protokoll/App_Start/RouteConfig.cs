@@ -1,7 +1,7 @@
 ﻿using System.Web.Mvc;
 using System.Web.Routing;
 
-namespace ILK_Protokoll
+namespace IGCV_Protokoll
 {
 	public class RouteConfig
 	{

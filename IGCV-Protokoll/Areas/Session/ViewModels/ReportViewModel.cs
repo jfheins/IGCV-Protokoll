@@ -1,4 +1,4 @@
-﻿namespace ILK_Protokoll.Areas.Session.ViewModels
+﻿namespace IGCV_Protokoll.Areas.Session.ViewModels
 {
 	public class ReportViewModel
 	{

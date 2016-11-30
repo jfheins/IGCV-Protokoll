@@ -9,13 +9,13 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using System.Web.Mvc;
-using ILK_Protokoll.Areas.Session.Models;
-using ILK_Protokoll.Mailers;
-using ILK_Protokoll.Models;
-using ILK_Protokoll.util;
+using IGCV_Protokoll.Areas.Session.Models;
+using IGCV_Protokoll.Mailers;
+using IGCV_Protokoll.Models;
+using IGCV_Protokoll.util;
 using StackExchange.Profiling;
 
-namespace ILK_Protokoll.Areas.Session.Controllers
+namespace IGCV_Protokoll.Areas.Session.Controllers
 {
 	public class FinalizeController : SessionBaseController
 	{

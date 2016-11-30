@@ -6,11 +6,11 @@ using System.Resources;
 // Attribute gesteuert. Ändern Sie diese Attributwerte, um die Informationen zu ändern,
 // die mit einer Assembly verknüpft sind.
 
-[assembly: AssemblyTitle("ILK_Protokoll")]
+[assembly: AssemblyTitle("IGCV_Protokoll")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Institut für Werkzeugmaschinen und Betriebswissenschaften (iwb)")]
-[assembly: AssemblyProduct("ILK_Protokoll")]
+[assembly: AssemblyProduct("IGCV_Protokoll")]
 [assembly: AssemblyCopyright("Copyright © 2014 – iwb, Technische Universität München")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

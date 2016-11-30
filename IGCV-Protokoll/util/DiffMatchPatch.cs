@@ -6,7 +6,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
 
-namespace ILK_Protokoll.util
+namespace IGCV_Protokoll.util
 {
 	/*
 	* Copyright 2008 Google Inc. All Rights Reserved.

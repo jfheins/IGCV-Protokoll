@@ -3,10 +3,10 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using System.Web.Hosting;
-using ILK_Protokoll.Models;
+using IGCV_Protokoll.Models;
 using Mvc.Mailer;
 
-namespace ILK_Protokoll.Mailers
+namespace IGCV_Protokoll.Mailers
 {
 	public class UserMailer : MailerBase
 	{
@@ -24,7 +24,7 @@ namespace ILK_Protokoll.Mailers
 			ViewBag.Host = FQDN;
 			var mail = Populate(x =>
 			{
-				x.Subject = "Wilkommen beim ILK-Protokoll";
+				x.Subject = "Wilkommen beim IGCV-Protokoll";
 				x.ViewName = "Welcome";
 				x.To.Add(u.EmailAddress);
 			});
@@ -37,7 +37,7 @@ namespace ILK_Protokoll.Mailers
 			ViewBag.Host = FQDN;
 			var mail = Populate(x =>
 			{
-				x.Subject = string.Format("Neue Aufgabe »{0}« im ILK-Protokoll", assignment.Title);
+				x.Subject = string.Format("Neue Aufgabe »{0}« im IGCV-Protokoll", assignment.Title);
 				x.ViewName = "NewAssignment";
 				x.To.Add(assignment.Owner.EmailAddress);
 			});

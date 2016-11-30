@@ -6,7 +6,7 @@ using System.Web.Mvc;
 using System.Web.Routing;
 using StackExchange.Profiling;
 
-namespace ILK_Protokoll
+namespace IGCV_Protokoll
 {
 	/// <summary>
 	/// Diese Klasse sogt für das einfache Profiling von Controlleraktionen.

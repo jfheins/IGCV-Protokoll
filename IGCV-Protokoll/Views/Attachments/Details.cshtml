@@ -1,5 +1,5 @@
-﻿@using ILK_Protokoll.util
-@model ILK_Protokoll.Models.Document
+﻿@using IGCV_Protokoll.util
+@model IGCV_Protokoll.Models.Document
 @{
 	ViewBag.Title = "Details (" + Model.DisplayName + ")";
 }
@@ -191,7 +191,7 @@ else
 			@Html.HiddenFor(model => model.ID)
 			<div style="max-width: 60em;">
 				<p>
-					Mit nahtloser Bearbeitung können Sie direkt neue Revisionen eines Dokuments anlegen. Nach dem Betätigen des Buttons wird intern die aktuelle Revision kopiert und für Sie zur Bearbeitung freigegeben. Sie können in dem Dokument beliebige Änderungen vornehmen und diese speichern. Sind ihre Änderungen abgeschlossen, klicken Sie im ILK-Protokoll auf "Bearbeitung abschließen" um die neue Revision zu sichern und anderen zugänglich zu machen. Sie brauchen die Datei somit nicht lokal speichern.
+					Mit nahtloser Bearbeitung können Sie direkt neue Revisionen eines Dokuments anlegen. Nach dem Betätigen des Buttons wird intern die aktuelle Revision kopiert und für Sie zur Bearbeitung freigegeben. Sie können in dem Dokument beliebige Änderungen vornehmen und diese speichern. Sind ihre Änderungen abgeschlossen, klicken Sie im IGCV-Protokoll auf "Bearbeitung abschließen" um die neue Revision zu sichern und anderen zugänglich zu machen. Sie brauchen die Datei somit nicht lokal speichern.
 					<br/><small class="text-muted">Dieses Feature ist nur für Office-Dokumente im Internet Explorer nutzbar.</small>
 				</p>
 				<button type="submit" class="btn btn-primary">Neue Revision erzeugen</button>

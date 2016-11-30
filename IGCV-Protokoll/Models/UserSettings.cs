@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
-namespace ILK_Protokoll.Models
+namespace IGCV_Protokoll.Models
 {
 	public class UserSettings
 	{

@@ -1,7 +1,7 @@
 ﻿using System.Web.Mvc;
-using ILK_Protokoll.Controllers;
+using IGCV_Protokoll.Controllers;
 
-namespace ILK_Protokoll.Areas.Administration.Controllers
+namespace IGCV_Protokoll.Areas.Administration.Controllers
 {
 	public class AdminHomeController : BaseController
 	{

@@ -2,7 +2,7 @@ using System.IO;
 using System.Web.Mvc;
 using StackExchange.Profiling;
 
-namespace ILK_Protokoll
+namespace IGCV_Protokoll
 {
 	public class ProfilingViewEngine : IViewEngine
 	{

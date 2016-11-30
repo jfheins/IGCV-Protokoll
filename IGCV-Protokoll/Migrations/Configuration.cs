@@ -1,14 +1,14 @@
 using System.Data.Entity.Migrations;
-using ILK_Protokoll.DataLayer;
+using IGCV_Protokoll.DataLayer;
 
-namespace ILK_Protokoll.Migrations
+namespace IGCV_Protokoll.Migrations
 {
 	internal sealed class Configuration : DbMigrationsConfiguration<DataContext>
 	{
 		public Configuration()
 		{
 			AutomaticMigrationsEnabled = false;
-			ContextKey = "ILK_Protokoll.DataLayer.DataContext";
+			ContextKey = "IGCV_Protokoll.DataLayer.DataContext";
 		}
 
 		protected override void Seed(DataContext context)
