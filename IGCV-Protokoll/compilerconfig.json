@@ -1,0 +1,35 @@
+﻿[
+  {
+    "outputFile": "Content/bootstrap-multiselect/bootstrap-multiselect.css",
+    "inputFile": "Content/bootstrap-multiselect/bootstrap-multiselect.less",
+    "minify": {
+      "enabled": false
+    },
+    "includeInProject": true,
+    "options": {
+      "sourceMap": false
+    }
+  },
+  {
+    "outputFile": "Content/iwbTheme.css",
+    "inputFile": "Content/iwbTheme.less",
+    "minify": {
+      "enabled": false
+    },
+    "includeInProject": true,
+    "options": {
+      "sourceMap": false
+    }
+  },
+  {
+    "outputFile": "Content/rmvTheme.css",
+    "inputFile": "Content/rmvTheme.less",
+    "minify": {
+      "enabled": false
+    },
+    "includeInProject": true,
+    "options": {
+      "sourceMap": false
+    }
+  }
+]

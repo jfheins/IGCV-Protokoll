@@ -22,6 +22,8 @@
     <IISExpressUseClassicPipelineMode />
     <TargetFrameworkProfile />
     <UseGlobalApplicationHostFile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -432,9 +434,6 @@
     <Content Include="Content\bootstrap-multiselect\bootstrap-multiselect.css">
       <DependentUpon>bootstrap-multiselect.less</DependentUpon>
     </Content>
-    <Content Include="Content\bootstrap-multiselect\bootstrap-multiselect.min.css">
-      <DependentUpon>bootstrap-multiselect.css</DependentUpon>
-    </Content>
     <Content Include="Content\fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Content\images\animated-overlay.gif" />
     <Content Include="Content\images\ui-bg_flat_0_aaaaaa_40x100.png" />
@@ -456,14 +455,8 @@
     <Content Include="Content\rmvTheme.css">
       <DependentUpon>rmvTheme.less</DependentUpon>
     </Content>
-    <Content Include="Content\rmvTheme.min.css">
-      <DependentUpon>rmvTheme.css</DependentUpon>
-    </Content>
     <Content Include="Content\iwbTheme.css">
       <DependentUpon>iwbTheme.less</DependentUpon>
-    </Content>
-    <Content Include="Content\iwbTheme.min.css">
-      <DependentUpon>iwbTheme.css</DependentUpon>
     </Content>
     <Content Include="Content\themes\base\accordion.css" />
     <Content Include="Content\themes\base\all.css" />
@@ -605,9 +598,6 @@
     <Content Include="Areas\Administration\Views\Tags\Edit.cshtml" />
     <Content Include="Areas\Administration\Views\Tags\Index.cshtml" />
     <Content Include="Content\bootstrap-multiselect\bootstrap-multiselect.less" />
-    <Content Include="Content\bootstrap-multiselect\bootstrap-multiselect.css.map">
-      <DependentUpon>bootstrap-multiselect.css</DependentUpon>
-    </Content>
     <Content Include="Areas\Session\Views\Discussion\IndexTable.cshtml" />
     <Content Include="Areas\Session\Views\Shared\_StateDropdown.cshtml" />
     <Content Include="Areas\Session\Views\LIndustryProjects\_CreateForm.cshtml" />
@@ -618,6 +608,11 @@
     <Content Include="Areas\Session\Views\LResearchProposals\_Edit.cshtml" />
     <Content Include="Areas\Session\Views\LResearchProposals\_List.cshtml" />
     <Content Include="Areas\Session\Views\LResearchProposals\_Row.cshtml" />
+    <None Include="bundleconfig.json" />
+    <None Include="compilerconfig.json" />
+    <None Include="compilerconfig.json.defaults">
+      <DependentUpon>compilerconfig.json</DependentUpon>
+    </None>
     <None Include="Content\bootstrap\bootstrap.less" />
     <Content Include="Content\iwbTheme.less" />
     <Content Include="Areas\Administration\Views\web.config" />
@@ -627,13 +622,7 @@
     <Content Include="Areas\Administration\Views\Shared\_AdminNavbar.cshtml" />
     <Content Include="Areas\Administration\Views\AdminHome\Index.cshtml" />
     <Content Include="Areas\Administration\Views\RecycleBin\Purge.cshtml" />
-    <Content Include="Content\iwbTheme.css.map">
-      <DependentUpon>iwbTheme.css</DependentUpon>
-    </Content>
     <Content Include="Content\rmvTheme.less" />
-    <Content Include="Content\rmvTheme.css.map">
-      <DependentUpon>rmvTheme.css</DependentUpon>
-    </Content>
     <Content Include="Content\fonts\glyphicons-halflings-regular.woff" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.eot" />
@@ -980,6 +969,13 @@
       </FlavorProperties>
     </VisualStudio>
   </ProjectExtensions>
+  <Import Project="..\packages\BuildWebCompiler.1.11.326\build\BuildWebCompiler.targets" Condition="Exists('..\packages\BuildWebCompiler.1.11.326\build\BuildWebCompiler.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\BuildWebCompiler.1.11.326\build\BuildWebCompiler.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\BuildWebCompiler.1.11.326\build\BuildWebCompiler.targets'))" />
+  </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
