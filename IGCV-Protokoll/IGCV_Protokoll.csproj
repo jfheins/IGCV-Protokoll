@@ -213,6 +213,10 @@
     <Compile Include="Migrations\201510301823439_rsprop_status_added.Designer.cs">
       <DependentUpon>201510301823439_rsprop_status_added.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201612021045568_Renaming.cs" />
+    <Compile Include="Migrations\201612021045568_Renaming.Designer.cs">
+      <DependentUpon>201612021045568_Renaming.cs</DependentUpon>
+    </Compile>
     <Compile Include="ViewModels\SearchResultList.cs" />
     <Compile Include="Controllers\StatisticsController.cs" />
     <Compile Include="Controllers\ViewListsController.cs" />
@@ -697,6 +701,7 @@
     <None Include="Content\variables_iwb.less" />
     <None Include="Content\variables_rmv.less" />
     <None Include="Content\variables.less" />
+    <None Include="Properties\PublishProfiles\Lokal.pubxml" />
     <None Include="Scripts\jquery-2.1.1.intellisense.js" />
     <Content Include="Scripts\bootstrap-multiselect.js" />
     <Content Include="Scripts\bootstrap-validation.js" />
@@ -939,6 +944,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201510301823439_rsprop_status_added.resx">
       <DependentUpon>201510301823439_rsprop_status_added.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612021045568_Renaming.resx">
+      <DependentUpon>201612021045568_Renaming.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
