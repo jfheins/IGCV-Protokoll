@@ -567,7 +567,7 @@ namespace IGCV_Protokoll.Controllers
 
 			var vm = new TopicHistoryViewModel
 			{
-				Usernames = db.Users.Where(u => u.IsActive).ToDictionary(u => u.ID, u => u.ShortName),
+				Usernames = db.Users.ToDictionary(u => u.ID, u => u.ShortName),
 				SessionTypes = db.SessionTypes.ToDictionary(s => s.ID, s => s.Name),
 				Current = topic,
 				Initial = history[0]
