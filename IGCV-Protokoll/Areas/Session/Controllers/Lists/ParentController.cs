@@ -4,12 +4,12 @@ using System.Data.Entity.Validation;
 using System.Linq;
 using System.Net;
 using System.Web.Mvc;
-using DDay.iCal;
-using DDay.iCal.Serialization.iCalendar;
 using EntityFramework.Extensions;
 using IGCV_Protokoll.Areas.Session.Models.Lists;
 using IGCV_Protokoll.Controllers;
-using Event = DDay.iCal.Event;
+using Ical.Net;
+using Ical.Net.DataTypes;
+using Ical.Net.Serialization.iCalendar.Serializers;
 
 namespace IGCV_Protokoll.Areas.Session.Controllers.Lists
 {
@@ -196,22 +196,22 @@ namespace IGCV_Protokoll.Areas.Session.Controllers.Lists
 			if (string.IsNullOrWhiteSpace(eventId))
 				eventId = Guid.NewGuid().ToString();
 
-			var iCal = new iCalendar
+			var iCal = new Calendar
 			{
 				Method = "REQUEST",
 				Version = "2.0"
 			};
 
-			iCal.AddLocalTimeZone();
+            iCal.AddTimeZone(VTimeZone.FromLocalTimeZone());
 
-			var evt = iCal.Create<Event>();
+			var evt = iCal.Create<Ical.Net.Event>();
 			evt.Summary = title;
-			evt.Start = new iCalDateTime(startDate);
-			evt.End = new iCalDateTime(endDate);
+			evt.Start = new CalDateTime(startDate);
+			evt.End = new CalDateTime(endDate);
 			evt.Description = description;
 			evt.Location = location;
 			evt.IsAllDay = allDayEvent;
-			evt.UID = eventId;
+			evt.Uid = eventId;
 			evt.Organizer = new Organizer {CommonName = "IGCV-Protokoll", Value = new Uri("mailto:no-reply@iwb.tum.de")};
 			evt.Alarms.Add(new Alarm
 			{
@@ -221,7 +221,7 @@ namespace IGCV_Protokoll.Areas.Session.Controllers.Lists
 				Description = "Erinnerung"
 			});
 
-			return new iCalendarSerializer().SerializeToString(iCal);
+			return new CalendarSerializer().SerializeToString(iCal);
 		}
 	}
 
