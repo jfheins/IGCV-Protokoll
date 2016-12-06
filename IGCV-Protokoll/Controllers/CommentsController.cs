@@ -83,14 +83,8 @@ namespace IGCV_Protokoll.Controllers
 				return HttpNotFound();
 
 			Topic t = db.Topics.Find(comment.TopicID);
-			Comment lastcomment = t.Comments.OrderBy(c => c.Created).Last();
 
-			if (id != lastcomment.ID)
-			{
-				return new HttpStatusCodeResult(HttpStatusCode.BadRequest,
-					"Dieser Kommentar kann nicht gelöscht werden: Er ist nicht der letzte Kommentar der Diskussion.");
-			}
-			else if (!lastcomment.Author.Equals(GetCurrentUser()))
+			if (comment.AuthorID != GetCurrentUserID())
 			{
 				return new HttpStatusCodeResult(HttpStatusCode.BadRequest,
 					"Dieser Kommentar kann nicht gelöscht werden: Sie sind nicht der Autor des Kommentars.");

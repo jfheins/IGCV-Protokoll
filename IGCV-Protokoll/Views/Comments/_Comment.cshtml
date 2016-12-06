@@ -4,7 +4,7 @@
 <div class="comment-panel-group">
 	<p class="comment-author" title="@Model.Created.ToString("F")">@Model.Author</p>
 	<p class="comment-content">@Html.DisplayWithLinksFor(model => model.Content, "String_Multiline")</p>
-	@if (Model.ID == ViewBag.AllowDeletion)
+	@if (Model.AuthorID == ViewBag.CurrentUser.ID)
 	{
 		<p class="comment-delete">
 			@Ajax.ActionLink(" ", "_Delete", new {id = Model.ID}, new AjaxOptions {UpdateTargetId = "comments_" + Model.TopicID, Confirm = "Kommentar wirklich löschen?"}, new {@class = "glyphicon glyphicon-remove"})

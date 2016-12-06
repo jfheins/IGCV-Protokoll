@@ -147,8 +147,8 @@ namespace IGCV_Protokoll.Controllers
 			return View(a);
 		}
 
-		// POST: Administration/SessionTypes/Create
-		[HttpPost]
+        // POST: Assignments/Create
+        [HttpPost]
 		[ValidateAntiForgeryToken]
 		public async Task<ActionResult> Create([Bind] AssignmentEdit input)
 		{
