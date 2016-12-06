@@ -16,8 +16,10 @@ using IGCV_Protokoll.ViewModels;
 namespace IGCV_Protokoll.Controllers
 {
 	public class TopicsController : BaseController
-	{
-		protected override void OnActionExecuting(ActionExecutingContext filterContext)
+    {
+        private readonly string FQDN = "http://" + Dns.GetHostName() + ".igcv.fraunhofer.de";
+
+        protected override void OnActionExecuting(ActionExecutingContext filterContext)
 		{
 			base.OnActionExecuting(filterContext);
 			ViewBag.TopicStyle = "active";
@@ -163,8 +165,9 @@ namespace IGCV_Protokoll.Controllers
 			ViewBag.TopicHistoryCount = db.TopicHistory.Count(t => t.TopicID == id.Value);
 			ViewBag.IsEditable = topic.IsEditableBy(GetCurrentUser(), GetSession()).IsAuthorized;
 			ViewBag.TagDict = CreateTagDictionary(topic.Tags);
+            ViewBag.Host = FQDN;
 
-			topic.IsLocked = IsTopicLocked(id.Value);
+            topic.IsLocked = IsTopicLocked(id.Value);
 			return View(topic);
 		}
 
