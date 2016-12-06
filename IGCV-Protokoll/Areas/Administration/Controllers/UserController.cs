@@ -139,7 +139,7 @@ namespace IGCV_Protokoll.Areas.Administration.Controllers
 		[NotNull]
 		public static User GetUser(DataContext db, IPrincipal userPrincipal)
 		{
-            return new IGCV_Protokoll.Models.User(userPrincipal.Identity.Name);
+            return new IGCV_Protokoll.Models.User { ShortName = userPrincipal.Identity.Name, ID = 1 };
 			string fullName = userPrincipal.Identity.Name;
 			string shortName = fullName.Split('\\').Last();
 
