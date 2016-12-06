@@ -26,7 +26,7 @@ namespace IGCV_Protokoll.Controllers
 		public ActionResult Index(
 			[Bind(Include = "ShowToDos,ShowDuties,ShowPast,ShowFuture,ShowDone,UserID")] FilteredAssignments filter)
 		{
-			IQueryable<Assignment> query = db.Assignments;
+			IQueryable<Assignment> query = db.Assignments.Include(a => a.Topic);
 
 			if (!filter.ShowToDos)
 				query = query.Where(a => a.Type != AssignmentType.ToDo);
