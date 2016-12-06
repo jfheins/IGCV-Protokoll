@@ -1,20 +1,2 @@
 [
-  {
-    "outputFileName": "Content/rmvTheme.min.css",
-    "inputFiles": [
-      "Content/rmvTheme.css"
-    ]
-  },
-  {
-    "outputFileName": "Content/iwbTheme.min.css",
-    "inputFiles": [
-      "Content/iwbTheme.css"
-    ]
-  },
-  {
-    "outputFileName": "Content/bootstrap-multiselect/bootstrap-multiselect.min.css",
-    "inputFiles": [
-      "Content/bootstrap-multiselect/bootstrap-multiselect.css"
-    ]
-  }
 ]
