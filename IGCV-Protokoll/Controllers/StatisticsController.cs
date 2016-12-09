@@ -26,7 +26,7 @@ namespace IGCV_Protokoll.Controllers
 				{"Diskutierte Themen", db.Topics.Count()},
 				{"Gefällte Beschlüsse", db.Decisions.Count(d => d.Type == DecisionType.Resolution)},
 				{"Archivierte Themen", db.Decisions.Count(d => d.Type == DecisionType.Closed)},
-				{"Durchgefürte Sitzungen", db.SessionReports.Count()},
+				{"Durchgeführte Sitzungen", db.SessionReports.Count()},
 				{"Vergebene Aufgaben", db.Assignments.Count()},
 				{"Erledigte Aufgaben", db.Assignments.Count(a => a.IsDone)},
 				{

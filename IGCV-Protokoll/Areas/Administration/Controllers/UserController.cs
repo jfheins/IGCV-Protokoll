@@ -21,8 +21,8 @@ namespace IGCV_Protokoll.Areas.Administration.Controllers
 	[DisplayName("Benutzer")]
 	public class UserController : BaseController
 	{
-		public const string DomainName = "iwbmuc";
-		private readonly string[] _authorizeGroups = {"ILK", "ILK-Proto"};
+		public const string DomainName = "IGCV";
+		private readonly string[] _authorizeGroups = {"Julius Heins", "RMV-HAL" };
 		// Benutzer dieser Gruppen werden automatisch hinzugefügt
 
 		/// <summary>
