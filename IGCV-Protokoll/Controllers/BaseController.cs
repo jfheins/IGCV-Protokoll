@@ -13,6 +13,7 @@ using IGCV_Protokoll.Areas.Session.Models;
 using IGCV_Protokoll.DataLayer;
 using IGCV_Protokoll.Models;
 using JetBrains.Annotations;
+using StackExchange.Profiling;
 
 namespace IGCV_Protokoll.Controllers
 {
@@ -40,24 +41,32 @@ namespace IGCV_Protokoll.Controllers
 
 		/// <summary>
 		///    Diese Methode läuft vor jeder Aktion jedes Controllers. Hier werden häufig benutzte Variablen in ViewBag gespeichert
-		///    und die Referent auf die Sitzung gesetzt. zudem wird ggf. der Profiler aktiviert, falls die URL mit ?profiler=true
+		///    und die Referenz auf die Sitzung gesetzt. zudem wird ggf. der Profiler aktiviert, falls die URL mit ?profiler=true
 		///    aufgerufen wurde.
 		/// </summary>
 		/// <param name="filterContext"></param>
 		protected override void OnActionExecuting(ActionExecutingContext filterContext)
 		{
-			base.OnActionExecuting(filterContext);
-			var user = GetCurrentUser();
-			ViewBag.CurrentUser = user;
-			ViewBag.CurrentColorScheme = user.Settings.ColorScheme;
-
-			var session = GetSession();
-			ViewBag.CurrentSession = session;
-			if (session != null)
-				ViewBag.LastSession = session.SessionType.LastDate;
-
 			if (Request.QueryString["profiler"] != null)
 				Session["profiler"] = Request.QueryString["profiler"] == "true";
+		    using (MiniProfiler.Current.Step("filterContext"))
+		    {
+		        base.OnActionExecuting(filterContext);
+		    }
+		    using (MiniProfiler.Current.Step("Benutzer auslesen"))
+		    {
+		        var user = GetCurrentUser();
+		        ViewBag.CurrentUser = user;
+		        ViewBag.CurrentColorScheme = user.Settings.ColorScheme;
+		    }
+
+		    using (MiniProfiler.Current.Step("Sitzung auslesen"))
+		    {
+		        var session = GetSession();
+		        ViewBag.CurrentSession = session;
+		        if (session != null)
+		            ViewBag.LastSession = session.SessionType.LastDate;
+		    }
 		}
 
 		/// <summary>
