@@ -1,82 +1,82 @@
 ﻿@model IEnumerable<IGCV_Protokoll.Areas.Session.Models.ActiveSession>
-
 @{
-	ViewBag.Title = "Laufende Sitzungen";
+    ViewBag.Title = "Laufende Sitzungen";
 }
-
-@Html.ActionLink("Dashboard", "Index", "Home", new {Area = ""}, new {@class = "index-action btn btn-primary"})
-
+@Html.ActionLink("Dashboard", "Index", "Home", new { Area = "" }, new { @class = "index-action btn btn-primary" })
 <h2>@ViewBag.Title</h2>
-
+@if (!string.IsNullOrEmpty(ViewBag.ErrorMessage))
+{
+    <p class="alert alert-danger alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        @ViewBag.ErrorMessage
+    </p>
+}
 @if (!Model.Any())
 {
-	<p>Aktuelle laufen keine Sitzungen.</p>
+    <p>Aktuelle laufen keine Sitzungen.</p>
 }
 else
 {
-	<table class="table table-striped table-sortable" id="ActiveSession_table">
-		<thead>
-			<tr>
-				<th>
-					@Html.DisplayNameFor(model => model.Start)
-				</th>
-				<th>
-					@Html.DisplayNameFor(model => model.SessionType.Name)
-				</th>
-				<th>
-					@Html.DisplayNameFor(model => model.Manager)
-				</th>
-				<th>
-					@Html.DisplayNameFor(model => model.PresentUsers)
-				</th>
-				<th>Aktionen</th>
-			</tr>
-		</thead>
-		<tbody>
-			@foreach (var item in Model)
-			{
-				<tr>
-					<td>
-						@Html.DisplayFor(modelItem => item.Start)
-					</td>
-					<td>
-						@Html.DisplayFor(modelItem => item.SessionType.Name)
-					</td>
-					<td>
-						@Html.DisplayFor(modelItem => item.Manager.LongName)
-					</td>
-					<td>
-						@Html.DisplayFor(modelItem => item.PresentUsers, "IEnumerable_User")
-					</td>
-					<td>@Html.ActionLink("Übernehmen", "Resume", "Master", new {Area = "Session", SessionID = item.ID}, null)</td>
-				</tr>
-			}
-		</tbody>
-	</table>
+    <table class="table table-striped table-sortable" id="ActiveSession_table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Start)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.SessionType.Name)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Manager)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.PresentUsers)
+                </th>
+                <th>Aktionen</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Start)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.SessionType.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Manager.LongName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PresentUsers, "IEnumerable_User")
+                    </td>
+                    <td>@Html.ActionLink("Übernehmen", "Resume", "Master", new { Area = "Session", SessionID = item.ID }, null)</td>
+                </tr>}
+        </tbody>
+    </table>
 }
 <hr />
 <h3>Neue Sitzung</h3>
-@using (Html.BeginForm("Create", "Master", new {Area = "Session"}, FormMethod.Post))
+@using (Html.BeginForm("Create", "Master", new { Area = "Session" }, FormMethod.Post))
 {
-	@Html.AntiForgeryToken()
+    @Html.AntiForgeryToken()
 
-	<div class="form-horizontal">
-		@Html.ValidationSummary(true, "", new {@class = "text-danger"})
-
-		<div class="form-group">
-			<p class="control-label col-md-2">Sitzungstyp</p>
-			<div class="col-md-5">
-				@Html.DropDownList("SessionTypeID", (SelectList)ViewBag.SessionTypes, new {@class = "form-control"})
-			</div>
-		</div>
-		<div class="form-group">
-			<div class="col-md-offset-2 col-md-5">
-				<input type="submit" value="Erstellen" class="btn btn-primary" />
-			</div>
-		</div>
-	</div>
+    <div class="form-horizontal">
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            <p class="control-label col-md-2">Sitzungstyp</p>
+            <div class="col-md-5">
+                @Html.DropDownList("SessionTypeID", (SelectList)ViewBag.SessionTypes, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-5">
+                <input type="submit" value="Erstellen" class="btn btn-primary" />
+            </div>
+        </div>
+    </div>
 }
-
 @section Scripts {
-	@Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/jqueryval")
 }

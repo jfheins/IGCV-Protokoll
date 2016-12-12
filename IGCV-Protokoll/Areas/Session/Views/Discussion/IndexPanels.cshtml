@@ -13,9 +13,9 @@
 </ul>
 
 <div class="index-action">
-	<a class="btn btn-default" onclick=" collapseTopicsOut(); "> Alle Themen ausklappen</a>
-	<a class="btn btn-default" onclick=" collapseTopicsIn(); "> Alle Themen einklappen</a>
-	@Html.ActionLink("Zurück", "Index", "Lists", new {Area = "Session"}, new {@class = "btn btn-default"})
+	<a class="btn btn-default" onclick="collapseTopicsOut();"> Alle Themen ausklappen</a>
+	<a class="btn btn-default" onclick="collapseTopicsIn();"> Alle Themen einklappen</a>
+	@Html.ActionLink("Zurück", "Index", "Agenda", new {Area = "Session"}, new {@class = "btn btn-default"})
 	@Html.ActionLink("Weiter", "Index", "Finalize", new {Area = "Session"}, new {@class = "btn btn-primary"})
 </div>
 
