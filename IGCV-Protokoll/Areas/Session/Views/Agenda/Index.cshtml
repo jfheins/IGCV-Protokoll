@@ -1,0 +1,44 @@
+﻿@using IGCV_Protokoll.Areas.Session.Models
+@model ActiveSession
+
+@{
+    ViewBag.Title = "Agendapunkte";
+}
+<div class="index-action">
+    @Html.ActionLink("Zurück", "Index", "Lists", new { Area = "Session" }, new { @class = "btn btn-default" })
+    @Html.ActionLink("Weiter", "Index", "Discussion", new { Area = "Session" }, new { @class = "btn btn-primary" })
+</div>
+
+<h2>@ViewBag.Title</h2>
+
+<div class="row">
+    <div class="col-sm-6"></div>
+    <div class="col-sm-6"></div>
+</div>
+
+<hr />
+<h3>Neue Sitzung</h3>
+@using (Html.BeginForm("Create", "Master", new {Area = "Session"}, FormMethod.Post))
+{
+	@Html.AntiForgeryToken()
+
+	<div class="form-horizontal">
+		@Html.ValidationSummary(true, "", new {@class = "text-danger"})
+
+		<div class="form-group">
+			<p class="control-label col-md-2">Sitzungstyp</p>
+			<div class="col-md-5">
+				@Html.DropDownList("SessionTypeID", (SelectList)ViewBag.SessionTypes, new {@class = "form-control"})
+			</div>
+		</div>
+		<div class="form-group">
+			<div class="col-md-offset-2 col-md-5">
+				<input type="submit" value="Erstellen" class="btn btn-primary" />
+			</div>
+		</div>
+	</div>
+}
+
+@section Scripts {
+	@Scripts.Render("~/bundles/jqueryval")
+}

@@ -172,6 +172,7 @@
     <Compile Include="Areas\Administration\Controllers\SessionTypesController.cs" />
     <Compile Include="Areas\Administration\Controllers\TagsController.cs" />
     <Compile Include="Areas\Administration\Controllers\UserController.cs" />
+    <Compile Include="Areas\Session\Controllers\AgendaController.cs" />
     <Compile Include="Areas\Session\Controllers\FinalizeController.cs" />
     <Compile Include="Areas\Session\Controllers\ListsController.cs" />
     <Compile Include="Areas\Session\Controllers\Lists\LEmployeePresentationController.cs" />
@@ -201,6 +202,7 @@
     <Compile Include="Areas\Session\Models\Lists\Extension.cs" />
     <Compile Include="Areas\Session\Models\Lists\Prof.cs" />
     <Compile Include="Areas\Session\Models\Lists\ResearchProposal.cs" />
+    <Compile Include="Areas\Session\Models\SessionAgenda.cs" />
     <Compile Include="Areas\Session\SessionAreaRegistration.cs" />
     <Compile Include="Areas\Session\ViewModels\ReportViewModel.cs" />
     <Compile Include="Controllers\AssignmentsController.cs" />
@@ -624,6 +626,7 @@
     <Content Include="Areas\Session\Views\LResearchProposals\_Edit.cshtml" />
     <Content Include="Areas\Session\Views\LResearchProposals\_List.cshtml" />
     <Content Include="Areas\Session\Views\LResearchProposals\_Row.cshtml" />
+    <Content Include="Areas\Session\Views\Agenda\Index.cshtml" />
     <None Include="bundleconfig.json" />
     <None Include="compilerconfig.json" />
     <None Include="compilerconfig.json.defaults">
