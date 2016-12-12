@@ -159,16 +159,7 @@
             </remarks>
         </member>
         <member name="T:Ical.Net.DataTypes.Period">
-            <summary>
-            Represents an iCalendar period of time.
-            </summary>    
-        </member>
-        <member name="P:Ical.Net.DataTypes.Period.MatchesDateOnly">
-            <summary>
-            When true, comparisons between this and other <see cref="T:Ical.Net.DataTypes.Period"/>
-            objects are matched against the date only, and
-            not the date-time combination.
-            </summary>
+            <summary> Represents an iCalendar period of time. </summary>    
         </member>
         <member name="T:Ical.Net.DataTypes.CalDateTime">
             <summary>
@@ -786,6 +777,9 @@
             <param name="periodEnd">The end date of the range to evaluate.</param>
             <param name="includeReferenceDateInResults"></param>
         </member>
+        <member name="M:Ical.Net.Evaluation.RecurringEvaluator.EvaluateRDate(Ical.Net.Interfaces.DataTypes.IDateTime,System.DateTime,System.DateTime)">
+            <summary> Evalates the RDate component, and adds each specified DateTime or Period to the Periods collection. </summary>
+        </member>
         <member name="M:Ical.Net.Evaluation.RecurringEvaluator.EvaluateExRule(Ical.Net.Interfaces.DataTypes.IDateTime,System.DateTime,System.DateTime)">
             <summary>
             Evaulates the ExRule component, and excludes each specified DateTime from the Periods collection.
@@ -883,7 +877,7 @@
             Adds a parameter to the iCalendar object.
             </summary>
         </member>
-        <member name="M:Ical.Net.General.CalendarProperty.AddParameter(Ical.Net.Interfaces.General.ICalendarParameter)">
+        <member name="M:Ical.Net.General.CalendarProperty.AddParameter(Ical.Net.General.CalendarParameter)">
             <summary>
             Adds a parameter to the iCalendar object.
             </summary>
@@ -1033,9 +1027,8 @@
         </member>
         <member name="M:Ical.Net.Interfaces.Evaluation.IGetOccurrences.GetOccurrences(Ical.Net.Interfaces.DataTypes.IDateTime,Ical.Net.Interfaces.DataTypes.IDateTime)">
             <summary>
-            Returns all occurrences of this component that start within the date range provided.
-            All components occurring between <paramref name="startTime"/> and <paramref name="endTime"/>
-            will be returned.
+            Returns all occurrences of this component that overlap with the date range provided.
+            All components that overlap with the time range between <paramref name="startTime"/> and <paramref name="endTime"/> will be returned.
             </summary>
             <param name="startTime">The starting date range</param>
             <param name="endTime">The ending date range</param>
