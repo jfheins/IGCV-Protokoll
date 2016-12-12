@@ -189,6 +189,9 @@
     <Compile Include="Areas\Session\Controllers\MasterController.cs" />
     <Compile Include="Areas\Session\Controllers\DiscussionController.cs" />
     <Compile Include="Areas\Session\Controllers\SessionBaseController.cs" />
+    <Compile Include="Areas\Session\Models\ActiveAgendaItem.cs" />
+    <Compile Include="Areas\Session\Models\AgendaItem.cs" />
+    <Compile Include="Areas\Session\Models\AgendaTemplate.cs" />
     <Compile Include="Areas\Session\Models\Lists\Approval.cs" />
     <Compile Include="Areas\Session\Models\Lists\BaseItem.cs" />
     <Compile Include="Areas\Session\Models\Lists\Event.cs" />
@@ -202,7 +205,6 @@
     <Compile Include="Areas\Session\Models\Lists\Extension.cs" />
     <Compile Include="Areas\Session\Models\Lists\Prof.cs" />
     <Compile Include="Areas\Session\Models\Lists\ResearchProposal.cs" />
-    <Compile Include="Areas\Session\Models\SessionAgenda.cs" />
     <Compile Include="Areas\Session\SessionAreaRegistration.cs" />
     <Compile Include="Areas\Session\ViewModels\ReportViewModel.cs" />
     <Compile Include="Controllers\AssignmentsController.cs" />
@@ -232,6 +234,10 @@
     <Compile Include="Migrations\201612021045568_Renaming.cs" />
     <Compile Include="Migrations\201612021045568_Renaming.Designer.cs">
       <DependentUpon>201612021045568_Renaming.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201612122135105_agenda_added.cs" />
+    <Compile Include="Migrations\201612122135105_agenda_added.Designer.cs">
+      <DependentUpon>201612122135105_agenda_added.cs</DependentUpon>
     </Compile>
     <Compile Include="ViewModels\SearchResultList.cs" />
     <Compile Include="Controllers\StatisticsController.cs" />
@@ -966,6 +972,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201612021045568_Renaming.resx">
       <DependentUpon>201612021045568_Renaming.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612122135105_agenda_added.resx">
+      <DependentUpon>201612122135105_agenda_added.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
