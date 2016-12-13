@@ -134,10 +134,14 @@ namespace IGCV_Protokoll.Areas.Session.Controllers
 
         private ActiveSession CreateNewSession(SessionType type)
         {
+
             var session = db.ActiveSessions.Add(new ActiveSession(type)
             {
                 ManagerID = GetCurrentUserID()
             });
+
+            // Agenda aus Template instanziieren und damit festlegen
+            session.ActiveAgendaItems = type?.Agenda.AgendaItems.Select(ai => ActiveAgendaItem.FromTemplate(ai, session)).ToList();
 
             // GGf. Themen übernehmen, die in die aktuelle Sitzung hinein verschoben werden.
             foreach (var t in db.Topics.Include(t => t.Creator).Where(t => t.TargetSessionTypeID == type.ID))

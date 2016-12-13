@@ -5,16 +5,15 @@
 	ViewBag.Title = "Stammdaten";
 	var users = (Dictionary<User, bool>)ViewBag.UserDict;
 }
-@using (Html.BeginForm("Edit", "Master", new {Area = "Session"}, FormMethod.Post))
+@using (Html.BeginForm("Edit", "Master", new { Area = "Session" }, FormMethod.Post))
 {
-	<div class="index-action">
-		<button class="btn btn-default disabled">Zurück</button>
-		<button class="btn btn-primary" type="submit">Speichern & Weiter</button>
-	</div>
+    <div class="index-action">
+        <span class="btn btn-default disabled">Zurück</span>
+        <button class="btn btn-primary" type="submit">Speichern & Weiter</button>
+    </div>
 
-	<h2>@ViewBag.Title</h2>
-
-	@Html.AntiForgeryToken()
+    <h2>@ViewBag.Title</h2>
+    @Html.AntiForgeryToken()
 
 	<div class="form-horizontal">
 		@Html.ValidationSummary(true, "", new {@class = "text-danger"})
