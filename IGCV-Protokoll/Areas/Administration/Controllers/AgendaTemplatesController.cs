@@ -29,21 +29,6 @@ namespace IGCV_Protokoll.Areas.Administration.Controllers
             return View(db.AgendaTemplates.Include(at => at.AgendaItems).ToList());
         }
 
-        // GET: Administration/AgendaTemplates/Details/5
-        public ActionResult Details(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            AgendaTemplate agendaTemplate = db.AgendaTemplates.Find(id);
-            if (agendaTemplate == null)
-            {
-                return HttpNotFound();
-            }
-            return View(agendaTemplate);
-        }
-
         // GET: Administration/AgendaTemplates/Create
         public ActionResult Create()
         {
@@ -94,11 +79,14 @@ namespace IGCV_Protokoll.Areas.Administration.Controllers
                 // Alte Punkte löschen
                 db.AgendaItems.Where(ai => ai.ParentID == agendaTemplate.ID).Delete();
 
-                for (int i = 0; i < agendaTemplate.AgendaItems.Count; i++)
+                if (agendaTemplate.AgendaItems != null)
                 {
-                    var x = db.AgendaItems.Add(agendaTemplate.AgendaItems[i]);
-                    x.ParentID = agendaTemplate.ID;
-                    x.Position = i;
+                    for (int i = 0; i < agendaTemplate.AgendaItems.Count; i++)
+                    {
+                        var x = db.AgendaItems.Add(agendaTemplate.AgendaItems[i]);
+                        x.ParentID = agendaTemplate.ID;
+                        x.Position = i;
+                    }
                 }
 
                 db.Entry(agendaTemplate).State = EntityState.Modified;

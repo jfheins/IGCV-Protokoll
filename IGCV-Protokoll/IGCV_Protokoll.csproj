@@ -644,7 +644,6 @@
     <Content Include="Areas\Session\Views\Agenda\Index.cshtml" />
     <Content Include="Areas\Administration\Views\AgendaTemplates\Create.cshtml" />
     <Content Include="Areas\Administration\Views\AgendaTemplates\Delete.cshtml" />
-    <Content Include="Areas\Administration\Views\AgendaTemplates\Details.cshtml" />
     <Content Include="Areas\Administration\Views\AgendaTemplates\Edit.cshtml" />
     <Content Include="Areas\Administration\Views\AgendaTemplates\Index.cshtml" />
     <Content Include="Areas\Administration\Views\AgendaTemplates\_EditAgendaItem.cshtml" />

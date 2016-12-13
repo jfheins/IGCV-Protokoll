@@ -5,16 +5,16 @@
     <div class="panel-heading">
         <span class="glyphicon glyphicon-resize-vertical"></span>&nbsp;&nbsp;&nbsp;
         <input class="text-box single-line" name="AgendaItems[@Model.Position].Title" data-val="true" data-val-required="Das Feld &quot;Titel&quot; ist erforderlich." type="text" value="@Model.Title" aria-required="true" aria-invalid="false" aria-describedby="item_Title-error">
-        <input class="text-box single-line agendaItem-pos" name="AgendaItems[@Model.Position].Position" type="number" value="@Model.Position" aria-required="true" aria-invalid="false" aria-describedby="Position-error Position-error">
+        <span class="field-validation-valid text-danger" data-valmsg-for="AgendaItems[@Model.Position].Title" data-valmsg-replace="true"></span>
+        <input class="agendaItem-pos" name="AgendaItems[@Model.Position].Position" type="hidden" value="@Model.Position">
 
         <a onclick="DeleteAgendaItem(this);" class="btn btn-sm btn-hover-danger" style="float: right; line-height: 12px;"><span class="glyphicon glyphicon-remove"></span></a>
     </div>
     <div class="panel-body">
         <div class="col-xs-6">
             @Html.LabelFor(model => model.Description)<br />
-            @* Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control", name= "AgendaItems[@Model.Position].Title", id="" } })
-            *@
             <textarea class="form-control text-box multi-line" name="AgendaItems[@Model.Position].Description" data-val="true" data-val-required="Das Feld &quot;Beschreibung&quot; ist erforderlich.">@Model.Description</textarea>
+            <span class="field-validation-valid text-danger" data-valmsg-for="AgendaItems[@Model.Position].Description" data-valmsg-replace="true"></span>
         </div>
         <div class="col-xs-6">
             @Html.LabelFor(model => model.Placeholder)<br />
