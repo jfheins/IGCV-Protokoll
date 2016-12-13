@@ -7,6 +7,7 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using EntityFramework.Extensions;
 using IGCV_Protokoll.Areas.Session.Models;
 using IGCV_Protokoll.Controllers;
 using IGCV_Protokoll.DataLayer;
@@ -60,7 +61,7 @@ namespace IGCV_Protokoll.Areas.Administration.Controllers
             {
                 db.AgendaTemplates.Add(agendaTemplate);
                 db.SaveChanges();
-                return RedirectToAction("Edit", new {ID = agendaTemplate.ID});
+                return RedirectToAction("Edit", new { ID = agendaTemplate.ID });
             }
 
             return View(agendaTemplate);
@@ -90,7 +91,18 @@ namespace IGCV_Protokoll.Areas.Administration.Controllers
         {
             if (ModelState.IsValid)
             {
+                // Alte Punkte löschen
+                db.AgendaItems.Where(ai => ai.ParentID == agendaTemplate.ID).Delete();
+
+                for (int i = 0; i < agendaTemplate.AgendaItems.Count; i++)
+                {
+                    var x = db.AgendaItems.Add(agendaTemplate.AgendaItems[i]);
+                    x.ParentID = agendaTemplate.ID;
+                    x.Position = i;
+                }
+
                 db.Entry(agendaTemplate).State = EntityState.Modified;
+
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }

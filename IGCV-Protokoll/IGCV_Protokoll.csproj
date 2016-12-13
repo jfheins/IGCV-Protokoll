@@ -244,6 +244,10 @@
     <Compile Include="Migrations\201612122217572_agenda_attribute.Designer.cs">
       <DependentUpon>201612122217572_agenda_attribute.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201612131530482_agenda_parents.cs" />
+    <Compile Include="Migrations\201612131530482_agenda_parents.Designer.cs">
+      <DependentUpon>201612131530482_agenda_parents.cs</DependentUpon>
+    </Compile>
     <Compile Include="ViewModels\SearchResultList.cs" />
     <Compile Include="Controllers\StatisticsController.cs" />
     <Compile Include="Controllers\ViewListsController.cs" />
@@ -989,6 +993,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201612122217572_agenda_attribute.resx">
       <DependentUpon>201612122217572_agenda_attribute.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612131530482_agenda_parents.resx">
+      <DependentUpon>201612131530482_agenda_parents.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

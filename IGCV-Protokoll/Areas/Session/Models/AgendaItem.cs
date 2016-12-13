@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace IGCV_Protokoll.Areas.Session.Models
 {
@@ -8,6 +9,10 @@ namespace IGCV_Protokoll.Areas.Session.Models
         public int ID { get; set; }
 
         public AgendaTemplate Parent { get; set; }
+
+        [Index("IX_ParentIDPosition", 1, IsUnique = true)]
+        [ForeignKey("Parent")]
+        public int ParentID { get; set; }
 
         [DisplayName("Titel")]
         [Required]
@@ -21,6 +26,7 @@ namespace IGCV_Protokoll.Areas.Session.Models
         [DataType(DataType.MultilineText)]
         public virtual string Placeholder { get; set; }
 
+        [Index("IX_ParentIDPosition", 2, IsUnique = true)]
         public int Position { get; set; }
     }
 }

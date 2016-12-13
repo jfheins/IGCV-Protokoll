@@ -30,6 +30,6 @@ namespace IGCV_Protokoll.Areas.Session.Models
         public virtual ICollection<SessionType> SessionTypes { get; set; }
 
         [DisplayName("Unterpunkte")]
-        public virtual ICollection<AgendaItem> AgendaItems { get; set; }
+        public virtual IList<AgendaItem> AgendaItems { get; set; }
     }
 }

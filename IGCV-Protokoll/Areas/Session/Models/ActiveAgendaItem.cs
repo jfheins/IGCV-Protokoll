@@ -16,6 +16,9 @@ namespace IGCV_Protokoll.Areas.Session.Models
 
         public ActiveSession Parent { get; set; }
 
+        [ForeignKey("Parent")]
+        public int ParentID { get; set; }
+
         [DisplayName("Titel")]
         [Required]
         public string Title { get; set; }

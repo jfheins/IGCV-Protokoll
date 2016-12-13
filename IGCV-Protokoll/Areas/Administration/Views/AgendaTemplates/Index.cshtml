@@ -26,7 +26,7 @@
                     @Html.DisplayFor(modelItem => item.Name)
                 </td>
                 <td>
-                    @{ string.Join(", ", item.AgendaItems.OrderBy(x => x.Position).Select(x => x.Title)); }
+                    @string.Join(", ", item.AgendaItems.OrderBy(x => x.Position).Select(x => x.Title))
                 </td>
                 <td>
                     @Html.ActionLink("Bearbeiten", "Edit", new { id = item.ID }) |

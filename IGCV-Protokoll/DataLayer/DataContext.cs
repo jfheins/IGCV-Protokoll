@@ -19,9 +19,12 @@ namespace IGCV_Protokoll.DataLayer
 		{
 			//Database.Log = s => System.Diagnostics.Debug.WriteLine(s);
 		}
-
-		public DbSet<ActiveSession> ActiveSessions { get; set; }
-		public DbSet<Assignment> Assignments { get; set; }
+        
+        public DbSet<ActiveAgendaItem> ActiveAgendaItems { get; set; }
+        public DbSet<ActiveSession> ActiveSessions { get; set; }
+        public DbSet<AgendaItem> AgendaItems { get; set; }
+        public DbSet<AgendaTemplate> AgendaTemplates { get; set; }
+        public DbSet<Assignment> Assignments { get; set; }
 		public DbSet<Comment> Comments { get; set; }
 		public DbSet<Decision> Decisions { get; set; }
 		public DbSet<Document> Documents { get; set; }
@@ -109,7 +112,5 @@ namespace IGCV_Protokoll.DataLayer
 			Topics.Remove(topic);
 			SaveChanges();
 		}
-
-        public System.Data.Entity.DbSet<IGCV_Protokoll.Areas.Session.Models.AgendaTemplate> AgendaTemplates { get; set; }
     }
 }

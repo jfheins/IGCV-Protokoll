@@ -1,9 +1,25 @@
 ﻿
 @model IGCV_Protokoll.Areas.Session.Models.AgendaItem
 
-<div class="panel panel-primary">
-    <div class="panel-heading">@Html.EditorFor(model => model.Title)</div>
-    <div class="panel-body">
+<div class="panel panel-default agendaItem">
+    <div class="panel-heading">
+        <span class="glyphicon glyphicon-resize-vertical"></span>&nbsp;&nbsp;&nbsp;
+        <input class="text-box single-line" name="AgendaItems[@Model.Position].Title" data-val="true" data-val-required="Das Feld &quot;Titel&quot; ist erforderlich." type="text" value="@Model.Title" aria-required="true" aria-invalid="false" aria-describedby="item_Title-error">
+        <input class="text-box single-line agendaItem-pos" name="AgendaItems[@Model.Position].Position" type="number" value="@Model.Position" aria-required="true" aria-invalid="false" aria-describedby="Position-error Position-error">
 
+        <a onclick="DeleteAgendaItem(this);" class="btn btn-sm btn-hover-danger" style="float: right; line-height: 12px;"><span class="glyphicon glyphicon-remove"></span></a>
+    </div>
+    <div class="panel-body">
+        <div class="col-xs-6">
+            @Html.LabelFor(model => model.Description)<br />
+            @* Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control", name= "AgendaItems[@Model.Position].Title", id="" } })
+            *@
+            <textarea class="form-control text-box multi-line" name="AgendaItems[@Model.Position].Description" data-val="true" data-val-required="Das Feld &quot;Beschreibung&quot; ist erforderlich.">@Model.Description</textarea>
+        </div>
+        <div class="col-xs-6">
+            @Html.LabelFor(model => model.Placeholder)<br />
+            @*Html.EditorFor(model => model.Placeholder, new { htmlAttributes = new { @class = "form-control" } })*@
+            <textarea class="form-control text-box multi-line" name="AgendaItems[@Model.Position].Placeholder">@Model.Placeholder</textarea>
+        </div>
     </div>
 </div>
