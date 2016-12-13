@@ -2,68 +2,80 @@
 @model IEnumerable<IGCV_Protokoll.Areas.Administration.Models.SessionType>
 
 @{
-	ViewBag.Title = "Sitzungstypen";
+    ViewBag.Title = "Sitzungstypen";
 }
 
-@Html.ActionLink("Neuer Sitzungstyp", "Create", null, new {@class = "index-action btn btn-primary"})
+@Html.ActionLink("Neuer Sitzungstyp", "Create", null, new { @class = "index-action btn btn-primary" })
 
 <h2>@ViewBag.Title</h2>
 
 <p>Hier können Sie Sitzungstypen hinzufügen oder entfernen. Sitzungstypen, die bereits verwendet wurden, können jedoch nicht gelöscht werden. Stattdessen können Sie versteckt werden und tauchen dann nicht mehr in den Auswählmenüs auf.</p>
 
-<table class="table table-striped table-hover">
-	<thead>
-		<tr>
-			<th>
-				@Html.DisplayNameFor(model => model.ID)
-			</th>
-			<th class="col-xs-2">
-				@Html.DisplayNameFor(model => model.Name)
-			</th>
-			<th>
-				@Html.DisplayNameFor(model => model.LastDate)
-			</th>
-			<th>
-				@Html.DisplayNameFor(model => model.Attendees)
-			</th>
-			<th class="col-xs-1">
-				@Html.DisplayNameFor(model => model.Active)
-			</th>
-			<th class="col-xs-3">Aktionen</th>
-		</tr>
-	</thead>
-	<tbody>
-		@foreach (SessionType item in Model)
-		{
-			<tr>
-				<td>
-					@Html.DisplayFor(modelItem => item.ID)
-				</td>
-				<td>
-					@Html.DisplayFor(modelItem => item.Name)
-				</td>
-				<td>
-					@if (item.LastDate.HasValue)
-					{
-						@item.LastDate
-					}
-					else
-					{
-						@:Noch nie
-					}
-				</td>
-				<td>
-					@Html.DisplayFor(modelItem => item.Attendees, "IEnumerable_User")
-				</td>
-				<td>
-					@Html.DisplayFor(modelItem => item.Active)
-				</td>
-				<td>
-					@Html.ActionLink("Bearbeiten", "Edit", new {id = item.ID}) |
-					@Html.ActionLink("Details", "Details", new {id = item.ID}) |
-					@Html.ActionLink("Löschen", "Delete", new {id = item.ID}, new {@class = "text-danger"})
-				</td>
-			</tr>
-		}
-	</tbody>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.ID)
+            </th>
+            <th class="col-xs-2">
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LastDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Attendees)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Agenda)
+            </th>
+            <th class="col-xs-1">
+                @Html.DisplayNameFor(model => model.Active)
+            </th>
+            <th class="col-xs-3">Aktionen</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (SessionType item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ID)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @if (item.LastDate.HasValue)
+                    {
+                        @item.LastDate
+                    }
+                    else
+                    {
+                        @:Noch nie
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Attendees, "IEnumerable_User")
+                </td>
+                <td>
+                    @if (item.Agenda != null)
+                    {
+                        @Html.DisplayFor(modelItem => item.Agenda.Name)}
+                    else
+                    {
+                        <span class="text-muted">(Keins)</span>
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Active)
+                </td>
+                <td>
+                    @Html.ActionLink("Bearbeiten", "Edit", new { id = item.ID }) |
+                    @Html.ActionLink("Details", "Details", new { id = item.ID }) |
+                    @Html.ActionLink("Löschen", "Delete", new { id = item.ID }, new { @class = "text-danger" })
+                </td>
+            </tr>
+        }
+    </tbody>
 </table>

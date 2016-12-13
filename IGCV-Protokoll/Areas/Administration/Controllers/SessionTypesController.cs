@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
+using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Web.Mvc;
 using IGCV_Protokoll.Areas.Administration.Models;
+using IGCV_Protokoll.Areas.Administration.ViewModels;
 using IGCV_Protokoll.Controllers;
 
 namespace IGCV_Protokoll.Areas.Administration.Controllers
@@ -21,7 +23,7 @@ namespace IGCV_Protokoll.Areas.Administration.Controllers
 		// GET: Administration/SessionTypes
 		public ActionResult Index()
 		{
-			return View(db.SessionTypes.ToList());
+			return View(db.SessionTypes.Include(st => st.Agenda).ToList());
 		}
 
 		// GET: Administration/SessionTypes/Details/5
@@ -38,14 +40,16 @@ namespace IGCV_Protokoll.Areas.Administration.Controllers
 		// GET: SessionTypes/Create
 		public ActionResult Create()
 		{
-			ViewBag.UserDict = CreateUserDictionary(u => false);
-			return View();
+            var vm = new SessionTypeVM();
+            vm.AgendaList = new SelectList(db.AgendaTemplates, "ID", "Name");
+            vm.UserDict = CreateUserDictionary(u => false);
+			return View(vm);
 		}
 
 		// POST: Administration/SessionTypes/Create
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public ActionResult Create([Bind(Include = "ID,Name")] SessionType sessionType, IEnumerable<int> Attendees)
+		public ActionResult Create([Bind(Include = "ID,Name,AgendaID")] SessionTypeVM vm, IEnumerable<int> Attendees)
 		{
 			if (Attendees == null)
 			{
@@ -55,6 +59,7 @@ namespace IGCV_Protokoll.Areas.Administration.Controllers
 
 			if (ModelState.IsValid)
 			{
+			    var sessionType = vm.updateModel(new SessionType());
 				foreach (int userid in Attendees)
 					sessionType.Attendees.Add(db.Users.Find(userid));
 
@@ -63,8 +68,9 @@ namespace IGCV_Protokoll.Areas.Administration.Controllers
 				return RedirectToAction("Index");
 			}
 
-			ViewBag.UserDict = CreateUserDictionary(u => Attendees.Contains(u.ID));
-			return View(sessionType);
+            vm.AgendaList = new SelectList(db.AgendaTemplates, "ID", "Name", vm.AgendaID);
+            vm.UserDict = CreateUserDictionary(u => Attendees.Contains(u.ID));
+			return View(vm);
 		}
 
 		// GET: Administration/SessionTypes/Edit/5
@@ -72,23 +78,26 @@ namespace IGCV_Protokoll.Areas.Administration.Controllers
 		{
 			if (id == null)
 				return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-			SessionType sessionType = db.SessionTypes.Find(id);
+			SessionType sessionType = db.SessionTypes.Include(st => st.Agenda).First(st => st.ID == id);
 			if (sessionType == null)
 				return HttpNotFound();
-			ViewBag.UserDict = CreateUserDictionary(u => sessionType.Attendees.Contains(u));
-			return View(sessionType);
+
+		    var vm = SessionTypeVM.fromModel(sessionType);
+
+            vm.AgendaList = new SelectList(db.AgendaTemplates, "ID", "Name", vm.AgendaID);
+            vm.UserDict = CreateUserDictionary(u => sessionType.Attendees.Contains(u));
+			return View(vm);
 		}
 
 		// POST: Administration/SessionTypes/Edit/5
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public ActionResult Edit([Bind(Include = "ID,Name,Active")] SessionType input, IEnumerable<int> Attendees)
+		public ActionResult Edit([Bind(Include = "ID,Name,Active,AgendaID")] SessionTypeVM input, IEnumerable<int> Attendees)
 		{
 			if (ModelState.IsValid)
 			{
 				var sessionType = db.SessionTypes.Find(input.ID);
-				sessionType.Name = input.Name;
-				sessionType.Active = input.Active;
+			    input.updateModel(sessionType);
 				sessionType.Attendees.Clear();
 
 				if (Attendees != null)
@@ -100,8 +109,9 @@ namespace IGCV_Protokoll.Areas.Administration.Controllers
 				db.SaveChanges();
 				return RedirectToAction("Index");
 			}
-			ViewBag.UserDict = CreateUserDictionary(u => Attendees.Contains(u.ID));
 
+            input.AgendaList = new SelectList(db.AgendaTemplates, "ID", "Name", input.AgendaID);
+            input.UserDict = CreateUserDictionary(u => Attendees.Contains(u.ID));
 			return View(input);
 		}
 

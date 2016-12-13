@@ -173,6 +173,7 @@
     <Compile Include="Areas\Administration\Controllers\SessionTypesController.cs" />
     <Compile Include="Areas\Administration\Controllers\TagsController.cs" />
     <Compile Include="Areas\Administration\Controllers\UserController.cs" />
+    <Compile Include="Areas\Administration\ViewModels\SessionTypeVM.cs" />
     <Compile Include="Areas\Session\Controllers\AgendaController.cs" />
     <Compile Include="Areas\Session\Controllers\FinalizeController.cs" />
     <Compile Include="Areas\Session\Controllers\ListsController.cs" />
@@ -247,6 +248,10 @@
     <Compile Include="Migrations\201612131530482_agenda_parents.cs" />
     <Compile Include="Migrations\201612131530482_agenda_parents.Designer.cs">
       <DependentUpon>201612131530482_agenda_parents.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201612131635300_agenda_integration.cs" />
+    <Compile Include="Migrations\201612131635300_agenda_integration.Designer.cs">
+      <DependentUpon>201612131635300_agenda_integration.cs</DependentUpon>
     </Compile>
     <Compile Include="ViewModels\SearchResultList.cs" />
     <Compile Include="Controllers\StatisticsController.cs" />
@@ -995,6 +1000,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201612131530482_agenda_parents.resx">
       <DependentUpon>201612131530482_agenda_parents.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612131635300_agenda_integration.resx">
+      <DependentUpon>201612131635300_agenda_integration.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

@@ -1,5 +1,5 @@
 ﻿@using IGCV_Protokoll.Models
-@model IGCV_Protokoll.Areas.Administration.Models.SessionType
+@model IGCV_Protokoll.Areas.Administration.ViewModels.SessionTypeVM
 
 @{
 	ViewBag.Title = "Sitzungstyp bearbeiten";
@@ -35,11 +35,19 @@
 			</div>
 		</div>
 
+        <div class="form-group">
+            @Html.LabelFor(model => model.AgendaID, new { @class = "control-label col-md-2" })
+            <div class="col-md-2">
+                @Html.DropDownListFor(m => m.AgendaID, Model.AgendaList, "(Keine)", new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.AgendaID, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
 		<div class="form-group">
-			@Html.LabelFor(model => model.Attendees, new {@class = "control-label col-md-2"})
+			@Html.LabelFor(model => model.UserDict, new {@class = "control-label col-md-2"})
 			<div class="col-md-10">
 				<ul class="userlist">
-					@foreach (KeyValuePair<User, bool> kvp in ViewBag.UserDict)
+					@foreach (KeyValuePair<User, bool> kvp in Model.UserDict)
 					{
 						string preset = kvp.Value ? "checked" : null;
 						<li>

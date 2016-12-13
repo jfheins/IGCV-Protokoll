@@ -29,7 +29,7 @@
 
         <div class="form-group">
             @Html.LabelFor(model => model.AgendaItems, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-8" id="AgendaItemContainer">
+            <div class="col-md-8" id="AgendaItemContainer" style="overflow-y: auto;">
                 @foreach (var item in Model.AgendaItems)
                 {
                     Html.RenderPartial("_EditAgendaItem", item);
@@ -85,6 +85,7 @@
             update: function (event, ui) { Renumerate(); }
             });
         $("#AgendaItemContainer").disableSelection();
+        $("#AgendaItemContainer").css("min-height", $('#AgendaItemContainer').height() + "px");
     });
 </script>
 

@@ -36,5 +36,7 @@ namespace IGCV_Protokoll.Areas.Administration.Models
         [DisplayName("Agendatemplate")]
         [InverseProperty("SessionTypes")]
         public virtual AgendaTemplate Agenda { get; set; }
+        [ForeignKey("Agenda")]
+        public int? AgendaID { get; set; }
     }
 }

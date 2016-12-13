@@ -8,18 +8,17 @@
         <span class="field-validation-valid text-danger" data-valmsg-for="AgendaItems[@Model.Position].Title" data-valmsg-replace="true"></span>
         <input class="agendaItem-pos" name="AgendaItems[@Model.Position].Position" type="hidden" value="@Model.Position">
 
-        <a onclick="DeleteAgendaItem(this);" class="btn btn-sm btn-hover-danger" style="float: right; line-height: 12px;"><span class="glyphicon glyphicon-remove"></span></a>
+        <a onclick="DeleteAgendaItem(this);" class="btn btn-sm btn-hover-danger" style="float: right; line-height: 12px;" title="Punkt löschen"><span class="glyphicon glyphicon-remove"></span></a>
     </div>
     <div class="panel-body">
         <div class="col-xs-6">
             @Html.LabelFor(model => model.Description)<br />
             <textarea class="form-control text-box multi-line" name="AgendaItems[@Model.Position].Description" data-val="true" data-val-required="Das Feld &quot;Beschreibung&quot; ist erforderlich.">@Model.Description</textarea>
-            <span class="field-validation-valid text-danger" data-valmsg-for="AgendaItems[@Model.Position].Description" data-valmsg-replace="true"></span>
+            <span class="field-validation-valid text-danger" style="resize: vertical;" data-valmsg-for="AgendaItems[@Model.Position].Description" data-valmsg-replace="true"></span>
         </div>
         <div class="col-xs-6">
             @Html.LabelFor(model => model.Placeholder)<br />
-            @*Html.EditorFor(model => model.Placeholder, new { htmlAttributes = new { @class = "form-control" } })*@
-            <textarea class="form-control text-box multi-line" name="AgendaItems[@Model.Position].Placeholder">@Model.Placeholder</textarea>
+            <textarea class="form-control text-box multi-line" style="resize: vertical;" name="AgendaItems[@Model.Position].Placeholder">@Model.Placeholder</textarea>
         </div>
     </div>
 </div>
