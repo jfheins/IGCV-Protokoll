@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
@@ -21,12 +22,14 @@ namespace IGCV_Protokoll.Areas.Session.Models
 
         public int ID { get; set; }
 
-        [DisplayName("Templatename")]
+        [DisplayName("Name")]
+        [Required]
         public virtual string Name { get; set; }
 
         [InverseProperty("Agenda")]
         public virtual ICollection<SessionType> SessionTypes { get; set; }
 
+        [DisplayName("Unterpunkte")]
         public virtual ICollection<AgendaItem> AgendaItems { get; set; }
     }
 }

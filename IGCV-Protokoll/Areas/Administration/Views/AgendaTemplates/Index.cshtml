@@ -1,0 +1,41 @@
+﻿@model IEnumerable<IGCV_Protokoll.Areas.Session.Models.AgendaTemplate>
+
+@{
+    ViewBag.Title = "Agendatemplates";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<table class="table table-striped table-hover">
+    <thead>
+        <tr>
+            <th class="col-xs-2">
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th class="col-xs-7">
+                @Html.DisplayNameFor(model => model.AgendaItems)
+            </th>
+            <th class="col-xs-3"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @{ string.Join(", ", item.AgendaItems.OrderBy(x => x.Position).Select(x => x.Title)); }
+                </td>
+                <td>
+                    @Html.ActionLink("Bearbeiten", "Edit", new { id = item.ID }) |
+                    @Html.ActionLink("Details", "Details", new { id = item.ID }) |
+                    @Html.ActionLink("Löschen", "Delete", new { id = item.ID }, new { @class = "text-danger" })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@Html.ActionLink("Neues Template", "Create", null, new { @class = "btn btn-primary" })

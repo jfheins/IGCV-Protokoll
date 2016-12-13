@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Security.Cryptography;
@@ -15,9 +16,16 @@ namespace IGCV_Protokoll.Areas.Session.Models
 
         public ActiveSession Parent { get; set; }
 
+        [DisplayName("Titel")]
+        [Required]
+        public string Title { get; set; }
+
         [DisplayName("Beschreibung")]
+        [DataType(DataType.MultilineText)]
+        [Required]
         public virtual string Description { get; set; }
         [DisplayName("Kommentar")]
+        [DataType(DataType.MultilineText)]
         public virtual string Comment { get; set; }
 
         public int Position { get; set; }
@@ -26,6 +34,7 @@ namespace IGCV_Protokoll.Areas.Session.Models
         {
             return new ActiveAgendaItem
             {
+                Title = templateItem.Title,
                 Description = templateItem.Description,
                 Comment =  templateItem.Placeholder,
                 Position = templateItem.Position,

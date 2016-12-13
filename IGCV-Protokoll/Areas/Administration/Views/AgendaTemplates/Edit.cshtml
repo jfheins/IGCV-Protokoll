@@ -1,0 +1,98 @@
+﻿@using IGCV_Protokoll.Areas.Session.Models
+@model IGCV_Protokoll.Areas.Session.Models.AgendaTemplate
+
+@{
+    ViewBag.Title = "Agendatemplate bearbeiten";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<div>
+    @Html.ActionLink("Zurück zum Index", "Index")
+</div>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.ID)
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-8" id="AgendaItemContainer">
+                @foreach (var item in Model.AgendaItems)
+                {
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <span class="glyphicon glyphicon-resize-vertical"></span>&nbsp;&nbsp;&nbsp;
+                                <input class="text-box single-line" data-val="true" data-val-required="Das Feld &quot;Titel&quot; ist erforderlich." type="text" value="@item.Title" aria-required="true" aria-invalid="false" aria-describedby="item_Title-error">
+                                @Html.EditorFor(model => item.Position, new { htmlAttributes = new { @class = "" } })
+                        </div>
+                        <div class="panel-body">
+                            <div class="col-xs-6">
+                                @Html.LabelFor(model => item.Description)<br />
+                                @Html.EditorFor(model => item.Description, new { htmlAttributes = new { @class = "form-control" } })
+                            </div>
+                            <div class="col-xs-6">
+                                @Html.LabelFor(model => item.Placeholder)<br />
+                                @Html.EditorFor(model => item.Placeholder, new { htmlAttributes = new { @class = "form-control" } })
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <a class="btn btn-primary" onclick="AddNewAgendaItem();">Neuer Unterpunkt</a>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Speichern" class="btn btn-primary" />
+            </div>
+        </div>
+    </div>
+}
+
+<script type="text/javascript">
+
+    function AddNewAgendaItem() {
+        var lastTpl = $("#AgendaItemContainer div.panel:last-child");
+        var newItem = lastTpl.clone();
+        $(newItem).find(".panel-heading input").first().val("");
+        lastTpl.after(newItem);
+    }
+
+    function Renumerate() {
+        $("#AgendaItemContainer div.panel").each(function (i) {
+            $(this).find("span").text(++i);
+        });
+        $('.topic-panel').each(function () {
+            var link = $(this).find('.panel-heading .panel-collapse-heading a');
+            var content = $(this).find('.topic-content');
+            collapseTopicIn(link, content);
+        });
+    }
+
+    $(function () {
+        $("#AgendaItemContainer").sortable();
+        $("#AgendaItemContainer").disableSelection();
+    });
+</script>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

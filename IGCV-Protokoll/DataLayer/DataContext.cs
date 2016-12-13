@@ -109,5 +109,7 @@ namespace IGCV_Protokoll.DataLayer
 			Topics.Remove(topic);
 			SaveChanges();
 		}
-	}
+
+        public System.Data.Entity.DbSet<IGCV_Protokoll.Areas.Session.Models.AgendaTemplate> AgendaTemplates { get; set; }
+    }
 }
