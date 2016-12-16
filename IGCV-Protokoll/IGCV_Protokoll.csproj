@@ -652,6 +652,7 @@
     <Content Include="Areas\Administration\Views\AgendaTemplates\Edit.cshtml" />
     <Content Include="Areas\Administration\Views\AgendaTemplates\Index.cshtml" />
     <Content Include="Areas\Administration\Views\AgendaTemplates\_EditAgendaItem.cshtml" />
+    <Content Include="Areas\Session\Views\Finalize\_ReportAgenda.cshtml" />
     <None Include="bundleconfig.json" />
     <None Include="compilerconfig.json" />
     <None Include="compilerconfig.json.defaults">

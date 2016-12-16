@@ -1,0 +1,11 @@
+﻿@model System.Collections.Generic.ICollection<IGCV_Protokoll.Areas.Session.Models.ActiveAgendaItem>
+
+@foreach (var agendaItem in Model.OrderBy(x => x.Position))
+{
+    <div class="row" style="margin-bottom: 20px; margin-left: 10px;">
+        <div class="col-xs-3">
+            <h4 style="margin-top: 0;">@Html.DisplayFor(model => agendaItem.Title)</h4>
+        </div>
+        <div class="col-xs-9" style="white-space: pre-line;">@Html.DisplayFor(model => agendaItem.Comment)</div>
+    </div>
+}
