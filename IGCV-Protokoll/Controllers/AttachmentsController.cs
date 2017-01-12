@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Configuration;
 using System.Data.Entity;
 using System.Data.Entity.Validation;
 using System.IO;
@@ -47,23 +48,17 @@ namespace IGCV_Protokoll.Controllers
 		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2211:NonConstantFieldsShouldNotBeVisible")] public static HashSet<string>
 			KnownExtensions = new HashSet<string>();
 
-		private static string Serverpath
-		{
-			get { return @"C:\IGCV-Protokoll_Uploads\"; }
-		}
+		private static string Serverpath => ConfigurationManager.AppSettings["UploadPath"];
 
-		private static string TemporaryServerpath
-		{
-			get { return @"C:\IGCV-Protokoll_Temp\"; }
-		}
+	    private static string TemporaryServerpath => ConfigurationManager.AppSettings["TempPath"];
 
 #if DEBUG
 		private readonly string _hostname = Dns.GetHostName();
 #else
-		private readonly string _hostname = Dns.GetHostName() + ".iwb.mw.tu-muenchen.de";
+		private readonly string _hostname = Dns.GetHostName() + ".igcv.fraunhofer.de";
 #endif
 
-		private bool isInternetExplorer
+        private bool isInternetExplorer
 		{
 			get
 			{

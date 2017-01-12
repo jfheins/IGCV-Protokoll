@@ -10,7 +10,7 @@ namespace IGCV_Protokoll.Mailers
 {
 	public class UserMailer : MailerBase
 	{
-		private readonly string FQDN = "http://" + Dns.GetHostName() + ".iwb.mw.tu-muenchen.de";
+		private readonly string FQDN = "http://" + Dns.GetHostName() + ".igcv.fraunhofer.de";
 
 		public UserMailer()
 		{
