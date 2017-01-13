@@ -138,17 +138,17 @@
       previewsContainer: null,
       hiddenInputContainer: "body",
       capture: null,
-      dictDefaultMessage: "Drop files here to upload",
-      dictFallbackMessage: "Your browser does not support drag'n'drop file uploads.",
-      dictFallbackText: "Please use the fallback form below to upload your files like in the olden days.",
-      dictFileTooBig: "File is too big ({{filesize}}MiB). Max filesize: {{maxFilesize}}MiB.",
-      dictInvalidFileType: "You can't upload files of this type.",
-      dictResponseError: "Server responded with {{statusCode}} code.",
-      dictCancelUpload: "Cancel upload",
-      dictCancelUploadConfirmation: "Are you sure you want to cancel this upload?",
-      dictRemoveFile: "Remove file",
+      dictDefaultMessage: "Dateien per Drag 'n' Drop ablegen",
+      dictFallbackMessage: "Ihr Browser unterstützt keine Dateiuploads per Drag 'n' Drop.",
+      dictFallbackText: "Drag 'n' Drop musste deaktiviert werden. Bitte das Fomularfeld benutzen:",
+      dictFileTooBig: "Die Datei ist zu groß, sie hat ({{filesize}}MB). Maximal erlaubt sind {{maxFilesize}}MB.",
+      dictInvalidFileType: "Dateien dieses Typs sind nicht erlaubt.",
+      dictResponseError: "Server-Code {{statusCode}}.",
+      dictCancelUpload: "Upload abbrechen",
+      dictCancelUploadConfirmation: "Möchten Sie den Upload wirklich abbrechen?",
+      dictRemoveFile: "Datei entfernen",
       dictRemoveFileConfirmation: null,
-      dictMaxFilesExceeded: "You can not upload any more files.",
+      dictMaxFilesExceeded: "Die Maximalzahl von Dateien ist erreicht.",
       accept: function(file, done) {
         return done();
       },
@@ -174,11 +174,13 @@
         }
         span = messageElement.getElementsByTagName("span")[0];
         if (span) {
-          if (span.textContent != null) {
-            span.textContent = this.options.dictFallbackMessage;
-          } else if (span.innerText != null) {
-            span.innerText = this.options.dictFallbackMessage;
-          }
+            if (span.textContent != null) {
+                span.textContent = this.options.dictFallbackMessage;
+            } else if (span.innerText != null) {
+                span.innerText = this.options.dictFallbackMessage;
+            }
+        } else {
+            messageElement.innerText = "";
         }
         return this.element.appendChild(this.getFallbackForm());
       },
@@ -729,7 +731,7 @@
       if (this.options.dictFallbackText) {
         fieldsString += "<p>" + this.options.dictFallbackText + "</p>";
       }
-      fieldsString += "<input type=\"file\" name=\"" + (this._getParamName(0)) + "\" " + (this.options.uploadMultiple ? 'multiple="multiple"' : void 0) + " /><input type=\"submit\" value=\"Upload!\"></div>";
+      fieldsString += "<input type=\"file\" name=\"" + (this._getParamName(0)) + "\" " + (this.options.uploadMultiple ? 'multiple="multiple"' : void 0) + " style=\"width: 500px;\" /><input type=\"submit\" value=\"Upload!\"></div>";
       fields = Dropzone.createElement(fieldsString);
       if (this.element.tagName !== "FORM") {
         form = Dropzone.createElement("<form action=\"" + this.options.url + "\" enctype=\"multipart/form-data\" method=\"" + this.options.method + "\"></form>");
