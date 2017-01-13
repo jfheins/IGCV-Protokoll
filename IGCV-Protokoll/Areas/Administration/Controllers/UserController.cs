@@ -23,8 +23,8 @@ namespace IGCV_Protokoll.Areas.Administration.Controllers
     public class UserController : BaseController
     {
         public const string DomainName = "IGCV";
-        private readonly string[] _authorizeGroups = { "RMV-HAL" };
         // Benutzer dieser Gruppen werden automatisch hinzugefügt
+        private readonly string[] _authorizeGroups = { "IGCV-HAL, Protokoll-Developer" };
 
         /// <summary>
         ///    Wird aufgerufen, bevor die Aktionsmethode aufgerufen wird.
@@ -144,7 +144,6 @@ namespace IGCV_Protokoll.Areas.Administration.Controllers
         [NotNull]
         public static User GetUser(DataContext db, IPrincipal userPrincipal)
         {
-            return db.Users.Find(1);
             string fullName = userPrincipal.Identity.Name;
             string shortName = fullName.Split('\\').Last();
 

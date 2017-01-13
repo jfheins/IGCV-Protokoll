@@ -40,8 +40,7 @@ namespace IGCV_Protokoll
 
 		protected void Application_BeginRequest()
 		{
-			if (true)
-				MiniProfiler.Start();
+            MiniProfiler.Start();
 		}
 
 		protected void Application_EndRequest()

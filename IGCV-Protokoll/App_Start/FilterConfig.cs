@@ -8,7 +8,7 @@ namespace IGCV_Protokoll
 		{
 			filters.Add(new HandleErrorAttribute());
 			//filters.Add(new RequireHttpsAttribute());
-			filters.Add(new AuthorizeAttribute {Roles = @""});
+			filters.Add(new AuthorizeAttribute { Roles = @"IGCV\IGCV-HAL, IGCV\Protokoll-Developer" });
 		}
 	}
 }
