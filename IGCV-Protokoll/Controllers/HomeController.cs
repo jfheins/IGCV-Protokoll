@@ -90,10 +90,11 @@ namespace IGCV_Protokoll.Controllers
 			return PartialView("~/Views/Topics/_Topic.cshtml", db.Topics.Find(id));
 		}
 
-		/// <summary>
-		///    Grundlegende Informationen über das IGCV-Protokoll. Diese Seite ist nicht verlinkt.
-		/// </summary>
-		public ActionResult About()
+        /// <summary>
+        ///    Grundlegende Informationen über das IGCV-Protokoll. Diese Seite ist nicht verlinkt.
+        /// </summary>
+        [AllowAnonymous]
+        public ActionResult About()
 		{
 			return View();
 		}

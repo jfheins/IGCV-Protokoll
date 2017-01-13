@@ -70,7 +70,18 @@ namespace IGCV_Protokoll.util
 				return stripped;
 		}
 
-		public static string RenderViewAsString(ControllerContext controllerContext, string viewName, object model)
+        /// <summary>
+        ///    Kürzt den String hart auf eine Länge ein.
+        /// </summary>
+        /// <param name="str">Der Eingabestring</param>
+        /// <param name="maxLength">Die maximale Länge (in Zeichen) des Ausgabestrings</param>
+        /// <returns>Ein String, der maximal <paramref name="maxLength" /> Zeichen lang ist.</returns>
+        public static string Truncate(this string str, int maxLength)
+        {
+            return str.Length <= maxLength ? str : str.Substring(0, maxLength);
+        }
+
+        public static string RenderViewAsString(ControllerContext controllerContext, string viewName, object model)
 		{
 			// create a string writer to receive the HTML code
 			StringWriter stringWriter = new StringWriter();

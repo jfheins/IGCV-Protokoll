@@ -15,6 +15,7 @@ using System.Web.Mvc;
 using EntityFramework.Extensions;
 using IGCV_Protokoll.DataLayer;
 using IGCV_Protokoll.Models;
+using IGCV_Protokoll.util;
 using JetBrains.Annotations;
 
 namespace IGCV_Protokoll.Controllers
@@ -279,7 +280,7 @@ namespace IGCV_Protokoll.Controllers
 			var revision = new Revision
 			{
 				ParentDocument = document,
-				SafeName = InvalidChars.Replace(filename, ""),
+				SafeName = InvalidChars.Replace(filename, "").Truncate(100),
 				FileSize = file.ContentLength,
 				UploaderID = GetCurrentUserID(),
 				Extension = fileext,
