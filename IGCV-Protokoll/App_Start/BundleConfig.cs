@@ -41,6 +41,7 @@ namespace IGCV_Protokoll
 				"~/Content/themes/iwb/jquery-ui.*",
 				"~/Content/other/jquery.rtResponsiveTables.css",
 				"~/Content/other/colpick.css",
+                "~/Scripts/dropzone/dropzone.css",
 				"~/Content/bootstrap-multiselect/bootstrap-multiselect.css"));
 
 			// Festlegen von EnableOptimizations auf false für Debugzwecke. Weitere Informationen

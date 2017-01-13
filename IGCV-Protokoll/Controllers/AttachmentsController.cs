@@ -128,7 +128,7 @@ namespace IGCV_Protokoll.Controllers
 			if (entityKind == DocumentContainer.Topic && IsTopicLocked(id))
 				return Content("<div class=\"panel-footer\">Da das Thema gesperrt ist, können Sie keine Dateien hochladen.</div>");
 			else
-				return PartialView("_DocumentCreateForm", Tuple.Create(entityKind, id));
+				return PartialView("_DocumentCreateDropZone", Tuple.Create(entityKind, id));
 		}
 
 		[HttpPost]

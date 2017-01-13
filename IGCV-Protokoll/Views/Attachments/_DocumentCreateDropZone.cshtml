@@ -1,0 +1,52 @@
+﻿@model Tuple<IGCV_Protokoll.Models.DocumentContainer, int>
+<div class="panel-footer">
+    @using (Html.BeginForm("_CreateDocuments", "Attachments",
+                        FormMethod.Post,
+                        new { id = "attachment_uploader", @class = "form-horizontal dropzone", enctype = "multipart/form-data" }))
+    {
+        <div>
+            @Html.AntiForgeryToken()
+            @Html.Hidden("entityKind", Model.Item1.ToString())
+            @Html.Hidden("id", Model.Item2)
+            <div class="dz-message clearfix" style="position: relative;">
+                <div class="glyphicon glyphicon-cloud-upload" style="font-size: 70px; float: left;"></div>
+                <div style="font-size: 150%; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);">Dateien per Drag 'n' Drop ablegen um neue Dokumente anzuhängen.</div>
+            </div>
+        </div>
+    }
+    <div id="attachment_uploader_status" style="text-align: right;"></div>
+</div>
+
+<script src="~/Scripts/dropzone/dropzone.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        Dropzone.options.attachmentUploader = {
+            paramName: "files", // The name that will be used to transfer the file
+            maxFilesize: 20, // MB
+            uploadMultiple: true,
+            forceFallback: false,
+            init: function () {
+                this.on("complete", function (dzFile) {
+                    if (dzFile.xhr.status == 200) {
+                        $('#attachments_@Model.Item2').replaceWith(dzFile.xhr.responseText);
+                        $('#attachment_uploader_status').html('');
+                        $('#attachments_@Model.Item2').tablesorter();
+                        $('#attachments_@Model.Item2').timeago();
+                        var dz = this;
+                        window.setTimeout(function () { dz.removeFile(dzFile); }, 2000);
+
+                    } else {
+                        if (dzFile.xhr.responseText.length > 0) {
+                            $('#attachment_uploader_status')
+                                .html('<span class="text-danger">' + dzFile.xhr.responseText + '</span>');
+                        } else {
+                            $('#attachment_uploader_status')
+                                .html('<span class="text-danger">' + dzFile.xhr.statusText + '</span>');
+                        }
+                    }
+                });
+            }
+        };
+    });
+</script>
