@@ -24,7 +24,7 @@ namespace IGCV_Protokoll.Areas.Administration.Controllers
     {
         public const string DomainName = "IGCV";
         // Benutzer dieser Gruppen werden automatisch hinzugefügt
-        private readonly string[] _authorizeGroups = { "IGCV-HAL, Protokoll-Developer" };
+        private readonly string[] _authorizeGroups = { "IGCV-AL", "Protokoll-Developer" };
 
         /// <summary>
         ///    Wird aufgerufen, bevor die Aktionsmethode aufgerufen wird.

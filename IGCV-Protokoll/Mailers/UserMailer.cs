@@ -20,15 +20,18 @@ namespace IGCV_Protokoll.Mailers
 
 		public virtual void SendWelcome(User u)
 		{
-			ViewData.Model = u.EmailName;
-			ViewBag.Host = FQDN;
-			var mail = Populate(x =>
-			{
-				x.Subject = "Wilkommen beim IGCV-Protokoll";
-				x.ViewName = "Welcome";
-				x.To.Add(u.EmailAddress);
-			});
-			HostingEnvironment.QueueBackgroundWorkItem(ct => mail.SendAsync());
+            if (u.EmailAddress != null)
+            {
+			    ViewData.Model = u.EmailName;
+			    ViewBag.Host = FQDN;
+			    var mail = Populate(x =>
+			    {
+				    x.Subject = "Wilkommen beim IGCV-Protokoll";
+				    x.ViewName = "Welcome";
+				    x.To.Add(u.EmailAddress);
+			    });
+			    HostingEnvironment.QueueBackgroundWorkItem(ct => mail.SendAsync());
+            }
 		}
 
 		public virtual Task SendNewAssignment(Assignment assignment)
