@@ -24,7 +24,8 @@ namespace IGCV_Protokoll.Areas.Administration.Controllers
     {
         public const string DomainName = "IGCV";
         // Benutzer dieser Gruppen werden automatisch hinzugefügt
-        private readonly string[] _authorizeGroups = { "IGCV-AL", "Protokoll-Developer" };
+        private readonly string[] _authorizeGroups = { "V-AL", "Protokoll-Developer" };
+        private readonly string[] _authorizeUsers = { "Schilpjo", "Reinhart" };
 
         /// <summary>
         ///    Wird aufgerufen, bevor die Aktionsmethode aufgerufen wird.
@@ -79,12 +80,13 @@ namespace IGCV_Protokoll.Areas.Administration.Controllers
                 // Benutzer, zu denen eine GUID gespeichert ist, werden zuerst synchronisiert, da die Übereinstimmung garantiert richtig ist
                 foreach (User user in myusers.Where(u => u.Guid != Guid.Empty))
                 {
-                    UserPrincipal iwbuser;
-                    if (employees.TryGetValue(user.Guid, out iwbuser))
+                    UserPrincipal adUser;
+                    if (employees.TryGetValue(user.Guid, out adUser))
                     {
-                        user.ShortName = iwbuser.SamAccountName;
-                        user.LongName = iwbuser.DisplayName;
-                        user.EmailAddress = iwbuser.EmailAddress;
+                        user.ShortName = adUser.SamAccountName;
+                        user.LongName = adUser.DisplayName;
+                        if (adUser.EmailAddress != null)
+                            user.EmailAddress = adUser.EmailAddress;
                         employees.Remove(user.Guid);
                     }
                 }
@@ -92,17 +94,35 @@ namespace IGCV_Protokoll.Areas.Administration.Controllers
                 // Als zweites wird über das Namenskürzel synchronisiert. Die User ohne GUID bekommen hier eine GUID.
                 foreach (User user in myusers.Where(u => u.Guid == Guid.Empty))
                 {
-                    UserPrincipal iwbuser = employees.Values.SingleOrDefault(u => u.SamAccountName == user.ShortName);
-                    if (iwbuser != null && iwbuser.Guid != null)
+                    UserPrincipal adUser = employees.Values.SingleOrDefault(u => u.SamAccountName == user.ShortName);
+                    if (adUser != null && adUser.Guid != null)
                     {
-                        user.Guid = iwbuser.Guid.Value;
-                        user.LongName = iwbuser.DisplayName;
-                        user.EmailAddress = iwbuser.EmailAddress;
+                        user.Guid = adUser.Guid.Value;
+                        user.LongName = adUser.DisplayName;
+                        user.EmailAddress = adUser.EmailAddress;
                         employees.Remove(user.Guid);
                     }
                 }
 
                 // Schließlich werden neue User in die Datenbank importiert.
+                foreach (var userName in _authorizeUsers)
+                {
+                    using (UserPrincipal userPrincipal = UserPrincipal.FindByIdentity(context, IdentityType.SamAccountName, userName))
+                    {
+                        if (userPrincipal == null)
+                        {
+                            return HTTPStatus(HttpStatusCode.InternalServerError,
+                                string.Format("Der Benutzer \"{0}\" wurde nicht gefunden.", userName));
+                        }
+                        User user = myusers.SingleOrDefault(u => u.Guid == userPrincipal.Guid);
+                        if (user == null)
+                        {
+                            user = CreateUserFromADUser(userPrincipal);
+                            db.Users.Add(user);
+                        }
+                        user.IsActive = true;
+                    }
+                }
                 foreach (var group in _authorizeGroups)
                 {
                     using (GroupPrincipal groupPrincipal = GroupPrincipal.FindByIdentity(context, IdentityType.SamAccountName, group))
