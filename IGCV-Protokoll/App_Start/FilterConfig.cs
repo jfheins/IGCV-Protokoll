@@ -1,4 +1,5 @@
 ﻿using System.Web.Mvc;
+using IGCV_Protokoll.util;
 
 namespace IGCV_Protokoll
 {
@@ -8,7 +9,7 @@ namespace IGCV_Protokoll
 		{
 			filters.Add(new HandleErrorAttribute());
 			//filters.Add(new RequireHttpsAttribute());
-			filters.Add(new AuthorizeAttribute { Roles = @"IGCV\V-AL, IGCV\Protokoll-Developer" });
+			filters.Add(new PermissiveAuthorizationAttribute { Roles = @"IGCV\V-AL, IGCV\Protokoll-Developer", Users = "Schilpjo, Reinhart" });
 		}
 	}
 }

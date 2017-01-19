@@ -253,6 +253,7 @@
     <Compile Include="Migrations\201612131635300_agenda_integration.Designer.cs">
       <DependentUpon>201612131635300_agenda_integration.cs</DependentUpon>
     </Compile>
+    <Compile Include="util\PermissiveAuthorizationAttribute.cs" />
     <Compile Include="ViewModels\SearchResultList.cs" />
     <Compile Include="Controllers\StatisticsController.cs" />
     <Compile Include="Controllers\ViewListsController.cs" />
