@@ -8,8 +8,12 @@ namespace IGCV_Protokoll
 		public static void RegisterGlobalFilters(GlobalFilterCollection filters)
 		{
 			filters.Add(new HandleErrorAttribute());
-			//filters.Add(new RequireHttpsAttribute());
-			filters.Add(new PermissiveAuthorizationAttribute { Roles = @"IGCV\V-AL, IGCV\Protokoll-Developer", Users = @"IGCV\Schilpjo, IGCV\Reinhart" });
-		}
-	}
+            //filters.Add(new RequireHttpsAttribute());
+#if DEBUG
+            filters.Add(new PermissiveAuthorizationAttribute { Roles = @"IGCV\V-AL, IGCV\Protokoll-Developer", Users = @"IGCV\hz, JULIUS-DESKTOP\Julius" });
+#else
+            filters.Add(new PermissiveAuthorizationAttribute { Roles = @"IGCV\V-AL, IGCV\Protokoll-Developer", Users = @"IGCV\Schilpjo, IGCV\Reinhart" });
+#endif
+        }
+    }
 }

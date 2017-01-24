@@ -169,6 +169,10 @@ namespace IGCV_Protokoll.Areas.Administration.Controllers
 
             if (string.IsNullOrEmpty(fullName))
                 return new User { ID = 0, ShortName = "xx", LongName = "Anonymous User" };
+#if DEBUG
+            if (fullName == @"JULIUS-DESKTOP\Julius")
+                return db.Users.Find(1);
+#endif
 
             using (var context = new PrincipalContext(ContextType.Domain, DomainName))
             using (UserPrincipal aduser = UserPrincipal.FindByIdentity(context, IdentityType.SamAccountName, fullName))
