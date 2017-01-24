@@ -28,7 +28,7 @@ namespace IGCV_Protokoll.Controllers
 		///    Diese Erweiterungen sind charakteristisch für MS-Office Dateien. Wird die Seite im Internet-Explorer genutzt, werden
 		///    diese Erweiterungen zum direkten Öffnen angeboten.
 		/// </summary>
-		private static readonly HashSet<string> OfficeExtensions = new HashSet<string>
+		private static readonly HashSet<string> OfficeExtensions = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
 		{
 			"doc",
 			"docm",
@@ -46,12 +46,16 @@ namespace IGCV_Protokoll.Controllers
 			"xltx"
 		};
 
-		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2211:NonConstantFieldsShouldNotBeVisible")] public static HashSet<string>
-			KnownExtensions = new HashSet<string>();
+		/// <summary>
+		/// Enthält die bekannten Dateitypen, denen ein Icon zugeordnet werden kann. Die Dateierweiterung ist der Schlüssel,
+		/// die genaue Dateiname des Icons ist der Schlüssel. (Nur relevant auf Dateisystemen, die case-sensitiv sind)
+		/// </summary>
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2211:NonConstantFieldsShouldNotBeVisible")]
+		public static Dictionary<string, string> KnownExtensions = new Dictionary<string, string>();
 
 		private static string Serverpath => ConfigurationManager.AppSettings["UploadPath"];
 
-	    private static string TemporaryServerpath => ConfigurationManager.AppSettings["TempPath"];
+		private static string TemporaryServerpath => ConfigurationManager.AppSettings["TempPath"];
 
 #if DEBUG
 		private readonly string _hostname = Dns.GetHostName();
@@ -59,7 +63,7 @@ namespace IGCV_Protokoll.Controllers
 		private readonly string _hostname = Dns.GetHostName() + ".igcv.fraunhofer.de";
 #endif
 
-        private bool isInternetExplorer
+		private bool isInternetExplorer
 		{
 			get
 			{
@@ -84,9 +88,8 @@ namespace IGCV_Protokoll.Controllers
 				documents = documents.Where(a => a.EmployeePresentationID == id);
 
 
-			KnownExtensions = new HashSet<string>(
-				from path in Directory.GetFiles(Server.MapPath("~/img/fileicons"), "*.png")
-				select Path.GetFileNameWithoutExtension(path));
+			KnownExtensions = (from path in Directory.GetFiles(Server.MapPath("~/img/fileicons"), "*.png")
+							   select Path.GetFileNameWithoutExtension(path)).ToDictionary(x => x, StringComparer.OrdinalIgnoreCase);
 
 			ViewBag.EntityID = id;
 			ViewBag.KnownExtensions = KnownExtensions;
@@ -310,7 +313,7 @@ namespace IGCV_Protokoll.Controllers
 			if (topic != null)
 				MarkAsUnread(topic);
 
-			return HTTPStatus(HttpStatusCode.Created, Url.Action("Details", "Attachments", new {Area = "", id}));
+			return HTTPStatus(HttpStatusCode.Created, Url.Action("Details", "Attachments", new { Area = "", id }));
 		}
 
 		/// <summary>
@@ -363,7 +366,7 @@ namespace IGCV_Protokoll.Controllers
 			var actionResult = CheckConstraints(id, out topic, out document);
 			if (actionResult != null)
 				return actionResult;
-			
+
 			if (!isInternetExplorer || !OfficeExtensions.Contains(document.LatestRevision.Extension))
 				return HTTPStatus(HttpStatusCode.BadRequest, "Dieser Vorgang ist nur mit MSIE und Office-Dokumenten zulässig.");
 			//---------------------------------------------------------------
@@ -415,14 +418,14 @@ namespace IGCV_Protokoll.Controllers
 				// The file is still in use
 				return HTTPStatus(HttpStatusCode.Conflict, "Dieser Vorgang kann nicht ausgeführt werden, da die Datei noch in Verwendung ist. Bitte schließen Sie die Datei und versuchen Sie es erneut.");
 			}
-			return RedirectToAction("Details", new {id});
+			return RedirectToAction("Details", new { id });
 		}
 
 		public static void ForceReleaseLock(int documentID)
 		{
 			using (var db = new DataContext())
 			{
-				var doc = db.Documents.Find(documentID); 
+				var doc = db.Documents.Find(documentID);
 				var cutoff = doc.LatestRevision.Created;
 				var unused = doc.Revisions.Where(r => r.Created > cutoff).ToArray();
 
@@ -434,7 +437,7 @@ namespace IGCV_Protokoll.Controllers
 
 				var unusedids = unused.Select(r => r.ID).ToArray();
 				db.Revisions.Where(r => unusedids.Contains(r.ID)).Delete();
-				
+
 				doc.LockTime = null;
 				doc.LockUserID = null;
 				db.SaveChanges();
@@ -496,7 +499,7 @@ namespace IGCV_Protokoll.Controllers
 			document.LockUserID = null;
 			db.SaveChanges();
 
-			return RedirectToAction("Details", new {id});
+			return RedirectToAction("Details", new { id });
 		}
 
 		[HttpPost]
@@ -620,7 +623,7 @@ namespace IGCV_Protokoll.Controllers
 			var document = db.Documents.Find(documentID);
 
 			var url = new UrlHelper(ControllerContext.RequestContext).Action("DownloadNewest", "Attachments",
-				new {id = document.GUID});
+				new { id = document.GUID });
 			return PartialView("_NameDisplay", Tuple.Create(new MvcHtmlString(url), document.DisplayName));
 		}
 
@@ -655,7 +658,7 @@ namespace IGCV_Protokoll.Controllers
 			db.SaveChanges();
 
 			var url = new UrlHelper(ControllerContext.RequestContext).Action("DownloadNewest", "Attachments",
-				new {id = document.GUID});
+				new { id = document.GUID });
 			return PartialView("_NameDisplay", Tuple.Create(new MvcHtmlString(url), document.DisplayName));
 		}
 	}

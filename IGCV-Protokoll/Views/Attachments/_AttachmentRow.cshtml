@@ -1,18 +1,14 @@
-﻿@using System.Data.Entity.Core.Common.EntitySql
-@using IGCV_Protokoll.util
+﻿@using IGCV_Protokoll.util
 @model IGCV_Protokoll.Models.Document
 
 @{
-	string iconname = Model.LatestRevision.Extension ?? "default";
-	if (!((HashSet<string>)ViewBag.KnownExtensions).Contains(iconname))
-	{
-		iconname = "default";
-	}
+    string iconname = Model.LatestRevision.Extension ?? "default";
+    iconname = ((Dictionary<string, string>)ViewBag.KnownExtensions).GetValueOrDefault(iconname, "default");
 
-	var fileurl = new MvcHtmlString(Url.Action("DownloadNewest", "Attachments", new {id = Model.GUID}));
+    var fileurl = new MvcHtmlString(Url.Action("DownloadNewest", "Attachments", new {id = Model.GUID}));
 
-	ViewBag.SeamlessEnabled = ViewBag.SeamlessEnabled && ((HashSet<string>)ViewBag.OfficeExtensions).Contains(Model.LatestRevision.Extension);
-	string trclass = null;
+    ViewBag.SeamlessEnabled = ViewBag.SeamlessEnabled && ((HashSet<string>)ViewBag.OfficeExtensions).Contains(Model.LatestRevision.Extension);
+    string trclass = null;
 }
 @if (Model.LockUserID == ViewBag.CurrentUser.ID) // locked by "me"
 {
