@@ -7,7 +7,7 @@ namespace IGCV_Protokoll.Models
 	{
 		public UserSettings()
 		{
-			ColorScheme = ColorScheme.iwb;
+			ColorScheme = ColorScheme.RMV;
 			ReportOccasions = SessionReportOccasions.Always;
 		}
 

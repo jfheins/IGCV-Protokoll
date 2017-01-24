@@ -50,7 +50,7 @@ namespace IGCV_Protokoll.Models
 			{
 				var names = LongName.Split(',');
 				if (names.Length < 2)
-					return "";
+					return LongName;
 
 				if (names[0].EndsWith(".RMV"))
 					names[0] = names[0].Substring(0, names[0].Length - 4);
