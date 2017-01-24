@@ -9,7 +9,7 @@ namespace IGCV_Protokoll
 		{
 			filters.Add(new HandleErrorAttribute());
 			//filters.Add(new RequireHttpsAttribute());
-			filters.Add(new PermissiveAuthorizationAttribute { Roles = @"IGCV\V-AL, IGCV\Protokoll-Developer", Users = "Schilpjo, Reinhart" });
+			filters.Add(new PermissiveAuthorizationAttribute { Roles = @"IGCV\V-AL, IGCV\Protokoll-Developer", Users = @"IGCV\Schilpjo, IGCV\Reinhart" });
 		}
 	}
 }
