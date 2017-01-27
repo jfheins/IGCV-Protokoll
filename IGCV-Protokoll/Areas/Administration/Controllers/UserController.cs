@@ -84,65 +84,52 @@ namespace IGCV_Protokoll.Areas.Administration.Controllers
 				SyncUsersByShortName(myusers, employees);
 
 				// Schließlich werden neue User in die Datenbank importiert.
-				var actionResult = ImportNewUsers(context, myusers);
-				if (actionResult != null)
-					return actionResult;
-
-				actionResult = ImportNewGroupMembers(context, myusers);
-				if (actionResult != null)
-					return actionResult;
+				try
+				{
+					foreach (var authorizedUser in EnumerateAuthorizedUsers(context))
+					{
+						var myUser = myusers.SingleOrDefault(u => u.Guid == authorizedUser.Guid);
+						if (myUser != null)
+							myUser.IsActive = true;
+						else
+							db.Users.Add(CreateUserFromADUser(authorizedUser));
+					}
+				}
+				catch (InvalidConfigurationException ex)
+				{
+					return HTTPStatus(HttpStatusCode.InternalServerError, ex.Message);
+				}
 			}
 			db.SaveChanges();
 
 			return new HttpStatusCodeResult(HttpStatusCode.NoContent);
 		}
 
-		private ActionResult ImportNewGroupMembers(PrincipalContext context, List<User> myusers)
-		{
-			foreach (var group in _authorizeGroups)
-			{
-				using (GroupPrincipal groupPrincipal = GroupPrincipal.FindByIdentity(context, IdentityType.SamAccountName, @group))
-				{
-					if (groupPrincipal == null)
-					{
-						return HTTPStatus(HttpStatusCode.InternalServerError, $"Die Gruppe \"{@group}\" wurde nicht gefunden.");
-					}
-
-					foreach (var adUser in groupPrincipal.GetMembers(true).OfType<UserPrincipal>())
-					{
-						User myUser = myusers.SingleOrDefault(u => u.Guid == adUser.Guid);
-						if (myUser == null)
-						{
-							myUser = CreateUserFromADUser(adUser);
-							db.Users.Add(myUser);
-						}
-						myUser.IsActive = true;
-					}
-				}
-			}
-			return null;
-		}
-
-		private ActionResult ImportNewUsers(PrincipalContext context, IEnumerable<User> myusers)
+		private IEnumerable<UserPrincipal> EnumerateAuthorizedUsers(PrincipalContext context)
 		{
 			foreach (var userName in _authorizeUsers)
 			{
 				using (UserPrincipal userPrincipal = UserPrincipal.FindByIdentity(context, IdentityType.SamAccountName, userName))
 				{
 					if (userPrincipal == null)
-					{
-						return HTTPStatus(HttpStatusCode.InternalServerError, $"Der Benutzer \"{userName}\" wurde nicht gefunden.");
-					}
-					User user = myusers.SingleOrDefault(u => u.Guid == userPrincipal.Guid);
-					if (user == null)
-					{
-						user = CreateUserFromADUser(userPrincipal);
-						db.Users.Add(user);
-					}
-					user.IsActive = true;
+						throw new InvalidConfigurationException($"Der Benutzer \"{userName}\" wurde nicht gefunden.");
+
+					yield return userPrincipal;
 				}
 			}
-			return null;
+			foreach (var group in _authorizeGroups)
+			{
+				using (GroupPrincipal groupPrincipal = GroupPrincipal.FindByIdentity(context, IdentityType.SamAccountName, @group))
+				{
+					if (groupPrincipal == null)
+						throw new InvalidConfigurationException($"Die Gruppe \"{@group}\" wurde nicht gefunden.");
+
+					foreach (var adUser in groupPrincipal.GetMembers(true).OfType<UserPrincipal>())
+					{
+						yield return adUser;
+					}
+				}
+			}
 		}
 
 		private static void SyncUsersByShortName(IEnumerable<User> myusers, Dictionary<Guid, UserPrincipal> employees)
@@ -276,5 +263,15 @@ namespace IGCV_Protokoll.Areas.Administration.Controllers
 			new UserMailer().SendWelcome(u);
 			return u;
 		}
+	}
+
+
+
+	[System.Serializable]
+	public class InvalidConfigurationException : Exception
+	{
+		public InvalidConfigurationException() { }
+		public InvalidConfigurationException(string message) : base(message) { }
+		public InvalidConfigurationException(string message, Exception inner) : base(message, inner) { }
 	}
 }
