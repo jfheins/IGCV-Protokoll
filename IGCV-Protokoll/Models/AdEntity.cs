@@ -21,6 +21,11 @@ namespace IGCV_Protokoll.Models
 
 		public int ID { get; set; }
 
+		public int? ParentID { get; set; }
+		public AdEntity Parent { get; set; }
+		[InverseProperty("Parent")]
+		public virtual ICollection<AdEntity> Children { get; set; }
+
 		[Required]
 		[Index("guid_index", IsUnique = true)]
 		public Guid Guid { get; set; }

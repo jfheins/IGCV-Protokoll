@@ -26,6 +26,7 @@ namespace IGCV_Protokoll.Areas.Administration.Controllers
 		// Benutzer dieser Gruppen werden automatisch hinzugefügt
 		private readonly string[] _authorizeGroups = { "V-AL", "Protokoll-Developer" };
 		private readonly string[] _authorizeUsers = { "Schilpjo", "Reinhart" };
+		private readonly string _rootGroup = "V-MA";
 
 		/// <summary>
 		///    Wird aufgerufen, bevor die Aktionsmethode aufgerufen wird.
@@ -36,6 +37,11 @@ namespace IGCV_Protokoll.Areas.Administration.Controllers
 			base.OnActionExecuting(filterContext);
 			ViewBag.AdminStyle = "active";
 			ViewBag.AUserStyle = "active";
+		}
+
+		protected static PrincipalContext CreateContext()
+		{
+			return new PrincipalContext(ContextType.Domain, DomainName);
 		}
 
 		// GET: Administration/User
@@ -67,7 +73,7 @@ namespace IGCV_Protokoll.Areas.Administration.Controllers
 			foreach (User user in myusers)
 				user.IsActive = user.Equals(GetCurrentUser());
 
-			using (var context = new PrincipalContext(ContextType.Domain, DomainName))
+			using (var context = CreateContext())
 			using (var userp = new UserPrincipal(context))
 			using (var searcher = new PrincipalSearcher(userp))
 			{
@@ -134,7 +140,7 @@ namespace IGCV_Protokoll.Areas.Administration.Controllers
 
 		private static void SyncUsersByShortName(IEnumerable<User> myusers, Dictionary<Guid, UserPrincipal> employees)
 		{
-			foreach (User user in myusers.Where(u => u.Guid == Guid.Empty))
+			foreach (var user in myusers.Where(u => u.Guid == Guid.Empty))
 			{
 				UserPrincipal adUser = employees.Values.SingleOrDefault(u => u.SamAccountName == user.ShortName);
 				if (adUser != null && adUser.Guid != null)
@@ -184,7 +190,7 @@ namespace IGCV_Protokoll.Areas.Administration.Controllers
 				return db.Users.Find(1);
 #endif
 
-			using (var context = new PrincipalContext(ContextType.Domain, DomainName))
+			using (var context = CreateContext())
 			using (UserPrincipal aduser = UserPrincipal.FindByIdentity(context, IdentityType.SamAccountName, fullName))
 			{
 				if (aduser == null || aduser.Guid == null)
@@ -228,7 +234,7 @@ namespace IGCV_Protokoll.Areas.Administration.Controllers
 		/// <returns>Einen neuen Benutzer, dessen Daten anhand des Kürzels aus dem AD gezogen wurden.</returns>
 		public static User CreateUserFromShortName(string samname)
 		{
-			using (var context = new PrincipalContext(ContextType.Domain, DomainName))
+			using (var context = CreateContext())
 			using (UserPrincipal aduser = UserPrincipal.FindByIdentity(context, IdentityType.SamAccountName, samname))
 			{
 				if (aduser == null || aduser.Guid == null)
@@ -262,6 +268,71 @@ namespace IGCV_Protokoll.Areas.Administration.Controllers
 			};
 			new UserMailer().SendWelcome(u);
 			return u;
+		}
+
+		public ActionResult PullADEntities()
+		{
+			// Value gibt an, ob eine Synchronisierung stattfand
+			var existingEntities = db.AdEntities.ToDictionary(x => x.Guid);
+			var touchedEntities = new HashSet<Guid>();
+
+			using (var context = CreateContext())
+			{
+				using (var root = GroupPrincipal.FindByIdentity(context, IdentityType.Name, _rootGroup))
+				{
+					if (root?.Guid == null)
+						throw new InvalidConfigurationException($"Zu dem Wurzelelement {_rootGroup} wurde keine GUID gefunden!");
+
+					touchedEntities.Add(root.Guid.Value);
+					SyncEntity(root, null, existingEntities, touchedEntities);
+				}
+			}
+			// Neue Datensätze speichern
+			db.SaveChanges();
+
+			var forRemoval = db.AdEntities.Where(dbEntry => !touchedEntities.Contains(dbEntry.Guid)).ToArray();
+			db.AdEntities.RemoveRange(forRemoval);
+			db.SaveChanges();
+
+			return Content(touchedEntities.Count.ToString());
+		}
+
+		/// <summary>
+		/// Zieht den angegebenen AD Eintrag in die Datenbank. Falls Daten aktualisiert wurden, wird das AdEntity Objekt zurückgegeben.
+		/// </summary>
+		private void SyncEntity(Principal source, AdEntity parent, Dictionary<Guid, AdEntity> map, HashSet<Guid> touched)
+		{
+			if (source?.Guid == null || source.Guid == Guid.Empty)
+				return;
+
+			AdEntity newEntity;
+			if (map.TryGetValue(source.Guid.Value, out newEntity))
+			{
+				// Update eine vorhandenen Datensatzes
+				newEntity.Parent = parent;
+				newEntity.Name = source.Name;
+				newEntity.SamAccountName = source.SamAccountName;
+			}
+			else
+			{
+				// Neuer Datensatz
+				newEntity = db.AdEntities.Add(new AdEntity
+				{
+					Parent = parent,
+					Name = source.Name,
+					SamAccountName = source.SamAccountName,
+					Guid = source.Guid.Value
+			});
+			}
+			touched.Add(newEntity.Guid);
+
+			if (!(source is GroupPrincipal))
+				return;
+
+			foreach (var member in ((GroupPrincipal)source).GetMembers(false))
+			{
+				SyncEntity(member, newEntity, map, touched);
+			}
 		}
 	}
 

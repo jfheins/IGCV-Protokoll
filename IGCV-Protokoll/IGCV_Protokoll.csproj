@@ -258,6 +258,10 @@
     <Compile Include="Migrations\201701271747121_started_ACL.Designer.cs">
       <DependentUpon>201701271747121_started_ACL.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201701272145403_adentity_tree_structure.cs" />
+    <Compile Include="Migrations\201701272145403_adentity_tree_structure.Designer.cs">
+      <DependentUpon>201701272145403_adentity_tree_structure.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\ACL.cs" />
     <Compile Include="Models\AclItem.cs" />
     <Compile Include="Models\AdEntity.cs" />
@@ -1024,6 +1028,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201701271747121_started_ACL.resx">
       <DependentUpon>201701271747121_started_ACL.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201701272145403_adentity_tree_structure.resx">
+      <DependentUpon>201701272145403_adentity_tree_structure.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
