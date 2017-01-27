@@ -232,6 +232,15 @@ else
     </div>
 }
 
+<div class="panel panel-primary">
+	<div class="panel-heading">
+		<h3 class="panel-title">@Html.DisplayNameFor(model => model.AclID)</h3>
+	</div>
+	<div class="panel-body" id="accessControl_@Model.ID">
+		@Html.Action("_DisplayAuthorized", "Acl", new { obj = Model })
+	</div>
+</div>
+
 <div class="panel panel-primary comment-panel">
     <div class="panel-heading">
         <h3 class="panel-title">@Html.DisplayNameFor(model => model.Comments)</h3>

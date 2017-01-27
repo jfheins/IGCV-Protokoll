@@ -209,6 +209,7 @@
     <Compile Include="Areas\Session\Models\Lists\ResearchProposal.cs" />
     <Compile Include="Areas\Session\SessionAreaRegistration.cs" />
     <Compile Include="Areas\Session\ViewModels\ReportViewModel.cs" />
+    <Compile Include="Controllers\AclController.cs" />
     <Compile Include="Controllers\AssignmentsController.cs" />
     <Compile Include="Controllers\AttachmentsController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
@@ -253,7 +254,16 @@
     <Compile Include="Migrations\201612131635300_agenda_integration.Designer.cs">
       <DependentUpon>201612131635300_agenda_integration.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201701271747121_started_ACL.cs" />
+    <Compile Include="Migrations\201701271747121_started_ACL.Designer.cs">
+      <DependentUpon>201701271747121_started_ACL.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ACL.cs" />
+    <Compile Include="Models\AclItem.cs" />
+    <Compile Include="Models\AdEntity.cs" />
+    <Compile Include="util\IAccessible.cs" />
     <Compile Include="util\PermissiveAuthorizationAttribute.cs" />
+    <Compile Include="ViewModels\AccessControlViewModel.cs" />
     <Compile Include="ViewModels\SearchResultList.cs" />
     <Compile Include="Controllers\StatisticsController.cs" />
     <Compile Include="Controllers\ViewListsController.cs" />
@@ -850,6 +860,7 @@
     <Content Include="Views\Shared\DisplayTemplates\Dictionary_Tag_bool.cshtml" />
     <Content Include="Views\Statistics\_Table.cshtml" />
     <Content Include="Views\Attachments\_DocumentCreateDropZone.cshtml" />
+    <Content Include="Views\Acl\_DisplayAuthorized.cshtml" />
     <None Include="Web.Integration.config" />
     <None Include="Web.Production.config" />
     <None Include="Web.Testing.config" />
@@ -1010,6 +1021,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201612131635300_agenda_integration.resx">
       <DependentUpon>201612131635300_agenda_integration.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201701271747121_started_ACL.resx">
+      <DependentUpon>201701271747121_started_ACL.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

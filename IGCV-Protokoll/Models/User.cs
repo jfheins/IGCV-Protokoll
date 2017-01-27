@@ -16,6 +16,7 @@ namespace IGCV_Protokoll.Models
 			UnreadTopics = new List<UnreadState>();
 			IsActive = false;
 			Settings = new UserSettings();
+			AdGroups = new List<AdEntityUser>();
 // ReSharper restore DoNotCallOverridableMethodsInConstructor
 		}
 
@@ -75,6 +76,10 @@ namespace IGCV_Protokoll.Models
 		public virtual ICollection<PushNotification> PushNotifications { get; set; }
 
 		public virtual ICollection<UnreadState> UnreadTopics { get; set; }
+
+
+		[InverseProperty("User")]
+		public virtual ICollection<AdEntityUser> AdGroups { get; set; }
 
 		#region Equals() etc.
 

@@ -1,0 +1,8 @@
+﻿@model IGCV_Protokoll.ViewModels.AccessControlViewModel
+
+<ul>
+	@foreach (var user in Model.AuthorizedUsers)
+	{
+		<li>@user.ShortName</li>
+	}
+</ul>

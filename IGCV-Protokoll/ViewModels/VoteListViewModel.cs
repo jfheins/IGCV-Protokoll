@@ -27,7 +27,7 @@ namespace IGCV_Protokoll.ViewModels
 		None,
 
 		/// <summary>
-		///    Es wird nur ei Link zur Abgabe der eigenen Stimme generiert
+		///    Es wird nur ein Link zur Abgabe der eigenen Stimme generiert
 		/// </summary>
 		OnlyMine,
 

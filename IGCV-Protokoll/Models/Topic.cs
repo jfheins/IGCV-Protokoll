@@ -5,11 +5,12 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using IGCV_Protokoll.Areas.Administration.Models;
 using IGCV_Protokoll.Areas.Session.Models;
+using IGCV_Protokoll.util;
 using IGCV_Protokoll.ViewModels;
 
 namespace IGCV_Protokoll.Models
 {
-	public class Topic
+	public class Topic : IAccessible
 	{
 		public Topic()
 		{
@@ -178,6 +179,11 @@ namespace IGCV_Protokoll.Models
 			Time = updates.Time;
 			ValidFrom = DateTime.Now;
 		}
+
+		[Display(Name = "Rechteverwaltung")]
+		public int? AclID { get; set; }
+
+		public ACL Acl { get; set; }
 	}
 
 	internal class TopicByIdComparer : IEqualityComparer<Topic>

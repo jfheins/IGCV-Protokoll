@@ -19,12 +19,16 @@ namespace IGCV_Protokoll.DataLayer
 		{
 			//Database.Log = s => System.Diagnostics.Debug.WriteLine(s);
 		}
-        
-        public DbSet<ActiveAgendaItem> ActiveAgendaItems { get; set; }
-        public DbSet<ActiveSession> ActiveSessions { get; set; }
-        public DbSet<AgendaItem> AgendaItems { get; set; }
-        public DbSet<AgendaTemplate> AgendaTemplates { get; set; }
-        public DbSet<Assignment> Assignments { get; set; }
+
+		public DbSet<ACL> ACLs { get; set; }
+		public DbSet<ACLItem> ACLItems { get; set; }
+		public DbSet<ActiveAgendaItem> ActiveAgendaItems { get; set; }
+		public DbSet<ActiveSession> ActiveSessions { get; set; }
+		public DbSet<AdEntity> AdEntities { get; set; }
+		public DbSet<AdEntityUser> AdEntityUsers { get; set; }
+		public DbSet<AgendaItem> AgendaItems { get; set; }
+		public DbSet<AgendaTemplate> AgendaTemplates { get; set; }
+		public DbSet<Assignment> Assignments { get; set; }
 		public DbSet<Comment> Comments { get; set; }
 		public DbSet<Decision> Decisions { get; set; }
 		public DbSet<Document> Documents { get; set; }
@@ -112,5 +116,20 @@ namespace IGCV_Protokoll.DataLayer
 			Topics.Remove(topic);
 			SaveChanges();
 		}
-    }
+
+		public IQueryable<ACLItem> GetACL(IAccessible obj)
+		{
+			return ACLItems.Where(item => item.ParentId == obj.AclID);
+		}
+
+		public bool HasAccess(User u, IAccessible obj)
+		{
+			return obj.AclID == null || (from aclitem in ACLItems
+										 join adEntity in AdEntities on aclitem.AdEntityID equals adEntity.ID
+										 join adu in AdEntityUsers on adEntity.ID equals adu.AdEntityID
+										 where adu.UserID == u.ID
+										 where aclitem.ParentId == obj.AclID.Value
+										 select aclitem.ParentId).Any();
+		}
+	}
 }
