@@ -665,7 +665,9 @@ namespace IGCV_Protokoll.Controllers
 		[HttpPost]
 		public ActionResult _SaveAclFor(int topicID, string aclTree)
 		{
-			var topic = db.Topics.Find(topicID);
+			var topic = db.Topics
+						.Include(t => t.Acl)
+						.SingleOrDefault(t => t.ID == topicID); ;
 
 			if (topic == null)
 				return HttpNotFound();
@@ -674,7 +676,7 @@ namespace IGCV_Protokoll.Controllers
 
 
 			var newIDs = new HashSet<int>(JsonConvert.DeserializeObject<List<SelectedAdEntity>>(aclTree).Where(x => x.selected).Select(x => x.id));
-			
+
 			if (topic.Acl == null)
 			{
 				// Neue ACL erstellen
@@ -682,22 +684,24 @@ namespace IGCV_Protokoll.Controllers
 			}
 			else
 			{
-				var oldEntities1 = topic.Acl.Items.Select(item => item.AdEntity).ToList();
 				var oldEntities = db.GetACL(topic).Select(item => item.AdEntity).ToList();
 				// Vorhandene ACL bearbeiten
 				var oldIDs = new HashSet<int>(oldEntities.Select(x => x.ID));
 
 				// TODO: Performance
 				var toRemove = oldIDs.Except(newIDs).ToArray();
-				db.ACLItems.Where(i => i.ParentId == topic.AclID && toRemove.Contains(i.AdEntityID)).Delete();
+				if (toRemove.Length > 0)
+					db.ACLItems.Where(i => i.ParentId == topic.AclID && toRemove.Contains(i.AdEntityID)).Delete();
+
+				newIDs.ExceptWith(oldIDs);
 			}
 
 			foreach (var newID in newIDs)
-				topic.Acl.Items.Add(new ACLItem { AdEntityID = newID});
+				topic.Acl.Items.Add(new ACLItem { AdEntityID = newID });
 
 			db.SaveChangesSwallowUnique();
 
-			return new AclController()._DisplayAuthorized(topic);
+			return PartialView("_AclDisplay", topic);
 		}
 	}
 }

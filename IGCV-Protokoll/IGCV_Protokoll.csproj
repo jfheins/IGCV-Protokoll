@@ -890,6 +890,7 @@
     <Content Include="Views\Attachments\_DocumentCreateDropZone.cshtml" />
     <Content Include="Views\Acl\_DisplayAuthorized.cshtml" />
     <Content Include="Views\Acl\_AclEditorFor.cshtml" />
+    <Content Include="Views\Topics\_AclDisplay.cshtml" />
     <None Include="Web.Integration.config" />
     <None Include="Web.Production.config" />
     <None Include="Web.Testing.config" />

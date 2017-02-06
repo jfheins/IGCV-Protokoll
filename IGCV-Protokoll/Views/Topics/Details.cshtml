@@ -156,17 +156,14 @@
 
 <div class="row">
 	<div class="@descClass">
-		@{
-			Html.RenderPartial("_Description", Model);
-		}
+		@{ Html.RenderPartial("_Description", Model); }
 	</div>
 	@if (!hasDecision)
 	{
 		<div class="col-md-6">
-			@{    Html.RenderPartial("_Proposal", Model);
-			}
+			@{ Html.RenderPartial("_Proposal", Model); }
 		</div>
-				}
+	}
 </div>
 
 @if (hasDecision)
@@ -237,69 +234,7 @@ else
 		<h3 class="panel-title">@Html.DisplayNameFor(model => model.AclID)</h3>
 	</div>
 	<div class="panel-body" id="accessControl_@Model.ID">
-		<div class="row">
-			<div class="col-sm-2">Aktuell berechtigt:</div>
-			<div class="col-sm-10">
-				@Html.Action("_DisplayAuthorized", "Acl", new { obj = Model })
-			</div>
-		</div>
-		<div class="row">
-			@{
-				var aclElementId = $"topicAcl_{Model.ID}";
-			}
-			<div class="col-sm-2">
-				Bearbeiten:
-				<button class="btn btn-primary" onclick="submitEditedAcl();">Speichern</button>
-				@using (Html.Delayed(null, "Topic-ACL-Editor"))
-				{
-					<script type="text/javascript">
-						function submitEditedAcl() {
-							var data = $('#@aclElementId').jstree(true).get_json('#', { flat: true });
-							var aclJson = JSON.stringify(data, AclPropertyFilter);
-
-							$.ajax({
-								url: '@Url.Action("_SaveAclFor", "Topics")',
-								type: 'POST',
-								data: {
-									topicID: @Model.ID,
-									aclTree: aclJson,
-									"X-Requested-With": "XMLHttpRequest"
-								},
-								success: function(responseData) {
-									$('#resubmissionCell_' + topicId + ' .glyphicon-remove').hide();
-									$('#resubmissionCell_' + topicId + ' .glyphicon-ok').finish().slideDown(400).fadeOut(1000);
-									$('#resubmissionCell_' + topicId + ' .datestr').text(localestr);
-								},
-								error: function(xhr, errorType) {
-									$('#responseMessage').html(xhr.responseText);
-								}
-							}); //end ajax
-						}
-
-						function AclPropertyFilter(key, value) {
-							// Filtering out properties
-							if (key === '') { // Wurzelelement
-								return value;
-							}
-							else if (!isNaN(key)) { // Oberste Ebene
-								value["selected"] = value["state"]["selected"];
-								return value;
-							}
-							else if (key === 'id' || key === 'selected') {
-								return value;
-							}
-							else
-								return undefined;
-						}
-					</script>
-				}
-			</div>
-			<div class="col-sm-10">
-				@Html.Action("_AclEditorFor", "Acl", new { obj = Model, htmlId = @aclElementId })
-			</div>
-		</div>
-		<div id="responseMessage">
-		</div>
+		@{ Html.RenderPartial("_AclDisplay", Model); }
 	</div>
 </div>
 
@@ -327,17 +262,17 @@ else
 		<h3 class="panel-title">Aufgaben</h3>
 	</div>
 	@if (Model.Assignments.Any())
-	{
-		Html.RenderPartial("~/Views/Assignments/_DetailedTable.cshtml", Model.Assignments.OrderBy(a => a.Type).ThenByDescending(a => a.DueDate));
-	}
-	else
-	{
+			{
+				Html.RenderPartial("~/Views/Assignments/_DetailedTable.cshtml", Model.Assignments.OrderBy(a => a.Type).ThenByDescending(a => a.DueDate));
+			}
+			else
+			{
 		<div class="panel-body">
 			Diese Diskussion enthält keine Aufgaben.
 		</div>
-	}
+			}
 	@if (!Model.IsReadOnly)
-	{
+			{
 		<div class="panel-footer">
 			@if (Model.IsLocked)
 			{
@@ -348,7 +283,7 @@ else
 				@Html.ActionLink("Neue Aufgabe erstellen", "Create", "Assignments", new { topicID = Model.ID }, null)
 			}
 		</div>
-	}
+			}
 </div>
 
 

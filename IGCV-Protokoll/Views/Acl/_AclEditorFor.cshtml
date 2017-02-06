@@ -21,17 +21,18 @@
 @using (Html.Delayed(null, "jstree"))
 {
 	<script src="~/Scripts/jstree.js"></script>
-	<script type="text/javascript">
-		$(function() {
-			$('#@Model.HtmlName').jstree({
-				'core': {
-					'data': @Html.Raw(jsonTree),
-					'themes': { "icons": false, "responsive": false },
-					"expand_selected_onload": false,
-					"dblclick_toggle": false
-				},
-				'plugins' : [ "checkbox" ]
-			});
-		});
-	</script>
 }
+
+<script type="text/javascript">
+	$(function() {
+		$('#@Model.HtmlName').jstree({
+			'core': {
+				'data': @Html.Raw(jsonTree),
+				'themes': { "icons": false, "responsive": false },
+				"expand_selected_onload": false,
+				"dblclick_toggle": false
+			},
+			'plugins' : [ "checkbox" ]
+		});
+	});
+</script>

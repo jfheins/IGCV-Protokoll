@@ -363,9 +363,8 @@ namespace IGCV_Protokoll.Areas.Administration.Controllers
 					var oldMemberships = user.AdGroups.Select(x => x.AdEntity).ToArray();
 					var toRemove = oldMemberships.Except(newMemberships).Select(x => x.ID).ToArray();
 					if (toRemove.Length > 0)
-					{
 						db.AdEntityUsers.Where(x => x.UserID == user.ID && toRemove.Contains(x.AdEntityID)).Delete();
-					}
+					
 					var toAdd = newMemberships.Except(oldMemberships);
 					db.AdEntityUsers.AddRange(toAdd.Select(x => new AdEntityUser {AdEntity = x, User = user}));
 				}
