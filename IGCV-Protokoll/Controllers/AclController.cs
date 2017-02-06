@@ -24,7 +24,7 @@ namespace IGCV_Protokoll.Controllers
 				authorizedUsers = db.GetACL(obj)
 					.Select(item => item.AdEntity)
 					.SelectMany(ade => ade.Users)
-					.Select(adu => adu.User).OrderBy(u => u.ShortName).ToList();
+					.Select(adu => adu.User).Distinct().OrderBy(u => u.ShortName).ToList();
 			}
 
 			return PartialView(new AccessControlDisplayViewModel

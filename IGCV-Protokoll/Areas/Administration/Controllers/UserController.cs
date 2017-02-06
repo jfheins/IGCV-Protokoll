@@ -298,6 +298,7 @@ namespace IGCV_Protokoll.Areas.Administration.Controllers
 			// Zuordnungen User-Entity synchronisieren
 			var rootEntity = db.AdEntities.Single(e => e.ParentID == null);
 			SyncMembership(rootEntity, new Stack<AdEntity>());
+			db.SaveChanges();
 
 			return Content(touchedEntities.Count.ToString());
 		}
@@ -361,7 +362,10 @@ namespace IGCV_Protokoll.Areas.Administration.Controllers
 					var newMemberships = parentStack.ToArray();
 					var oldMemberships = user.AdGroups.Select(x => x.AdEntity).ToArray();
 					var toRemove = oldMemberships.Except(newMemberships).Select(x => x.ID).ToArray();
-					db.AdEntityUsers.Where(x => x.UserID == user.ID && toRemove.Contains(x.AdEntityID)).Delete();
+					if (toRemove.Length > 0)
+					{
+						db.AdEntityUsers.Where(x => x.UserID == user.ID && toRemove.Contains(x.AdEntityID)).Delete();
+					}
 					var toAdd = newMemberships.Except(oldMemberships);
 					db.AdEntityUsers.AddRange(toAdd.Select(x => new AdEntityUser {AdEntity = x, User = user}));
 				}
