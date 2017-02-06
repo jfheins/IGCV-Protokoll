@@ -117,12 +117,12 @@ namespace IGCV_Protokoll.DataLayer
 			SaveChanges();
 		}
 
-		public IQueryable<ACLItem> GetACL(IAccessible obj)
+		public IQueryable<ACLItem> GetACL([NotNull] IAccessible obj)
 		{
-			return ACLItems.Where(item => item.ParentId == obj.AclID);
+			return obj.AclID == null ? null : ACLItems.Where(item => item.ParentId == obj.AclID);
 		}
 
-		public bool HasAccess(User u, IAccessible obj)
+		public bool HasAccess(User u, [NotNull] IAccessible obj)
 		{
 			return obj.AclID == null || (from aclitem in ACLItems
 										 join adEntity in AdEntities on aclitem.AdEntityID equals adEntity.ID

@@ -308,7 +308,7 @@ namespace IGCV_Protokoll.Areas.Administration.Controllers
 			AdEntity newEntity;
 			if (map.TryGetValue(source.Guid.Value, out newEntity))
 			{
-				// Update eine vorhandenen Datensatzes
+				// Update eines vorhandenen Datensatzes
 				newEntity.Parent = parent;
 				newEntity.Name = source.Name;
 				newEntity.SamAccountName = source.SamAccountName;

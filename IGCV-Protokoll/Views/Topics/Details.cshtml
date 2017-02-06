@@ -5,231 +5,231 @@
 @model IGCV_Protokoll.Models.Topic
 
 @{
-    ViewBag.Title = "Details (" + Model.Title + ")";
-    IDictionary<Tag, bool> tagDict = ViewBag.TagDict;
-    var selectList = tagDict.Select(kvp =>
-        new SelectListItem
-        {
-            Text = kvp.Key.Name,
-            Value = kvp.Key.ID.ToString(CultureInfo.InvariantCulture),
-            Selected = kvp.Value
-        });
+	ViewBag.Title = "Details (" + Model.Title + ")";
+	IDictionary<Tag, bool> tagDict = ViewBag.TagDict;
+	var selectList = tagDict.Select(kvp =>
+		new SelectListItem
+		{
+			Text = kvp.Key.Name,
+			Value = kvp.Key.ID.ToString(CultureInfo.InvariantCulture),
+			Selected = kvp.Value
+		});
 }
 
 
 <h2>
-    @ViewBag.Title
-    <span id="taglist">
-        @Html.DisplayFor(model => tagDict, "Dictionary_Tag_bool")
-    </span>
+	@ViewBag.Title
+	<span id="taglist">
+		@Html.DisplayFor(model => tagDict, "Dictionary_Tag_bool")
+	</span>
 </h2>
 @Html.ActionLink("Zurück zum Index", "Index")
 <hr />
 
 <div style="margin-bottom: 20px;" class="row">
-    <div class="col-xs-8">
-        <b>Tags: </b>
-        @Html.ListBox("SelectedTags", selectList, new { @class = "multiselect" })
-        <span id="successIndicator" class="text-success glyphicon glyphicon-ok" style="display: none;"></span>
-        <script type="text/javascript">
-            $(document).ready(function () {
-                $('#SelectedTags.multiselect').multiselect({
-                    nonSelectedText: 'Keine Tags ausgewählt',
-                    onChange: function (element, checked) {
-                        var tagId = element.attr("value");
-                        $('#taglist .label[data-tagid=' + tagId + ']').toggle(checked);
-                        var targetUrl = checked ?
-                            "@Url.Action("AddTag", "Topics", new {id = Model.ID})?tagid=" :
-                            "@Url.Action("RemoveTag", "Topics", new {id = Model.ID})?tagid=";
+	<div class="col-xs-8">
+		<b>Tags: </b>
+		@Html.ListBox("SelectedTags", selectList, new { @class = "multiselect" })
+		<span id="successIndicator" class="text-success glyphicon glyphicon-ok" style="display: none;"></span>
+		<script type="text/javascript">
+			$(document).ready(function () {
+				$('#SelectedTags.multiselect').multiselect({
+					nonSelectedText: 'Keine Tags ausgewählt',
+					onChange: function (element, checked) {
+						var tagId = element.attr("value");
+						$('#taglist .label[data-tagid=' + tagId + ']').toggle(checked);
+						var targetUrl = checked ?
+							"@Url.Action("AddTag", "Topics", new {id = Model.ID})?tagid=" :
+							"@Url.Action("RemoveTag", "Topics", new {id = Model.ID})?tagid=";
 
-                        $.ajax({
-                            url: targetUrl + tagId,
-                            type: 'POST',
-                            success: function (result) {
-                                $('#successIndicator').finish().slideDown(400).fadeOut(1000);
-                            }
-                        }); //end ajax
-                    }
-                });
-            });
-        </script>
-    </div>
-    <div class="col-xs-4 text-right">
-        @{
-            var mailSubject = Uri.EscapeDataString(Model.Title.Shorten(70));
-            var mailBody = Uri.EscapeDataString(ViewBag.Host + Url.Action("Details", "Topics", new { id = Model.ID, Area = "" }));
-        }
-        <a href="mailto:?subject=@mailSubject&body=@mailBody" class="btn btn-primary"><i class="glyphicon glyphicon-envelope"></i>&nbsp;&nbsp;Weiterleiten</a>
-    </div>
+						$.ajax({
+							url: targetUrl + tagId,
+							type: 'POST',
+							success: function (result) {
+								$('#successIndicator').finish().slideDown(400).fadeOut(1000);
+							}
+						}); //end ajax
+					}
+				});
+			});
+		</script>
+	</div>
+	<div class="col-xs-4 text-right">
+		@{
+			var mailSubject = Uri.EscapeDataString(Model.Title.Shorten(70));
+			var mailBody = Uri.EscapeDataString(ViewBag.Host + Url.Action("Details", "Topics", new { id = Model.ID, Area = "" }));
+		}
+		<a href="mailto:?subject=@mailSubject&body=@mailBody" class="btn btn-primary"><i class="glyphicon glyphicon-envelope"></i>&nbsp;&nbsp;Weiterleiten</a>
+	</div>
 </div>
 
 <div class="row">
-    <div class="col-md-12">
-        <div class="panel panel-primary">
-            <div class="panel-heading">
-                <div class="panel-title-right">
-                    <p>
-                        @if (Model.IsReadOnly)
-                        {
-                            <i class="glyphicon glyphicon-lock"></i>
-                            @:Schreibgeschützt
+	<div class="col-md-12">
+		<div class="panel panel-primary">
+			<div class="panel-heading">
+				<div class="panel-title-right">
+					<p>
+						@if (Model.IsReadOnly)
+						{
+							<i class="glyphicon glyphicon-lock"></i>
+							@:Schreibgeschützt
 						}
-                        else if (Model.IsLocked)
-                        {
-                            <i class="glyphicon glyphicon-lock"></i>
-                            @:Gesperrt
+						else if (Model.IsLocked)
+						{
+							<i class="glyphicon glyphicon-lock"></i>
+							@:Gesperrt
 						}
-                        else if (ViewBag.IsEditable)
-                        {
-                            <a href="@Url.Action("Edit", new {id = Model.ID})"><i class="glyphicon glyphicon-edit"></i> Bearbeiten</a>
-                        }
-                    </p>
-                </div>
-                <h3 class="panel-title">Stammdaten</h3>
-            </div>
-            <div class="panel-body">
-                <b>@Html.DisplayNameFor(model => model.Title):</b>
-                <p>@Html.DisplayFor(model => model.Title)</p>
+						else if (ViewBag.IsEditable)
+						{
+							<a href="@Url.Action("Edit", new {id = Model.ID})"><i class="glyphicon glyphicon-edit"></i> Bearbeiten</a>
+						}
+					</p>
+				</div>
+				<h3 class="panel-title">Stammdaten</h3>
+			</div>
+			<div class="panel-body">
+				<b>@Html.DisplayNameFor(model => model.Title):</b>
+				<p>@Html.DisplayFor(model => model.Title)</p>
 
-                <div class="row">
-                    <div class="col-xs-6 col-sm-4">
-                        <dl class="dl-horizontal">
-                            <dt>@Html.DisplayNameFor(model => model.SessionTypeID)</dt>
-                            <dd>@Html.DisplayFor(model => model.SessionType.Name)</dd>
+				<div class="row">
+					<div class="col-xs-6 col-sm-4">
+						<dl class="dl-horizontal">
+							<dt>@Html.DisplayNameFor(model => model.SessionTypeID)</dt>
+							<dd>@Html.DisplayFor(model => model.SessionType.Name)</dd>
 
-                            @if (Model.TargetSessionTypeID != null)
-                            {
-                                <dt>@Html.DisplayNameFor(model => model.TargetSessionTypeID)</dt>
-                                <dd>@Html.DisplayFor(model => model.TargetSessionType.Name)</dd>
-                            }
+							@if (Model.TargetSessionTypeID != null)
+							{
+								<dt>@Html.DisplayNameFor(model => model.TargetSessionTypeID)</dt>
+								<dd>@Html.DisplayFor(model => model.TargetSessionType.Name)</dd>
+							}
 
-                            @if (Model.ResubmissionDate != null)
-                            {
-                                <dt>@Html.DisplayNameFor(model => model.ResubmissionDate)</dt>
-                                <dd>@Html.DisplayFor(model => model.ResubmissionDate)</dd>
-                            }
+							@if (Model.ResubmissionDate != null)
+							{
+								<dt>@Html.DisplayNameFor(model => model.ResubmissionDate)</dt>
+								<dd>@Html.DisplayFor(model => model.ResubmissionDate)</dd>
+							}
 
-                            <dt>@Html.DisplayNameFor(model => model.Time)</dt>
-                            <dd>@Html.DisplayFor(model => model.Time)</dd>
+							<dt>@Html.DisplayNameFor(model => model.Time)</dt>
+							<dd>@Html.DisplayFor(model => model.Time)</dd>
 
-                            <dt>@Html.DisplayNameFor(model => model.OwnerID)</dt>
-                            <dd>@Html.DisplayFor(model => model.Owner.ShortName)</dd>
+							<dt>@Html.DisplayNameFor(model => model.OwnerID)</dt>
+							<dd>@Html.DisplayFor(model => model.Owner.ShortName)</dd>
 
-                            <dt>@Html.DisplayNameFor(model => model.Priority)</dt>
-                            <dd>@Model.Priority.DisplayName()</dd>
-                        </dl>
-                    </div>
-                    <div class="col-xs-6">
-                        <dl class="dl-horizontal">
-                            <dt>@Html.DisplayNameFor(model => model.ID)</dt>
-                            <dd>@Html.DisplayFor(model => model.ID)</dd>
+							<dt>@Html.DisplayNameFor(model => model.Priority)</dt>
+							<dd>@Model.Priority.DisplayName()</dd>
+						</dl>
+					</div>
+					<div class="col-xs-6">
+						<dl class="dl-horizontal">
+							<dt>@Html.DisplayNameFor(model => model.ID)</dt>
+							<dd>@Html.DisplayFor(model => model.ID)</dd>
 
 
-                            <dt>@Html.DisplayNameFor(model => model.Creator)</dt>
-                            <dd>@Html.DisplayFor(model => model.Creator.LongName)</dd>
+							<dt>@Html.DisplayNameFor(model => model.Creator)</dt>
+							<dd>@Html.DisplayFor(model => model.Creator.LongName)</dd>
 
-                            <dt>@Html.DisplayNameFor(model => model.Created)</dt>
-                            <dd>@Html.DisplayFor(model => model.Created)</dd>
-                            @if (ViewBag.TopicHistoryCount > 0)
-                            {
-                                <dt>@Html.DisplayNameFor(model => model.ValidFrom)</dt>
-                                <dd>
-                                    @Html.DisplayFor(model => model.ValidFrom) (Insgesamt @ViewBag.TopicHistoryCount Mal geändert)
-                                    <br />
-                                    <a href="@Url.Action("ViewHistory", "Topics", new {id = Model.ID})">
-                                        Versionsverlauf anzeigen
-                                    </a>
-                                </dd>
-                            }
-                        </dl>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+							<dt>@Html.DisplayNameFor(model => model.Created)</dt>
+							<dd>@Html.DisplayFor(model => model.Created)</dd>
+							@if (ViewBag.TopicHistoryCount > 0)
+							{
+								<dt>@Html.DisplayNameFor(model => model.ValidFrom)</dt>
+								<dd>
+									@Html.DisplayFor(model => model.ValidFrom) (Insgesamt @ViewBag.TopicHistoryCount Mal geändert)
+									<br />
+									<a href="@Url.Action("ViewHistory", "Topics", new {id = Model.ID})">
+										Versionsverlauf anzeigen
+									</a>
+								</dd>
+							}
+						</dl>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
 
 @{
-    bool hasDecision = Model.Decision != null;
-    string descClass = hasDecision ? "col-md-12" : "col-md-6";
+	bool hasDecision = Model.Decision != null;
+	string descClass = hasDecision ? "col-md-12" : "col-md-6";
 }
 
 <div class="row">
-    <div class="@descClass">
-        @{
-            Html.RenderPartial("_Description", Model);
-        }
-    </div>
-    @if (!hasDecision)
-    {
-        <div class="col-md-6">
-            @{    Html.RenderPartial("_Proposal", Model);
-            }
-        </div>
-                }
+	<div class="@descClass">
+		@{
+			Html.RenderPartial("_Description", Model);
+		}
+	</div>
+	@if (!hasDecision)
+	{
+		<div class="col-md-6">
+			@{    Html.RenderPartial("_Proposal", Model);
+			}
+		</div>
+				}
 </div>
 
 @if (hasDecision)
 {
-    string classname = "panel-primary";
-    if (Model.Decision.Type == DecisionType.Closed)
-    {
-        classname = "panel-warning";
-    }
-    else if (Model.Decision.Type == DecisionType.Resolution)
-    {
-        classname = "panel-success";
-    }
+	string classname = "panel-primary";
+	if (Model.Decision.Type == DecisionType.Closed)
+	{
+		classname = "panel-warning";
+	}
+	else if (Model.Decision.Type == DecisionType.Resolution)
+	{
+		classname = "panel-success";
+	}
 
-    <div class="panel @classname">
-        <div class="panel-heading">
-            <h3 class="panel-title">@Model.Decision.Type.DisplayName()</h3>
-        </div>
-        <div class="panel-body">
-            @Html.DisplayFor(model => model.Decision.Text, "String_Multiline")
-        </div>
-        <div class="panel-footer">
-            @Html.ActionLink("Sitzungsprotokoll vom " + Model.Decision.Report.End.ToString("d"),
-                "Details",
-                "SessionReports",
-                new { id = Model.Decision.Report.ID },
-                new { target = "pdfreport" })
-        </div>
-    </div>
+	<div class="panel @classname">
+		<div class="panel-heading">
+			<h3 class="panel-title">@Model.Decision.Type.DisplayName()</h3>
+		</div>
+		<div class="panel-body">
+			@Html.DisplayFor(model => model.Decision.Text, "String_Multiline")
+		</div>
+		<div class="panel-footer">
+			@Html.ActionLink("Sitzungsprotokoll vom " + Model.Decision.Report.End.ToString("d"),
+				"Details",
+				"SessionReports",
+				new { id = Model.Decision.Report.ID },
+				new { target = "pdfreport" })
+		</div>
+	</div>
 }
 
 
 <div class="panel panel-primary" style="background-color: #DDD">
-    <div class="panel-heading">
-        <h3 class="panel-title">@Html.DisplayNameFor(model => model.Votes)</h3>
-    </div>
-    <div class="panel-body" id="auditorlist_@Model.ID">
-        @Html.Action("_List", "Votes", new { topic = Model, linkLevel = VoteLinkLevel.Everyone })
-    </div>
+	<div class="panel-heading">
+		<h3 class="panel-title">@Html.DisplayNameFor(model => model.Votes)</h3>
+	</div>
+	<div class="panel-body" id="auditorlist_@Model.ID">
+		@Html.Action("_List", "Votes", new { topic = Model, linkLevel = VoteLinkLevel.Everyone })
+	</div>
 </div>
 
 
 @if (Model.IsReadOnly)
 {
-    <div class="panel panel-primary">
-        <div class="panel-heading">
-            <h3 class="panel-title">Gelesene Push-Benachrichtigungen</h3>
-        </div>
-        <div class="panel-body" id="pushlist_@Model.ID">
-            @Html.Action("_DisplayListTopic", "Push", new { topic = Model })
-        </div>
-    </div>
+	<div class="panel panel-primary">
+		<div class="panel-heading">
+			<h3 class="panel-title">Gelesene Push-Benachrichtigungen</h3>
+		</div>
+		<div class="panel-body" id="pushlist_@Model.ID">
+			@Html.Action("_DisplayListTopic", "Push", new { topic = Model })
+		</div>
+	</div>
 }
 else
 {
-    <div class="panel panel-primary">
-        <div class="panel-heading">
-            <h3 class="panel-title">@Html.DisplayNameFor(model => model.PushTargets)</h3>
-        </div>
-        <div class="panel-body" id="pushlist_@Model.ID">
-            @Html.Action("_EditListTopic", "Push", new { topic = Model })
-        </div>
-    </div>
+	<div class="panel panel-primary">
+		<div class="panel-heading">
+			<h3 class="panel-title">@Html.DisplayNameFor(model => model.PushTargets)</h3>
+		</div>
+		<div class="panel-body" id="pushlist_@Model.ID">
+			@Html.Action("_EditListTopic", "Push", new { topic = Model })
+		</div>
+	</div>
 }
 
 <div class="panel panel-primary">
@@ -237,75 +237,89 @@ else
 		<h3 class="panel-title">@Html.DisplayNameFor(model => model.AclID)</h3>
 	</div>
 	<div class="panel-body" id="accessControl_@Model.ID">
-		@Html.Action("_DisplayAuthorized", "Acl", new { obj = Model })
+		<div class="row">
+			<div class="col-sm-2">Aktuell berechtigt:</div>
+			<div class="col-sm-10">
+				@Html.Action("_DisplayAuthorized", "Acl", new { obj = Model })
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-sm-2">Bearbeiten:</div>
+			<div class="col-sm-10">
+				@Html.Action("_AclEditorFor", "Acl", new { obj = Model })
+			</div>
+		</div>
+		<div id="responseMessage">
+		</div>
 	</div>
 </div>
 
 <div class="panel panel-primary comment-panel">
-    <div class="panel-heading">
-        <h3 class="panel-title">@Html.DisplayNameFor(model => model.Comments)</h3>
-    </div>
-    <div id="comments_@Model.ID">
-        @if ((!Model.IsReadOnly && !Model.IsLocked) || Model.Comments.Any())
-        {
-            @Html.Action("_List", "Comments", Model)
-        }
-        else
-        {
-            <div class="panel-body">
-                Es sind keine Kommentare vorhanden.
-            </div>}
-    </div>
+	<div class="panel-heading">
+		<h3 class="panel-title">@Html.DisplayNameFor(model => model.Comments)</h3>
+	</div>
+	<div id="comments_@Model.ID">
+		@if ((!Model.IsReadOnly && !Model.IsLocked) || Model.Comments.Any())
+		{
+			@Html.Action("_List", "Comments", Model)
+		}
+		else
+		{
+			<div class="panel-body">
+				Es sind keine Kommentare vorhanden.
+			</div>
+		}
+	</div>
 </div>
 
 
 <div class="panel panel-primary">
-    <div class="panel-heading">
-        <h3 class="panel-title">Aufgaben</h3>
-    </div>
-    @if (Model.Assignments.Any())
-    {
-        Html.RenderPartial("~/Views/Assignments/_DetailedTable.cshtml", Model.Assignments.OrderBy(a => a.Type).ThenByDescending(a => a.DueDate));
-    }
-    else
-    {
-        <div class="panel-body">
-            Diese Diskussion enthält keine Aufgaben.
-        </div>
-    }
-    @if (!Model.IsReadOnly)
-    {
-        <div class="panel-footer">
-            @if (Model.IsLocked)
-            {
-                @:Da das Thema gesperrt ist, können Sie zur Zeit keine Aufgaben erstellen.
+	<div class="panel-heading">
+		<h3 class="panel-title">Aufgaben</h3>
+	</div>
+	@if (Model.Assignments.Any())
+	{
+		Html.RenderPartial("~/Views/Assignments/_DetailedTable.cshtml", Model.Assignments.OrderBy(a => a.Type).ThenByDescending(a => a.DueDate));
+	}
+	else
+	{
+		<div class="panel-body">
+			Diese Diskussion enthält keine Aufgaben.
+		</div>
+	}
+	@if (!Model.IsReadOnly)
+	{
+		<div class="panel-footer">
+			@if (Model.IsLocked)
+			{
+				@:Da das Thema gesperrt ist, können Sie zur Zeit keine Aufgaben erstellen.
 			}
-            else
-            {
-                @Html.ActionLink("Neue Aufgabe erstellen", "Create", "Assignments", new { topicID = Model.ID }, null)
-            }
-        </div>
-    }
+			else
+			{
+				@Html.ActionLink("Neue Aufgabe erstellen", "Create", "Assignments", new { topicID = Model.ID }, null)
+			}
+		</div>
+	}
 </div>
 
 
 <div class="row">
-    <div class="col-md-12">
-        <div class="panel panel-primary">
-            <div class="panel-heading">
-                <h3 class="panel-title">@Html.DisplayNameFor(model => model.Documents)</h3>
-            </div>
-            @if (Model.Documents.Count(d => d.Deleted == null) == 0)
-            {
-                <div class="panel-body" id="attachments_@Model.ID">Keine Dokumente vorhanden.</div>}
-            else
-            {
-                @Html.Action("_List", "Attachments", new { entityKind = DocumentContainer.Topic, id = Model.ID, showActions = !Model.IsReadOnly })
-            }
-            @if (!Model.IsReadOnly)
-            {
-                @Html.Action("_UploadForm", "Attachments", new { entityKind = DocumentContainer.Topic, id = Model.ID })
-            }
-        </div>
-    </div>
+	<div class="col-md-12">
+		<div class="panel panel-primary">
+			<div class="panel-heading">
+				<h3 class="panel-title">@Html.DisplayNameFor(model => model.Documents)</h3>
+			</div>
+			@if (Model.Documents.Count(d => d.Deleted == null) == 0)
+			{
+				<div class="panel-body" id="attachments_@Model.ID">Keine Dokumente vorhanden.</div>}
+			else
+			{
+				@Html.Action("_List", "Attachments", new { entityKind = DocumentContainer.Topic, id = Model.ID, showActions = !Model.IsReadOnly })
+			}
+			@if (!Model.IsReadOnly)
+			{
+				@Html.Action("_UploadForm", "Attachments", new { entityKind = DocumentContainer.Topic, id = Model.ID })
+			}
+		</div>
+	</div>
 </div>

@@ -1,8 +1,20 @@
-﻿@model IGCV_Protokoll.ViewModels.AccessControlViewModel
+﻿@using System.Diagnostics.Eventing.Reader
+@model IGCV_Protokoll.ViewModels.AccessControlDisplayViewModel
 
-<ul>
-	@foreach (var user in Model.AuthorizedUsers)
-	{
-		<li>@user.ShortName</li>
-	}
-</ul>
+@if (Model.AuthorizedUsers == null)
+{
+	<strong>Jeder</strong>
+}
+else if (Model.AuthorizedUsers.Any())
+{
+	<ul>
+		@foreach (var user in Model.AuthorizedUsers)
+		{
+			<li>@user.ShortName</li>
+		}
+	</ul>
+}
+else
+{
+	<strong>Keiner</strong>
+}

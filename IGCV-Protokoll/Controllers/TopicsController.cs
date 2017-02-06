@@ -658,5 +658,29 @@ namespace IGCV_Protokoll.Controllers
         {
             return idA == idB ? null : (idB.HasValue ? dict.GetValueOrDefault(idB.Value, "<Nicht verfügbar>") : defaultText);
         }
-    }
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public ActionResult _EditAcl(int id)
+		{
+			var topic = db.Topics.Find(id);
+
+			if (topic == null)
+				return HttpNotFound();
+
+			return new AclController()._AclEditorFor(topic);
+		}
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public ActionResult _SaveAclFor(int id, AccessControlEditorViewModel acl)
+		{
+			var topic = db.Topics.Find(id);
+
+			if (topic == null)
+				return HttpNotFound();
+
+			throw new NotImplementedException();
+		}
+	}
 }
