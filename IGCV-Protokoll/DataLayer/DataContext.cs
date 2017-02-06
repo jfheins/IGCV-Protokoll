@@ -2,12 +2,15 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration.Conventions;
+using System.Data.SqlClient;
 using System.Linq;
+using System.Web.Mvc;
 using IGCV_Protokoll.Areas.Administration.Models;
 using IGCV_Protokoll.Areas.Session.Models;
 using IGCV_Protokoll.Areas.Session.Models.Lists;
 using IGCV_Protokoll.Models;
 using IGCV_Protokoll.util;
+using IGCV_Protokoll.ViewModels;
 using JetBrains.Annotations;
 
 namespace IGCV_Protokoll.DataLayer
@@ -130,6 +133,44 @@ namespace IGCV_Protokoll.DataLayer
 										 where adu.UserID == u.ID
 										 where aclitem.ParentId == obj.AclID.Value
 										 select aclitem.ParentId).Any();
+		}
+
+		public void Authorize(int aclId, int adEntityId)
+		{
+			var acl = ACLs.Find(aclId);
+
+			// TODO Prüfen, ob der aktuelle Benutzer autorisiert ist
+
+			if (!acl.Items.Any(aclitem => aclitem.ParentId == aclId && aclitem.AdEntityID == adEntityId))
+				ACLItems.Add(new ACLItem { AdEntityID = adEntityId, ParentId = aclId });
+		}
+
+		public void DeAuthorize(int aclId, int adEntityId)
+		{
+			var acl = ACLs.Find(aclId);
+
+			// TODO Prüfen, ob der aktuelle Benutzer autorisiert ist
+
+			var item = acl.Items.FirstOrDefault(aclitem => aclitem.ParentId == aclId && aclitem.AdEntityID == adEntityId);
+
+			if (item != null)
+				ACLItems.Remove(item);
+		}
+
+		/// <summary>
+		/// Ruft SaveChanges() auf unf schluckt eine eventuell auftretende Verletzung von unique-Contraints
+		/// </summary>
+		public void SaveChangesSwallowUnique()
+		{
+			try
+			{
+				SaveChanges();
+			}
+			catch (SqlException ex) when (ex.Number == 2601)
+			{
+				// Ignore this exception.
+				// Violation of unique constraint, the entry was added already
+			}
 		}
 	}
 }

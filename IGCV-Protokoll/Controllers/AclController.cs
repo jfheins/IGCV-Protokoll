@@ -33,74 +33,32 @@ namespace IGCV_Protokoll.Controllers
 			});
 		}
 
-		public ActionResult _AclEditorFor(IAccessible obj)
+		public ActionResult _AclEditorFor(IAccessible obj, string htmlId)
 		{
 			if (obj == null)
 				return new HttpNotFoundResult("Zu editierendes Objekt darf nicht null sein!");
 
-			Dictionary<AdEntity, bool> adEntities;
+			var result = new AccessControlEditorViewModel();
 			if (obj.Acl == null)
 			{
-				//obj.Acl = db.ACLs.Add(new ACL());
-				//db.SaveChanges();
-				adEntities = db.AdEntities.ToDictionary(x => x, x => true);
+				result.IsNewAcl = true;
+				result.AuthorizedEntities = db.AdEntities.ToDictionary(x => x, x => true);
 			}
 			else
 			{
-				adEntities = (from adEntity in db.AdEntities
-							  from aclitem in adEntity.Acl.Where(aclitem => aclitem.ParentId == obj.AclID.Value).DefaultIfEmpty()
-							  select new { Entity = adEntity, hasAccess = aclitem != null }).ToDictionary(x => x.Entity, x => x.hasAccess);
+				result.IsNewAcl = false;
+				result.AuthorizedEntities = (from adEntity in db.AdEntities
+											 from aclitem in adEntity.Acl.Where(aclitem => aclitem.ParentId == obj.AclID.Value).DefaultIfEmpty()
+											 select new { Entity = adEntity, hasAccess = aclitem != null }).ToDictionary(x => x.Entity, x => x.hasAccess);
 			}
 
-			var root = adEntities.Keys.Single(e => e.ParentID == null);
-
-			return PartialView(new AccessControlEditorViewModel
-			{
-				RootEntity = root,
-				AuthorizedEntities = adEntities
-			});
-		}
-
-		public ActionResult _AclEditorFor(int aclID)
-		{
-			var adEntities = (from adEntity in db.AdEntities
-							  from aclitem in adEntity.Acl.Where(aclitem => aclitem.ParentId == aclID).DefaultIfEmpty()
-							  select new { Entity = adEntity, hasAccess = aclitem != null }).ToDictionary(x => x.Entity, x => x.hasAccess);
-
-			return PartialView(new AccessControlEditorViewModel
-			{
-				AuthorizedEntities = adEntities
-			});
+			result.HtmlName = htmlId ?? obj.GetType().Name +  "_acl";
+			return PartialView(result);
 		}
 
 		public ActionResult SynchronizeActiveDirectory()
 		{
 			return new UserController().PullADEntities();
-		}
-
-		public ActionResult Authorize([Bind(Prefix = "id")]int aclId, int adEntityId)
-		{
-			var acl = db.ACLs.Find(aclId);
-
-			// TODO Prüfen, ob der aktuelle Benutzer autorisiert ist
-
-			if (!acl.Items.Any(aclitem => aclitem.ParentId == aclId && aclitem.AdEntityID == adEntityId))
-				db.ACLItems.Add(new ACLItem { AdEntityID = adEntityId, ParentId = aclId });
-
-			try
-			{
-				db.SaveChanges();
-			}
-			catch (SqlException ex) when (ex.Number == 2601)
-			{
-				// Ignore this exception.
-				// Violation of unique constraint, the entry was added already
-			}
-
-			return View(new AccessControlEditorViewModel
-			{
-				AuthorizedEntities = null
-			});
 		}
 	}
 }

@@ -43,7 +43,8 @@ namespace IGCV_Protokoll
 				"~/Content/other/colpick.css",
                 "~/Scripts/dropzone/dropzone.css",
                 "~/Scripts/dropzone/basic.css",
-                "~/Content/bootstrap-multiselect/bootstrap-multiselect.css"));
+				"~/Content/themes/default/style.css",
+				"~/Content/bootstrap-multiselect/bootstrap-multiselect.css"));
 
 			// Festlegen von EnableOptimizations auf false für Debugzwecke. Weitere Informationen
 			// finden Sie unter http://go.microsoft.com/fwlink/?LinkId=301862

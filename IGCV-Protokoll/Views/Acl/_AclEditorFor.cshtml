@@ -1,3 +1,37 @@
 ﻿@using System.Diagnostics.Eventing.Reader
+@using IGCV_Protokoll.util
+@using Newtonsoft.Json
 @model IGCV_Protokoll.ViewModels.AccessControlEditorViewModel
 
+@{
+	// Key = AD Entity, Value = bool
+	var guiTree = Model.AuthorizedEntities.Select(kvp => new
+	{
+		id = kvp.Key.ID.ToString(),
+		parent = kvp.Key.ParentID?.ToString() ?? "#",
+		text = kvp.Key.Name,
+		state = new { opened = kvp.Key.ParentID == null || kvp.Key.Children.Count < 3, selected = kvp.Value },
+	});
+
+	var jsonTree = JsonConvert.SerializeObject(guiTree, Formatting.Indented);
+}
+
+<div id="@Model.HtmlName"></div>
+
+@using (Html.Delayed(null, "jstree"))
+{
+	<script src="~/Scripts/jstree.js"></script>
+	<script type="text/javascript">
+		$(function() {
+			$('#@Model.HtmlName').jstree({
+				'core': {
+					'data': @Html.Raw(jsonTree),
+					'themes': { "icons": false, "responsive": false },
+					"expand_selected_onload": false,
+					"dblclick_toggle": false
+				},
+				'plugins' : [ "checkbox" ]
+			});
+		});
+	</script>
+}

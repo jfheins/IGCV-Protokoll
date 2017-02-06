@@ -244,9 +244,58 @@ else
 			</div>
 		</div>
 		<div class="row">
-			<div class="col-sm-2">Bearbeiten:</div>
+			@{
+				var aclElementId = $"topicAcl_{Model.ID}";
+			}
+			<div class="col-sm-2">
+				Bearbeiten:
+				<button class="btn btn-primary" onclick="submitEditedAcl();">Speichern</button>
+				@using (Html.Delayed(null, "Topic-ACL-Editor"))
+				{
+					<script type="text/javascript">
+						function submitEditedAcl() {
+							var data = $('#@aclElementId').jstree(true).get_json('#', { flat: true });
+							var aclJson = JSON.stringify(data, AclPropertyFilter);
+
+							$.ajax({
+								url: '@Url.Action("_SaveAclFor", "Topics")',
+								type: 'POST',
+								data: {
+									topicID: @Model.ID,
+									aclTree: aclJson,
+									"X-Requested-With": "XMLHttpRequest"
+								},
+								success: function(responseData) {
+									$('#resubmissionCell_' + topicId + ' .glyphicon-remove').hide();
+									$('#resubmissionCell_' + topicId + ' .glyphicon-ok').finish().slideDown(400).fadeOut(1000);
+									$('#resubmissionCell_' + topicId + ' .datestr').text(localestr);
+								},
+								error: function(xhr, errorType) {
+									$('#responseMessage').html(xhr.responseText);
+								}
+							}); //end ajax
+						}
+
+						function AclPropertyFilter(key, value) {
+							// Filtering out properties
+							if (key === '') { // Wurzelelement
+								return value;
+							}
+							else if (!isNaN(key)) { // Oberste Ebene
+								value["selected"] = value["state"]["selected"];
+								return value;
+							}
+							else if (key === 'id' || key === 'selected') {
+								return value;
+							}
+							else
+								return undefined;
+						}
+					</script>
+				}
+			</div>
 			<div class="col-sm-10">
-				@Html.Action("_AclEditorFor", "Acl", new { obj = Model })
+				@Html.Action("_AclEditorFor", "Acl", new { obj = Model, htmlId = @aclElementId })
 			</div>
 		</div>
 		<div id="responseMessage">

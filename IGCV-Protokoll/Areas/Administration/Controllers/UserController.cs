@@ -7,6 +7,7 @@ using System.Net;
 using System.Security.Authentication;
 using System.Security.Principal;
 using System.Web.Mvc;
+using EntityFramework.Extensions;
 using IGCV_Protokoll.Controllers;
 using IGCV_Protokoll.DataLayer;
 using IGCV_Protokoll.Mailers;
@@ -293,12 +294,16 @@ namespace IGCV_Protokoll.Areas.Administration.Controllers
 			var forRemoval = db.AdEntities.Where(dbEntry => !touchedEntities.Contains(dbEntry.Guid)).ToArray();
 			db.AdEntities.RemoveRange(forRemoval);
 			db.SaveChanges();
+			
+			// Zuordnungen User-Entity synchronisieren
+			var rootEntity = db.AdEntities.Single(e => e.ParentID == null);
+			SyncMembership(rootEntity, new Stack<AdEntity>());
 
 			return Content(touchedEntities.Count.ToString());
 		}
 
 		/// <summary>
-		/// Zieht den angegebenen AD Eintrag in die Datenbank. Falls Daten aktualisiert wurden, wird das AdEntity Objekt zurückgegeben.
+		/// Synchronisiert rekursiv ab der Wurzel die Hierarchie des AD. Gibt die ADEntity zurück.
 		/// </summary>
 		private void SyncEntity(Principal source, AdEntity parent, Dictionary<Guid, AdEntity> map, HashSet<Guid> touched)
 		{
@@ -312,17 +317,18 @@ namespace IGCV_Protokoll.Areas.Administration.Controllers
 				newEntity.Parent = parent;
 				newEntity.Name = source.Name;
 				newEntity.SamAccountName = source.SamAccountName;
+				newEntity.SetTypeByPrincipal(source);
 			}
 			else
 			{
 				// Neuer Datensatz
-				newEntity = db.AdEntities.Add(new AdEntity
+				newEntity = db.AdEntities.Add(new AdEntity(source)
 				{
 					Parent = parent,
 					Name = source.Name,
 					SamAccountName = source.SamAccountName,
 					Guid = source.Guid.Value
-			});
+				});
 			}
 			touched.Add(newEntity.Guid);
 
@@ -334,8 +340,34 @@ namespace IGCV_Protokoll.Areas.Administration.Controllers
 				SyncEntity(member, newEntity, map, touched);
 			}
 		}
-	}
 
+		private void SyncMembership(AdEntity item, Stack<AdEntity> parentStack)
+		{
+			if (item.Children.Any())
+			{
+				parentStack.Push(item);
+				foreach (var child in item.Children)
+				{
+					SyncMembership(child, parentStack);
+				}
+				parentStack.Pop();
+			}
+			else
+			{
+				// User ==> Mitgliedschaften aktualisieren
+				var user = db.Users.FirstOrDefault(u => u.Guid == item.Guid);
+				if (user != null)
+				{
+					var newMemberships = parentStack.ToArray();
+					var oldMemberships = user.AdGroups.Select(x => x.AdEntity).ToArray();
+					var toRemove = oldMemberships.Except(newMemberships).Select(x => x.ID).ToArray();
+					db.AdEntityUsers.Where(x => x.UserID == user.ID && toRemove.Contains(x.AdEntityID)).Delete();
+					var toAdd = newMemberships.Except(oldMemberships);
+					db.AdEntityUsers.AddRange(toAdd.Select(x => new AdEntityUser {AdEntity = x, User = user}));
+				}
+			}
+		}
+	}
 
 
 	[System.Serializable]

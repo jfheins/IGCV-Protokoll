@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.DirectoryServices.AccountManagement;
 using System.Linq;
+using System.Security.Principal;
 using System.Web;
 using JetBrains.Annotations;
 
@@ -17,6 +19,20 @@ namespace IGCV_Protokoll.Models
 		{
 			Name = "";
 			SamAccountName = "";
+		}
+		public AdEntity(Principal p) : this()
+		{
+			SetTypeByPrincipal(p);
+		}
+
+		public void SetTypeByPrincipal(Principal p)
+		{
+			if (p is UserPrincipal)
+				Type = AdEntityType.User;
+			else if (p is GroupPrincipal)
+				Type = AdEntityType.Group;
+			else
+				Type = AdEntityType.Other;
 		}
 
 		public int ID { get; set; }
@@ -42,8 +58,11 @@ namespace IGCV_Protokoll.Models
 
 		[InverseProperty("AdEntity")]
 		public virtual ICollection<ACLItem> Acl { get; set; }
+
+		public AdEntityType Type { get; set; }
 	}
 
+	public enum AdEntityType { Other, Group, User }
 
 	// Join-Table
 	public class AdEntityUser

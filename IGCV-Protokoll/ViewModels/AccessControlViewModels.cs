@@ -15,9 +15,22 @@ namespace IGCV_Protokoll.ViewModels
 
 	public class AccessControlEditorViewModel
 	{
-		public AdEntity RootEntity { get; set; }
+		public bool IsNewAcl { get; set; }
+
+		[NotNull]
+		public string HtmlName { get; set; }
 
 		[NotNull]
 		public Dictionary<AdEntity, bool> AuthorizedEntities { get; set; }
+	}
+
+	public class SelectedAdEntity
+	{
+		/// <summary>
+		/// ID der ADEntity
+		/// </summary>
+		public int id { get; set; }
+
+		public bool selected { get; set; }
 	}
 }
