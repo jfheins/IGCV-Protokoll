@@ -559,12 +559,10 @@
     <Content Include="Content\themes\default-dark\32px.png" />
     <Content Include="Content\themes\default-dark\40px.png" />
     <Content Include="Content\themes\default-dark\style.css" />
-    <Content Include="Content\themes\default-dark\style.min.css" />
     <Content Include="Content\themes\default-dark\throbber.gif" />
     <Content Include="Content\themes\default\32px.png" />
     <Content Include="Content\themes\default\40px.png" />
     <Content Include="Content\themes\default\style.css" />
-    <Content Include="Content\themes\default\style.min.css" />
     <Content Include="Content\themes\default\throbber.gif" />
     <Content Include="Content\themes\iwb\images\animated-overlay.gif" />
     <Content Include="Content\themes\iwb\images\ui-bg_flat_0_aaaaaa_40x100.png" />
@@ -778,8 +776,6 @@
     <Content Include="Content\bootstrap\button-groups.less" />
     <Content Include="Content\bootstrap\breadcrumbs.less" />
     <None Include="Content\layout.less" />
-    <Content Include="Content\themes\default\Thumbs.db" />
-    <Content Include="Content\themes\default-dark\Thumbs.db" />
     <None Include="Content\variables_iwb.less" />
     <None Include="Content\variables_rmv.less" />
     <None Include="Content\variables.less" />
@@ -807,7 +803,6 @@
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jstree.js" />
-    <Content Include="Scripts\jstree.min.js" />
     <Content Include="Scripts\ListUtilities.js" />
     <Content Include="Scripts\masonry_grid.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
