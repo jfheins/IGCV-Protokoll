@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Configuration;
 using System.DirectoryServices.AccountManagement;
 using System.Linq;
 using System.Net;
@@ -27,7 +28,7 @@ namespace IGCV_Protokoll.Areas.Administration.Controllers
 		// Benutzer dieser Gruppen werden automatisch hinzugefügt
 		private readonly string[] _authorizeGroups = { "V-AL", "Protokoll-Developer" };
 		private readonly string[] _authorizeUsers = { "Schilpjo", "Reinhart" };
-		private readonly string _rootGroup = "V-MA";
+		private readonly string _rootGroup = ConfigurationManager.AppSettings["rootGroup"];
 
 		/// <summary>
 		///    Wird aufgerufen, bevor die Aktionsmethode aufgerufen wird.
