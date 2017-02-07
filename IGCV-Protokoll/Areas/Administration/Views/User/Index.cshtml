@@ -1,5 +1,4 @@
 ﻿@model IEnumerable<IGCV_Protokoll.Models.User>
-
 @{
 	ViewBag.Title = "Benutzerübersicht";
 }
@@ -10,8 +9,7 @@
 		OnBegin = "$('#syncWaitDialog').modal();",
 		OnComplete = "$('#syncWaitDialog').modal('hide'); location.reload();"
 	},
-	new {@class = "index-action btn btn-primary"})
-
+	new { @class = "index-action btn btn-primary" })
 <div class="modal fade" id="syncWaitDialog" data-backdrop="static" data-keyboard="false" role="dialog">
 	<div class="modal-dialog modal-sm">
 		<div class="modal-content">
@@ -26,9 +24,7 @@
 		</div>
 	</div>
 </div>
-
 <h2>@ViewBag.Title</h2>
-
 <table class="table table-striped table-hover table-sortable" id="User_table">
 	<thead>
 		<tr>
@@ -72,5 +68,5 @@
 		}
 	</tbody>
 </table>
-
-<div class="alert alert-info">Das Flag &quot;Aktiv&quot; gibt Auskunft darüber, ob sich der Benutzer aktuell in der ILK-Gruppe befindet. Es dient nicht zur Zugangsbeschränkung, sondern schränkt lediglich die Auswahlmöglichkeit in den Dropdown-Menüs ein. Ruft ein Benutzer das IGCV-Protokoll auf, wird er automatisch aktiv gesetzt.</div>
+@Html.ActionLink("Baum aktualisieren", "PullADEntities")
+	<div class="alert alert-info">Das Flag &quot;Aktiv&quot; gibt Auskunft darüber, ob sich der Benutzer aktuell in der ILK-Gruppe befindet. Es dient nicht zur Zugangsbeschränkung, sondern schränkt lediglich die Auswahlmöglichkeit in den Dropdown-Menüs ein. Ruft ein Benutzer das IGCV-Protokoll auf, wird er automatisch aktiv gesetzt.</div>
