@@ -19,7 +19,7 @@
 		{
 			<script type="text/javascript">
 				function submitEditedAcl() {
-					$('#accessControl_@Model.ID').fadeTo(200, 0.1, function () {
+					$('#accessControl_@Model.ID').fadeTo(200, 0.3, function () {
 						var data = $('#@aclElementId').jstree(true).get_json('#', { flat: true });
 						var aclJson = JSON.stringify(data, AclPropertyFilter);
 

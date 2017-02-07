@@ -122,7 +122,7 @@ namespace IGCV_Protokoll.DataLayer
 
 		public IQueryable<ACLItem> GetACL([NotNull] IAccessible obj)
 		{
-			return obj.AclID == null ? null : ACLItems.Where(item => item.ParentId == obj.AclID);
+			return obj.AclID == null ? null : ACLItems.Include(i => i.AdEntity).Where(item => item.ParentId == obj.AclID);
 		}
 
 		public bool HasAccess(User u, [NotNull] IAccessible obj)

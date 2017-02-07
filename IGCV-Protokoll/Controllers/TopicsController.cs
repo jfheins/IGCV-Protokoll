@@ -674,8 +674,8 @@ namespace IGCV_Protokoll.Controllers
 
 			// TODO: Prüfen, ob der Benutzer autorisiert ist
 
-
-			var newIDs = new HashSet<int>(JsonConvert.DeserializeObject<List<SelectedAdEntity>>(aclTree).Where(x => x.selected).Select(x => x.id));
+			var newAclTree = JsonConvert.DeserializeObject<List<SelectedAdEntity>>(aclTree);
+			var newIDs = new HashSet<int>(SimplifyTree(newAclTree));
 
 			if (topic.Acl == null)
 			{
@@ -702,6 +702,29 @@ namespace IGCV_Protokoll.Controllers
 			db.SaveChangesSwallowUnique();
 
 			return PartialView("_AclDisplay", topic);
+		}
+
+		/// <summary>
+		/// Reduziert den Baum auf die nötigene Elemente. Falls alle Kinder eines Knotens selektiert sind,
+		/// genügt es, den Knoten selbst als selektiert zu betrachten.
+		/// </summary>
+		/// <param name="tree"></param>
+		/// <returns></returns>
+		private IEnumerable<int> SimplifyTree(List<SelectedAdEntity> tree)
+		{
+			var selectedIDs = tree.Where(x => x.selected).Select(x => x.id).ToArray();
+			var result = tree.ToDictionary(x => x.id, x => x.selected);
+			var allEntities = db.AdEntities.Include(e => e.Children).ToDictionary(e => e.ID, e => e.Children);
+			
+			foreach (var item in selectedIDs)
+			{
+				foreach (var child in allEntities[item])
+				{
+					result[child.ID] = false;
+				}
+			}
+
+			return result.Where(kvp => kvp.Value).Select(kvp => kvp.Key).ToArray();
 		}
 	}
 }

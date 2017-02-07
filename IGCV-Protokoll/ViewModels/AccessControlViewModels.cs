@@ -30,7 +30,11 @@ namespace IGCV_Protokoll.ViewModels
 		/// ID der ADEntity
 		/// </summary>
 		public int id { get; set; }
-
 		public bool selected { get; set; }
+
+		public override string ToString()
+		{
+			return $"ID: {id}, {selected}";
+		}
 	}
 }
