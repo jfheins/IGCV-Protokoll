@@ -125,52 +125,9 @@ namespace IGCV_Protokoll.DataLayer
 			return obj.AclID == null ? null : ACLItems.Include(i => i.AdEntity).Where(item => item.ParentId == obj.AclID);
 		}
 
-		public bool HasAccess(User u, [NotNull] IAccessible obj)
+		public int[] GetRolesForUser(int userid)
 		{
-			return obj.AclID == null || (from aclitem in ACLItems
-										 join adEntity in AdEntities on aclitem.AdEntityID equals adEntity.ID
-										 join adu in AdEntityUsers on adEntity.ID equals adu.AdEntityID
-										 where adu.UserID == u.ID
-										 where aclitem.ParentId == obj.AclID.Value
-										 select aclitem.ParentId).Any();
-		}
-
-		public void Authorize(int aclId, int adEntityId)
-		{
-			var acl = ACLs.Find(aclId);
-
-			// TODO Prüfen, ob der aktuelle Benutzer autorisiert ist
-
-			if (!acl.Items.Any(aclitem => aclitem.ParentId == aclId && aclitem.AdEntityID == adEntityId))
-				ACLItems.Add(new ACLItem { AdEntityID = adEntityId, ParentId = aclId });
-		}
-
-		public void DeAuthorize(int aclId, int adEntityId)
-		{
-			var acl = ACLs.Find(aclId);
-
-			// TODO Prüfen, ob der aktuelle Benutzer autorisiert ist
-
-			var item = acl.Items.FirstOrDefault(aclitem => aclitem.ParentId == aclId && aclitem.AdEntityID == adEntityId);
-
-			if (item != null)
-				ACLItems.Remove(item);
-		}
-
-		/// <summary>
-		/// Ruft SaveChanges() auf unf schluckt eine eventuell auftretende Verletzung von unique-Contraints
-		/// </summary>
-		public void SaveChangesSwallowUnique()
-		{
-			try
-			{
-				SaveChanges();
-			}
-			catch (SqlException ex) when (ex.Number == 2601)
-			{
-				// Ignore this exception.
-				// Violation of unique constraint, the entry was added already
-			}
+			return AdEntityUsers.Where(item => item.UserID == userid).Select(item => item.AdEntityID).Distinct().ToArray();
 		}
 	}
 }

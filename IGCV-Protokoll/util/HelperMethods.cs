@@ -22,17 +22,17 @@ namespace IGCV_Protokoll.util
             yield return item;
         }
 
-        /// <summary>
-        ///    Liefert zu einer Enumeration alle Paare zurück. Eine Enumeration mit n Elementen hat genau n-1 Paare.
-        ///    Die Quelle wird nur einmal durchlaufen. Für jedes Paar wird ein neues Tupel generiert.
-        ///    Item1 ist stets das Element, dass in der Quelle zuerst vorkommt.
-        /// </summary>
-        /// <param name="source">Die Quelle, die paarweise enumeriert werden soll.</param>
-        /// <returns>
-        ///    Eine Enumeration mit n-1 überschneidenden Tupeln. Gibt eine leere Enumeration zurück, wenn die Quelle aus
-        ///    weniger als zwei Elmenten besteht.
-        /// </returns>
-        [NotNull]
+		/// <summary>
+		///    Liefert zu einer Enumeration alle Paare zurück. Eine Enumeration mit n Elementen hat genau n-1 Paare.
+		///    Die Quelle wird nur einmal durchlaufen. Für jedes Paar wird ein neues Tupel generiert.
+		///    Item1 ist stets das Element, dass in der Quelle zuerst vorkommt.
+		/// </summary>
+		/// <param name="source">Die Quelle, die paarweise enumeriert werden soll.</param>
+		/// <returns>
+		///    Eine Enumeration mit n-1 überschneidenden Tupeln. Gibt eine leere Enumeration zurück, wenn die Quelle aus
+		///    weniger als zwei Elmenten besteht.
+		/// </returns>
+		[NotNull]
         public static IEnumerable<Tuple<T, T>> Pairwise<T>(this IEnumerable<T> source)
         {
             using (var it = source.GetEnumerator())

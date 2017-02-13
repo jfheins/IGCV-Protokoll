@@ -12,6 +12,7 @@ using EntityFramework.Extensions;
 using IGCV_Protokoll.Models;
 using IGCV_Protokoll.util;
 using IGCV_Protokoll.ViewModels;
+using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -672,59 +673,19 @@ namespace IGCV_Protokoll.Controllers
 			if (topic == null)
 				return HttpNotFound();
 
-			// TODO: Prüfen, ob der Benutzer autorisiert ist
+			var selectedAclTree = JsonConvert.DeserializeObject<List<SelectedAdEntity>>(aclTree);
+			var newAclTree = selectedAclTree.Where(x => x.selected).Select(x => x.id);
 
-			var newAclTree = JsonConvert.DeserializeObject<List<SelectedAdEntity>>(aclTree);
-			var newIDs = new HashSet<int>(SimplifyTree(newAclTree));
-
-			if (topic.Acl == null)
+			try
 			{
-				// Neue ACL erstellen
-				topic.Acl = db.ACLs.Add(new ACL());
+				ApplyNewACLFor(topic, newAclTree);
 			}
-			else
+			catch (NotAuthorizedException e)
 			{
-				var oldEntities = db.GetACL(topic).Select(item => item.AdEntity).ToList();
-				// Vorhandene ACL bearbeiten
-				var oldIDs = new HashSet<int>(oldEntities.Select(x => x.ID));
-
-				// TODO: Performance
-				var toRemove = oldIDs.Except(newIDs).ToArray();
-				if (toRemove.Length > 0)
-					db.ACLItems.Where(i => i.ParentId == topic.AclID && toRemove.Contains(i.AdEntityID)).Delete();
-
-				newIDs.ExceptWith(oldIDs);
+				return HTTPStatus(HttpStatusCode.Forbidden, e.Message);
 			}
-
-			foreach (var newID in newIDs)
-				topic.Acl.Items.Add(new ACLItem { AdEntityID = newID });
-
-			db.SaveChangesSwallowUnique();
 
 			return PartialView("_AclDisplay", topic);
-		}
-
-		/// <summary>
-		/// Reduziert den Baum auf die nötigene Elemente. Falls alle Kinder eines Knotens selektiert sind,
-		/// genügt es, den Knoten selbst als selektiert zu betrachten.
-		/// </summary>
-		/// <param name="tree"></param>
-		/// <returns></returns>
-		private IEnumerable<int> SimplifyTree(List<SelectedAdEntity> tree)
-		{
-			var selectedIDs = tree.Where(x => x.selected).Select(x => x.id).ToArray();
-			var result = tree.ToDictionary(x => x.id, x => x.selected);
-			var allEntities = db.AdEntities.Include(e => e.Children).ToDictionary(e => e.ID, e => e.Children);
-			
-			foreach (var item in selectedIDs)
-			{
-				foreach (var child in allEntities[item])
-				{
-					result[child.ID] = false;
-				}
-			}
-
-			return result.Where(kvp => kvp.Value).Select(kvp => kvp.Key).ToArray();
 		}
 	}
 }

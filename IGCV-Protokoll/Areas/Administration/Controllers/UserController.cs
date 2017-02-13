@@ -239,7 +239,7 @@ namespace IGCV_Protokoll.Areas.Administration.Controllers
 			using (var context = CreateContext())
 			using (UserPrincipal aduser = UserPrincipal.FindByIdentity(context, IdentityType.SamAccountName, samname))
 			{
-				if (aduser == null || aduser.Guid == null)
+				if (aduser?.Guid == null)
 					throw new AuthenticationException("Keine GUID im AD gefunden.");
 
 				return new User
@@ -305,7 +305,7 @@ namespace IGCV_Protokoll.Areas.Administration.Controllers
 		}
 
 		/// <summary>
-		/// Synchronisiert rekursiv ab der Wurzel die Hierarchie des AD. Gibt die ADEntity zurück.
+		/// Synchronisiert rekursiv ab dem Element die Hierarchie des AD. Gibt die ADEntity zurück.
 		/// </summary>
 		private void SyncEntity(Principal source, AdEntity parent, Dictionary<Guid, AdEntity> map, HashSet<Guid> touched)
 		{
