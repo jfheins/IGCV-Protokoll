@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Web.Mvc;
+using IGCV_Protokoll.Areas.Administration.Controllers;
 
 namespace IGCV_Protokoll.Controllers
 {
@@ -22,6 +23,9 @@ namespace IGCV_Protokoll.Controllers
 				AttachmentsController.ForceReleaseLock(doc.ID);
 
 			db.SaveChanges();
+
+			// Datenbank mit Active-Directory synchronisieren
+			new UserController().PullADEntities();
 			
 			return AssignmentsController.SendReminders(db);
 		}
