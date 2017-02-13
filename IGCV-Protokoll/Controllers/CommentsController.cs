@@ -26,7 +26,7 @@ namespace IGCV_Protokoll.Controllers
 
 		public ActionResult _CreateForm(int topicID)
 		{
-			var c = new Comment {TopicID = topicID};
+			var c = new Comment { TopicID = topicID };
 			ViewBag.TopicID = topicID;
 			return PartialView("_CreateForm", c);
 		}
@@ -49,6 +49,9 @@ namespace IGCV_Protokoll.Controllers
 				.Include(t => t.Lock)
 				.Include(t => t.Lock.Session.Manager)
 				.Single(t => t.ID == comment.TopicID);
+
+			if (!IsAuthorizedFor(topic))
+				return HTTPStatus(HttpStatusCode.Forbidden, "Sie sind für diesen Vorgang nicht berechtigt!");
 
 			if (topic.IsReadOnly || IsTopicLocked(topic))
 				throw new TopicLockedException();
@@ -83,6 +86,11 @@ namespace IGCV_Protokoll.Controllers
 				return HttpNotFound();
 
 			Topic t = db.Topics.Find(comment.TopicID);
+
+			if (t == null)
+				return HTTPStatus(HttpStatusCode.InternalServerError, "Das Thema zu diesem Kommentar konnte nicht gefunden werden.");
+			if (!IsAuthorizedFor(t))
+				return HTTPStatus(HttpStatusCode.Forbidden, "Sie sind für diesen Vorgang nicht berechtigt!");
 
 			if (comment.AuthorID != GetCurrentUserID())
 			{

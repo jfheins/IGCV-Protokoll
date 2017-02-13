@@ -21,6 +21,11 @@ namespace IGCV_Protokoll.Controllers
 		public ActionResult _RegisterPushTargets(int topicID, Dictionary<int, bool> users)
 		{
 			var topic = db.Topics.Find(topicID);
+
+			if (topic == null)
+				return HTTPStatus(HttpStatusCode.InternalServerError, "Das Thema zu diesem Kommentar konnte nicht gefunden werden.");
+			if (!IsAuthorizedFor(topic))
+				return HTTPStatus(HttpStatusCode.Forbidden, "Sie sind für diesen Vorgang nicht berechtigt!");
 			if (topic.IsReadOnly)
 				return HTTPStatus(HttpStatusCode.Forbidden, "Das Thema ist schreibgeschützt.");
 

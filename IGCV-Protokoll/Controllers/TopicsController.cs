@@ -303,12 +303,12 @@ namespace IGCV_Protokoll.Controllers
 
 			if (topic == null)
 				return HttpNotFound();
-			else
-			{
-				var auth = topic.IsEditableBy(GetCurrentUser(), GetSession());
-				if (!auth.IsAuthorized)
-					throw new TopicLockedException(auth.Reason);
-			}
+			if (!IsAuthorizedFor(topic))
+				return HTTPStatus(HttpStatusCode.Forbidden, "Sie sind für diesen Vorgang nicht berechtigt!");
+
+			var auth = topic.IsEditableBy(GetCurrentUser(), GetSession());
+			if (!auth.IsAuthorized)
+				throw new TopicLockedException(auth.Reason);
 
 			TopicEdit viewmodel = TopicEdit.FromTopic(topic);
 			viewmodel.SessionTypeList = new SelectList(db.GetActiveSessionTypes(), "ID", "Name");
@@ -329,6 +329,9 @@ namespace IGCV_Protokoll.Controllers
 		public ActionResult Edit([Bind(Exclude = "SessionTypeID")] TopicEdit input)
 		{
 			Topic topic = db.Topics.Include(t => t.Creator).Single(t => t.ID == input.ID);
+			if (!IsAuthorizedFor(topic))
+				return HTTPStatus(HttpStatusCode.Forbidden, "Sie sind für diesen Vorgang nicht berechtigt!");
+			
 			if (ModelState.IsValid)
 			{
 				var auth = topic.IsEditableBy(GetCurrentUser(), GetSession());
@@ -401,6 +404,8 @@ namespace IGCV_Protokoll.Controllers
 
 			if (topic == null)
 				return HttpNotFound("Topic not found!");
+			if (!IsAuthorizedFor(topic))
+				return HTTPStatus(HttpStatusCode.Forbidden, "Sie sind für diesen Vorgang nicht berechtigt!");
 
 			ViewBag.TopicID = id;
 			ViewBag.IsEditable = topic.IsEditableBy(GetCurrentUser(), GetSession()).IsAuthorized;
@@ -423,12 +428,13 @@ namespace IGCV_Protokoll.Controllers
 
 			if (topic == null)
 				return HttpNotFound("Topic not found!");
-			else
-			{
-				var auth = topic.IsEditableBy(GetCurrentUser(), GetSession());
-				if (!auth.IsAuthorized)
-					throw new TopicLockedException(auth.Reason);
-			}
+			if (!IsAuthorizedFor(topic))
+				return HTTPStatus(HttpStatusCode.Forbidden, "Sie sind für diesen Vorgang nicht berechtigt!");
+
+			var auth = topic.IsEditableBy(GetCurrentUser(), GetSession());
+			if (!auth.IsAuthorized)
+				throw new TopicLockedException(auth.Reason);
+
 			if (description != topic.Description) //Trivialedit verhindern
 			{
 				// Änderungsverfolgung
@@ -468,6 +474,8 @@ namespace IGCV_Protokoll.Controllers
 
 			if (topic == null)
 				return HttpNotFound("Topic not found!");
+			if (!IsAuthorizedFor(topic))
+				return HTTPStatus(HttpStatusCode.Forbidden, "Sie sind für diesen Vorgang nicht berechtigt!");
 
 			ViewBag.TopicID = id;
 			ViewBag.IsEditable = topic.IsEditableBy(GetCurrentUser(), GetSession()).IsAuthorized;
@@ -489,6 +497,8 @@ namespace IGCV_Protokoll.Controllers
 
 			if (topic == null)
 				return HttpNotFound("Topic not found!");
+			if (!IsAuthorizedFor(topic))
+				return HTTPStatus(HttpStatusCode.Forbidden, "Sie sind für diesen Vorgang nicht berechtigt!");
 
 			ViewBag.TopicID = id;
 			ViewBag.IsEditable = topic.IsEditableBy(GetCurrentUser(), GetSession()).IsAuthorized;
@@ -511,12 +521,13 @@ namespace IGCV_Protokoll.Controllers
 
 			if (topic == null)
 				return HttpNotFound("Topic not found!");
-			else
-			{
-				var auth = topic.IsEditableBy(GetCurrentUser(), GetSession());
-				if (!auth.IsAuthorized)
-					throw new TopicLockedException(auth.Reason);
-			}
+			if (!IsAuthorizedFor(topic))
+				return HTTPStatus(HttpStatusCode.Forbidden, "Sie sind für diesen Vorgang nicht berechtigt!");
+
+			var auth = topic.IsEditableBy(GetCurrentUser(), GetSession());
+			if (!auth.IsAuthorized)
+				throw new TopicLockedException(auth.Reason);
+
 			if (proposal != topic.Proposal) //Trivialedit verhindern
 			{
 				// Änderungsverfolgung
@@ -560,6 +571,8 @@ namespace IGCV_Protokoll.Controllers
 
 			if (topic == null)
 				return HttpNotFound("Topic not found!");
+			if (!IsAuthorizedFor(topic))
+				return HTTPStatus(HttpStatusCode.Forbidden, "Sie sind für diesen Vorgang nicht berechtigt!");
 
 			ViewBag.TopicID = id;
 			ViewBag.IsEditable = topic.IsEditableBy(GetCurrentUser(), GetSession()).IsAuthorized;
@@ -576,6 +589,12 @@ namespace IGCV_Protokoll.Controllers
 		public ActionResult ViewHistory(int id)
 		{
 			Topic topic = db.Topics.Find(id);
+
+			if (topic == null)
+				return HttpNotFound("Das Thema konnte nicht gefunden werden.");
+			if (!IsAuthorizedFor(topic))
+				return HTTPStatus(HttpStatusCode.Forbidden, "Sie sind für diesen Vorgang nicht berechtigt!");
+			
 			var history = db.TopicHistory.Where(th => th.TopicID == topic.ID).OrderBy(th => th.ValidFrom).ToList();
 
 			if (history.Count == 0)
@@ -674,7 +693,9 @@ namespace IGCV_Protokoll.Controllers
 						.SingleOrDefault(t => t.ID == topicID); ;
 
 			if (topic == null)
-				return HttpNotFound();
+				return HttpNotFound(); 
+			if (!IsAuthorizedFor(topic))
+				return HTTPStatus(HttpStatusCode.Forbidden, "Sie sind für diesen Vorgang nicht berechtigt!");
 
 			var selectedAclTree = JsonConvert.DeserializeObject<List<SelectedAdEntity>>(aclTree);
 			var newAclTree = selectedAclTree.Where(x => x.selected).Select(x => x.id);

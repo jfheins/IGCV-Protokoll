@@ -60,7 +60,7 @@ namespace IGCV_Protokoll.Controllers
 			using (MiniProfiler.Current.Step("Themen"))
 			{
 				var cutoff = DateTime.Now.AddDays(3);
-				topics = db.Topics
+				topics = db.FilteredTopics(GetRolesForCurrentUser())
 					.Include(t => t.Comments)
 					.Include(t => t.Documents)
 					.Include(t => t.Lock)
@@ -86,7 +86,7 @@ namespace IGCV_Protokoll.Controllers
 		/// <param name="id">TopicID</param>
 		public ActionResult _FetchSingleTopic(int id)
 		{
-			return PartialView("~/Views/Topics/_Topic.cshtml", db.Topics.Find(id));
+			return PartialView("~/Views/Topics/_Topic.cshtml", db.FilteredTopics(GetRolesForCurrentUser()).First(t => t.ID == id));
 		}
 
         /// <summary>

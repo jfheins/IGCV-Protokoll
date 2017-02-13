@@ -79,7 +79,7 @@ namespace IGCV_Protokoll.Controllers
 			var sw = new Stopwatch();
 			sw.Start();
 
-			IQueryable<Topic> query = db.Topics
+			IQueryable<Topic> query = db.FilteredTopics(GetRolesForCurrentUser())
 				.Include(t => t.Assignments)
 				.Include(t => t.Comments)
 				.Include(t => t.Decision)
