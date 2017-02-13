@@ -62,6 +62,12 @@ namespace IGCV_Protokoll.Controllers
 		public ActionResult MarkAsDone(int id)
 		{
 			var a = db.Assignments.Find(id);
+
+			if (a == null)
+				return HttpNotFound();
+			if (!IsAuthorizedFor(a.Topic))
+				return HTTPStatus(HttpStatusCode.Forbidden, "Sie sind für diesen Vorgang nicht berechtigt!");
+
 			a.IsDone = true;
 			db.SaveChanges();
 
@@ -71,6 +77,12 @@ namespace IGCV_Protokoll.Controllers
 		public ActionResult MarkAsOpen(int id)
 		{
 			var assignment = db.Assignments.Find(id);
+
+			if (assignment == null)
+				return HttpNotFound();
+			if (!IsAuthorizedFor(assignment.Topic))
+				return HTTPStatus(HttpStatusCode.Forbidden, "Sie sind für diesen Vorgang nicht berechtigt!");
+
 			assignment.IsDone = false;
 
 			var topic = db.Topics
@@ -138,6 +150,9 @@ namespace IGCV_Protokoll.Controllers
 			if (IsTopicLocked(topicID))
 				throw new TopicLockedException();
 
+			if (!IsAuthorizedForTopic(topicID))
+				return HTTPStatus(HttpStatusCode.Forbidden, "Sie sind für diesen Vorgang nicht berechtigt!");
+
 			var a = new AssignmentEdit
 			{
 				TopicID = topicID,
@@ -154,42 +169,43 @@ namespace IGCV_Protokoll.Controllers
 		{
 			if (IsTopicLocked(input.TopicID))
 				throw new TopicLockedException();
-			else if (!ModelState.IsValid)
+
+			if (!IsAuthorizedForTopic(input.TopicID))
+				return HTTPStatus(HttpStatusCode.Forbidden, "Sie sind für diesen Vorgang nicht berechtigt!");
+
+			if (!ModelState.IsValid)
 			{
 				input.OwnerSelectList = CreateOwnerSelectListitems();
 				return View(input);
 			}
-			else
+			var topic = db.Topics.Find(input.TopicID);
+
+			// Ungelesen-Markierung und Aktion aktualisieren
+			MarkAsUnread(topic);
+			if (input.Type == AssignmentType.ToDo && topic.Lock != null)
+				topic.Lock.Action = TopicAction.None; // Falls ein ToDo hinzugefügt wird, Wiedervorlage auswählen.
+
+			var userlist = input.OwnerID >= 0
+				? input.OwnerID.ToEnumerable()
+				: db.SessionTypes.Find(-input.OwnerID).Attendees.Select(a => a.ID).ToList();
+
+			var mailer = new UserMailer();
+			var list = new List<Assignment>();
+			foreach (var userid in userlist)
 			{
-				var topic = db.Topics.Find(input.TopicID);
-
-				// Ungelesen-Markierung und Aktion aktualisieren
-				MarkAsUnread(topic);
-				if (input.Type == AssignmentType.ToDo && topic.Lock != null)
-					topic.Lock.Action = TopicAction.None; // Falls ein ToDo hinzugefügt wird, Wiedervorlage auswählen.
-
-				var userlist = input.OwnerID >= 0
-					? input.OwnerID.ToEnumerable()
-					: db.SessionTypes.Find(-input.OwnerID).Attendees.Select(a => a.ID).ToList();
-
-				var mailer = new UserMailer();
-				var list = new List<Assignment>();
-				foreach (var userid in userlist)
-				{
-					var a = Assignment.FromViewModel(input);
-					a.Owner = db.Users.Find(userid);
-					list.Add(a);
-				}
-
-				db.Assignments.AddRange(list);
-				db.SaveChanges();
-
-				await Task.WhenAll(list
-					.Where(assignment => assignment.Type == AssignmentType.ToDo && input.IsActive)
-					.Select(a => mailer.SendNewAssignment(a)));
-
-				return RedirectToAction("Details", "Topics", new {id = input.TopicID});
+				var a = Assignment.FromViewModel(input);
+				a.Owner = db.Users.Find(userid);
+				list.Add(a);
 			}
+
+			db.Assignments.AddRange(list);
+			db.SaveChanges();
+
+			await Task.WhenAll(list
+				.Where(assignment => assignment.Type == AssignmentType.ToDo && input.IsActive)
+				.Select(a => mailer.SendNewAssignment(a)));
+
+			return RedirectToAction("Details", "Topics", new {id = input.TopicID});
 		}
 
 		/// <summary>

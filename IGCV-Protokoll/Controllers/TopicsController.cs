@@ -163,7 +163,7 @@ namespace IGCV_Protokoll.Controllers
 				return HttpNotFound();
 			
 			if (!IsAuthorizedFor(topic))
-				throw new NotAuthorizedException("Sie sind für dieses Thema nicht berechtigt!");
+				return HTTPStatus(HttpStatusCode.Forbidden, "Sie sind für dieses Thema nicht berechtigt!");
 
 			// Ungelesen-Markierung aktualisieren
 			MarkAsRead(topic);

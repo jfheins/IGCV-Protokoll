@@ -154,6 +154,12 @@ namespace IGCV_Protokoll.Areas.Session.Controllers
 		public ActionResult _ChangeResubmissionDate(int topicID, DateTime? resubmissionDate)
 		{
 			var topic = db.Topics.Find(topicID);
+
+			if (topic == null)
+				return HttpNotFound();
+			if (GetSession()?.ManagerID == GetCurrentUserID()) // Nur zulassen, wenn innerhalb einer Sitzung
+				return HTTPStatus(HttpStatusCode.Forbidden, "Keine Sitzung gefunden.");
+
 			topic.ResubmissionDate = resubmissionDate;
 
 			try

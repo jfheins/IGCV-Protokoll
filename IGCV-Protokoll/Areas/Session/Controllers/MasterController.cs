@@ -8,6 +8,7 @@ using System.Web.Mvc;
 using IGCV_Protokoll.Areas.Administration.Models;
 using IGCV_Protokoll.Areas.Session.Models;
 using IGCV_Protokoll.Models;
+using JetBrains.Annotations;
 
 namespace IGCV_Protokoll.Areas.Session.Controllers
 {
@@ -132,16 +133,15 @@ namespace IGCV_Protokoll.Areas.Session.Controllers
             return RedirectToAction("Index", "Master", new { Area = "Session" });
         }
 
-        private ActiveSession CreateNewSession(SessionType type)
+        private ActiveSession CreateNewSession([NotNull] SessionType type)
         {
-
-            var session = db.ActiveSessions.Add(new ActiveSession(type)
+			var session = db.ActiveSessions.Add(new ActiveSession(type)
             {
                 ManagerID = GetCurrentUserID()
             });
 
             // Agenda aus Template instanziieren und damit festlegen
-            session.ActiveAgendaItems = type?.Agenda.AgendaItems.Select(ai => ActiveAgendaItem.FromTemplate(ai, session)).ToList();
+            session.ActiveAgendaItems = type.Agenda?.AgendaItems.Select(ai => ActiveAgendaItem.FromTemplate(ai, session)).ToList();
 
             // GGf. Themen übernehmen, die in die aktuelle Sitzung hinein verschoben werden.
             foreach (var t in db.Topics.Include(t => t.Creator).Where(t => t.TargetSessionTypeID == type.ID))

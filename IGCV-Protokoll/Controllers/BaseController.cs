@@ -144,6 +144,18 @@ namespace IGCV_Protokoll.Controllers
 					where aclitem.ParentId == obj.AclID.Value
 					select aclitem.ID).Any();
 		}
+		protected bool IsAuthorizedForTopic(int topicID)
+		{
+			var userRoles = GetRolesForCurrentUser();
+
+			var aclID = (from t in db.Topics where t.ID == topicID select t.AclID).SingleOrDefault();
+
+			return aclID == null || (from aclitem in db.ACLItems
+									 join adEntity in db.AdEntities on aclitem.AdEntityID equals adEntity.ID
+									 where userRoles.Contains(adEntity.ID)
+									 where aclitem.ParentId == aclID.Value
+									 select aclitem.ID).Any();
+		}
 
 		/// <summary>
 		/// Ändert die ACL des übergeben Objekts.
