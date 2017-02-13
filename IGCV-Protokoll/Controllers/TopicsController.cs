@@ -36,7 +36,7 @@ namespace IGCV_Protokoll.Controllers
 		/// <param name="filter">Das ViewModel, dass die Filterkriterien angibt.</param>
 		public ActionResult Index(FilteredTopics filter)
 		{
-			IQueryable<Topic> query = db.Topics
+			IQueryable<Topic> query = db.FilteredTopics(GetRolesForCurrentUser())
 				.Include(t => t.SessionType)
 				.Include(t => t.TargetSessionType)
 				.Include(t => t.Creator);
@@ -161,6 +161,9 @@ namespace IGCV_Protokoll.Controllers
 
 			if (topic == null)
 				return HttpNotFound();
+			
+			if (!IsAuthorizedFor(topic))
+				throw new NotAuthorizedException("Sie sind für dieses Thema nicht berechtigt!");
 
 			// Ungelesen-Markierung aktualisieren
 			MarkAsRead(topic);

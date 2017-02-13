@@ -149,7 +149,7 @@ namespace IGCV_Protokoll.Controllers
 		/// Ändert die ACL des übergeben Objekts.
 		/// </summary>
 		/// <param name="obj">Das Objekct, dess ACL geändert werden soll</param>
-		/// <param name="newAclList">Die neue ACL</param>
+		/// <param name="newAcl">Die neue ACL</param>
 		protected void ApplyNewACLFor([NotNull] IAccessible obj, IEnumerable<int> newAcl)
 		{
 			if (!IsAuthorizedFor(obj))
@@ -157,8 +157,9 @@ namespace IGCV_Protokoll.Controllers
 
 			var newAclList = newAcl.ToList();
 			// Es sollte nicht möglich sein, sich selbst die Rechte zu entziehen. Ansonsten könnte man einen derartigen Fehler nicht rückgängig machen.
-			// Falls es einen Eintrag in den AdEntities gibt, der nur diesem User entspreicht, wird er automatisch angehakt.
-			var thisUser = db.AdEntities.Where(e => e.Guid == GetCurrentUser().Guid).Select(e => e.ID).Cast<int?>().FirstOrDefault();
+			// Falls es einen Eintrag in den AdEntities gibt, der nur diesem User entspricht, wird er automatisch angehakt.
+			var thisUserGuid = GetCurrentUser().Guid;
+			var thisUser = db.AdEntities.Where(e => e.Guid == thisUserGuid).Select(e => e.ID).Cast<int?>().FirstOrDefault();
 			if (thisUser != null && !newAclList.Contains(thisUser.Value))
 				newAclList.Add(thisUser.Value);
 

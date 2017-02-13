@@ -20,7 +20,6 @@ namespace IGCV_Protokoll.DataLayer
 		public DataContext()
 			: base("DataContext")
 		{
-			//Database.Log = s => System.Diagnostics.Debug.WriteLine(s);
 		}
 
 		public DbSet<ACL> ACLs { get; set; }
@@ -57,6 +56,11 @@ namespace IGCV_Protokoll.DataLayer
 		public DbSet<UnreadState> UnreadState { get; set; }
 		public DbSet<User> Users { get; set; }
 		public DbSet<Vote> Votes { get; set; }
+
+		public IQueryable<Topic> FilteredTopics(int[] userRoles)
+		{
+			return Topics.Where(t => t.Acl == null || t.Acl.Items.Select(i => i.AdEntityID).Intersect(userRoles).Any());
+		}
 
 		protected override void OnModelCreating(DbModelBuilder modelBuilder)
 		{
