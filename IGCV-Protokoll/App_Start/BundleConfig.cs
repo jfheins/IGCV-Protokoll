@@ -38,7 +38,7 @@ namespace IGCV_Protokoll
 				"~/Scripts/masonry_grid.js"));
 
 			bundles.Add(new StyleBundle("~/Content/css").Include(
-				"~/Content/themes/iwb/jquery-ui.*",
+				"~/Content/themes/igcv/jquery-ui.*",
 				"~/Content/other/jquery.rtResponsiveTables.css",
 				"~/Content/other/colpick.css",
                 "~/Scripts/dropzone/dropzone.css",
