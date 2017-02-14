@@ -10,8 +10,11 @@ namespace IGCV_Protokoll.Controllers
 {
 	public class CommentsController : BaseController
 	{
-		public PartialViewResult _List(Topic topic)
+		public ActionResult _List(Topic topic)
 		{
+			if (!IsAuthorizedFor(topic))
+				return HTTPStatus(HttpStatusCode.Forbidden, "Sie sind für diesen Vorgang nicht berechtigt!");
+
 			var comments = db.Comments.Include(c => c.Author).Where(c => c.TopicID == topic.ID).OrderBy(c => c.Created).ToList();
 			ViewBag.TopicID = topic.ID;
 			ViewBag.ShowCreateForm = !topic.IsReadOnly && !IsTopicLocked(topic);

@@ -59,7 +59,15 @@ namespace IGCV_Protokoll.DataLayer
 
 		public IQueryable<Topic> FilteredTopics(int[] userRoles)
 		{
-			return Topics.Where(t => t.Acl == null || t.Acl.Items.Select(i => i.AdEntityID).Intersect(userRoles).Any());
+			return Topics.Where(t => t.Acl == null || t.Acl.Items.Select(i => i.AdEntityID).Any(x => userRoles.Contains(x)));
+		}
+		public IQueryable<Decision> FilteredDecisions(int[] userRoles)
+		{
+			//return from d in Decisions
+			//	   join t in Topics on d.ID equals t.ID
+			//	   where t.Acl == null || t.Acl.Items.Select(i => i.AdEntityID).Intersect(userRoles).Any()
+			//	   select d;
+			return FilteredTopics(userRoles).Where(t => t.Decision != null).Select(t => t.Decision);
 		}
 
 		protected override void OnModelCreating(DbModelBuilder modelBuilder)

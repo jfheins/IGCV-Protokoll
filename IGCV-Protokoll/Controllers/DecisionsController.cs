@@ -19,9 +19,12 @@ namespace IGCV_Protokoll.Controllers
 		// GET: Decisions
 		public ActionResult Index(FilteredDecisions filter)
 		{
-			IQueryable<Decision> query = db.Decisions
+			var roles = GetRolesForCurrentUser();
+			IQueryable<Decision> query = db.FilteredDecisions(roles)
 				.Include(d => d.OriginTopic)
-				.Include(d => d.Report);
+				.Include(d => d.Report)
+				.Include(d => d.OriginTopic.Tags)
+				.Include(d => d.OriginTopic.PushTargets);
 
 			if (!filter.ShowClosed)
 				query = query.Where(d => d.Type != DecisionType.Closed);

@@ -39,7 +39,9 @@ namespace IGCV_Protokoll.Controllers
 			IQueryable<Topic> query = db.FilteredTopics(GetRolesForCurrentUser())
 				.Include(t => t.SessionType)
 				.Include(t => t.TargetSessionType)
-				.Include(t => t.Creator);
+				.Include(t => t.Creator)
+				.Include(t => t.Votes)
+				.Include(t => t.Tags);
 
 			if (!filter.ShowReadonly)
 				query = query.Where(t => !t.IsReadOnly);
