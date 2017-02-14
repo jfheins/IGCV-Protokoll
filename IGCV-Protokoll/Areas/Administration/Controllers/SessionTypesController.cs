@@ -7,6 +7,7 @@ using System.Web.Mvc;
 using IGCV_Protokoll.Areas.Administration.Models;
 using IGCV_Protokoll.Areas.Administration.ViewModels;
 using IGCV_Protokoll.Controllers;
+using IGCV_Protokoll.util;
 
 namespace IGCV_Protokoll.Areas.Administration.Controllers
 {
@@ -40,9 +41,10 @@ namespace IGCV_Protokoll.Areas.Administration.Controllers
 		// GET: SessionTypes/Create
 		public ActionResult Create()
 		{
-            var vm = new SessionTypeVM();
-            vm.AgendaList = new SelectList(db.AgendaTemplates, "ID", "Name");
-            vm.UserDict = CreateUserDictionary(u => false);
+			var vm = new SessionTypeVM();
+			vm.AgendaList = new SelectList(db.AgendaTemplates, "ID", "Name");
+			var cuid = GetCurrentUserID();
+			vm.UserDict = CreateUserDictionary(u => u.ID == cuid);
 			return View(vm);
 		}
 
@@ -59,8 +61,11 @@ namespace IGCV_Protokoll.Areas.Administration.Controllers
 
 			if (ModelState.IsValid)
 			{
-			    var sessionType = vm.updateModel(new SessionType());
-				foreach (int userid in Attendees)
+				var sessionType = vm.updateModel(new SessionType());
+
+				// Der aktuelle Benutzer sollte den Sitzungstyp später bearbeiten können. Er wird daher als Stammteilnehmer hinzugefügt.
+				var attendeeSet = new HashSet<int>(Attendees) { GetCurrentUserID() };
+				foreach (int userid in attendeeSet)
 					sessionType.Attendees.Add(db.Users.Find(userid));
 
 				db.SessionTypes.Add(sessionType);
@@ -68,8 +73,8 @@ namespace IGCV_Protokoll.Areas.Administration.Controllers
 				return RedirectToAction("Index");
 			}
 
-            vm.AgendaList = new SelectList(db.AgendaTemplates, "ID", "Name", vm.AgendaID);
-            vm.UserDict = CreateUserDictionary(u => Attendees.Contains(u.ID));
+			vm.AgendaList = new SelectList(db.AgendaTemplates, "ID", "Name", vm.AgendaID);
+			vm.UserDict = CreateUserDictionary(u => Attendees.Contains(u.ID));
 			return View(vm);
 		}
 
@@ -82,10 +87,10 @@ namespace IGCV_Protokoll.Areas.Administration.Controllers
 			if (sessionType == null)
 				return HttpNotFound();
 
-		    var vm = SessionTypeVM.fromModel(sessionType);
+			var vm = SessionTypeVM.fromModel(sessionType);
 
-            vm.AgendaList = new SelectList(db.AgendaTemplates, "ID", "Name", vm.AgendaID);
-            vm.UserDict = CreateUserDictionary(u => sessionType.Attendees.Contains(u));
+			vm.AgendaList = new SelectList(db.AgendaTemplates, "ID", "Name", vm.AgendaID);
+			vm.UserDict = CreateUserDictionary(u => sessionType.Attendees.Contains(u));
 			return View(vm);
 		}
 
@@ -97,27 +102,36 @@ namespace IGCV_Protokoll.Areas.Administration.Controllers
 			if (ModelState.IsValid)
 			{
 				var sessionType = db.SessionTypes.Find(input.ID);
-			    input.updateModel(sessionType);
+
+				if (sessionType == null)
+					return HttpNotFound("SessionType not found!");
+
+				input.updateModel(sessionType);
 				sessionType.Attendees.Clear();
 
-				if (Attendees != null)
-				{
-					foreach (var userid in Attendees)
-						sessionType.Attendees.Add(db.Users.Find(userid));
-				}
+				if (Attendees == null) // Keine Häkchen gesetzt
+					Attendees = GetCurrentUserID().ToEnumerable();
+				else
+					Attendees = new HashSet<int>(Attendees) { GetCurrentUserID() };
+
+				foreach (var userid in Attendees)
+					sessionType.Attendees.Add(db.Users.Find(userid));
 
 				db.SaveChanges();
 				return RedirectToAction("Index");
 			}
 
-            input.AgendaList = new SelectList(db.AgendaTemplates, "ID", "Name", input.AgendaID);
-            input.UserDict = CreateUserDictionary(u => Attendees.Contains(u.ID));
+			input.AgendaList = new SelectList(db.AgendaTemplates, "ID", "Name", input.AgendaID);
+			input.UserDict = CreateUserDictionary(u => Attendees.Contains(u.ID));
 			return View(input);
 		}
 
 		// GET: Administration/SessionTypes/Delete/5
 		public ActionResult Delete(int? id)
 		{
+			// Löschen von Sitzungstypen wird nicht mehr unterstützt.
+			return HTTPStatus(HttpStatusCode.NotImplemented, "Löschen von Sitzungstypen wird nicht unterstützt.");
+
 			if (id == null)
 				return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 			SessionType sessionType = db.SessionTypes.Find(id);
@@ -135,6 +149,9 @@ namespace IGCV_Protokoll.Areas.Administration.Controllers
 		[ValidateAntiForgeryToken]
 		public ActionResult DeleteConfirmed(int id)
 		{
+			// Löschen von Sitzungstypen wird nicht mehr unterstützt.
+			return HTTPStatus(HttpStatusCode.NotImplemented, "Löschen von Sitzungstypen wird nicht unterstützt.");
+
 			SessionType sessionType = db.SessionTypes.Find(id);
 
 			if (sessionType.Attendees.Count != 0)
