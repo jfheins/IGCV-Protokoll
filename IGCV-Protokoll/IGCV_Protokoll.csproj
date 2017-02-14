@@ -552,7 +552,6 @@
     <Content Include="Content\themes\base\images\ui-icons_cd0a0a_256x240.png" />
     <Content Include="Content\themes\base\images\ui-icons_ffffff_256x240.png" />
     <Content Include="Content\themes\base\jquery-ui.css" />
-    <Content Include="Content\themes\base\jquery-ui.min.css" />
     <Content Include="Content\themes\base\menu.css" />
     <Content Include="Content\themes\base\progressbar.css" />
     <Content Include="Content\themes\base\resizable.css" />
@@ -808,16 +807,11 @@
     <Content Include="Scripts\dropzone\dropzone.js" />
     <None Include="Scripts\jquery-3.1.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.1.1.js" />
-    <Content Include="Scripts\jquery-3.1.1.min.js" />
     <Content Include="Scripts\jquery-3.1.1.slim.js" />
-    <Content Include="Scripts\jquery-3.1.1.slim.min.js" />
     <Content Include="Scripts\jquery-ui-1.12.1.js" />
-    <Content Include="Scripts\jquery-ui-1.12.1.min.js" />
     <Content Include="Scripts\jquery.colpick.js" />
-    <Content Include="Scripts\jquery.cookie-1.4.1.min.js" />
     <Content Include="Scripts\jquery.cookie.js" />
     <Content Include="Scripts\jquery.form.js" />
-    <Content Include="Scripts\jquery.form.min.js" />
     <Content Include="Scripts\jquery.highlight.js" />
     <Content Include="Scripts\jquery.json.js" />
     <Content Include="Scripts\jquery.rtResponsiveTables.js" />
@@ -825,11 +819,8 @@
     <Content Include="Scripts\jquery.timeago.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
-    <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
     <Content Include="Scripts\jquery.validate.js" />
-    <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
-    <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\jstree.js" />
     <Content Include="Scripts\ListUtilities.js" />
     <Content Include="Scripts\masonry_grid.js" />
@@ -914,9 +905,6 @@
     <Content Include="Views\Acl\_DisplayAuthorized.cshtml" />
     <Content Include="Views\Acl\_AclEditorFor.cshtml" />
     <Content Include="Views\Topics\_AclDisplay.cshtml" />
-    <Content Include="Scripts\jquery-3.1.1.slim.min.map" />
-    <Content Include="Scripts\jquery-3.1.1.min.map" />
-    <Content Include="Scripts\jquery.form.min.js.map" />
     <None Include="Web.Integration.config" />
     <None Include="Web.Production.config" />
     <None Include="Web.Testing.config" />
