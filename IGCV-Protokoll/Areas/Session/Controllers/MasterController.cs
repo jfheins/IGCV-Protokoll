@@ -43,18 +43,18 @@ namespace IGCV_Protokoll.Areas.Session.Controllers
             {
                 if (activeSession.ManagerID == uid)
                     return View(ResumeSession(activeSession.ID));
-                else
-                {
-                    TempData["ErrorMessage"] = "Es läuft bereits eine Sitzung dieses Typs. Benutzen Sie die Aktion 'Übernehmen' um die Sitzungsleitung zu übernehmen.";
-                    return RedirectToAction("Index");
-                }
+
+	            TempData["ErrorMessage"] = "Es läuft bereits eine Sitzung dieses Typs. Benutzen Sie die Aktion 'Übernehmen' um die Sitzungsleitung zu übernehmen.";
+	            return RedirectToAction("Index");
             }
 
             var st = db.SessionTypes.Find(SessionTypeID);
-            if (st != null)
-                return View(CreateNewSession(st));
-            else
-                return new HttpStatusCodeResult(HttpStatusCode.NotFound, "Sitzungstyp nicht gefunden.");
+	        if (st == null)
+				return HttpNotFound("Sitzungstyp nicht gefunden.");
+	        if (st.Attendees.All(u => u.ID != uid))
+				return HTTPStatus(HttpStatusCode.Forbidden, "Sie sind kein Stammteilnehmer. Nur Stammteilnehmer können die Sitzung eröffnen.");
+
+			return View(CreateNewSession(st));
         }
 
         public ActionResult Resume(int SessionID)
