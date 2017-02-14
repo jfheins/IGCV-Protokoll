@@ -97,15 +97,13 @@ namespace IGCV_Protokoll.Controllers
 				return new HttpStatusCodeResult(HttpStatusCode.BadRequest,
 					"Dieser Kommentar kann nicht gelöscht werden: Sie sind nicht der Autor des Kommentars.");
 			}
-			else if (IsTopicLocked(comment.TopicID))
+			if (IsTopicLocked(comment.TopicID))
 				throw new TopicLockedException();
-			else
-			{
-				db.Comments.Remove(comment);
-				db.SaveChanges();
 
-				return _List(t);
-			}
+			db.Comments.Remove(comment);
+			db.SaveChanges();
+
+			return _List(t);
 		}
 	}
 }

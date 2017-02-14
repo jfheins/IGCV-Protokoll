@@ -65,7 +65,7 @@
 							@{
 								var preset = kvp.Value ? "checked" : null;
 							}
-							<input type="checkbox" checked="@preset" class="check-box" id="Tags_@(index)_Value" name="Tags[@(index)].Value" value="true">
+							<input type="checkbox" checked="@(preset)" class="check-box" id="Tags_@(index)_Value" name="Tags[@(index)].Value" value="true">
 							<label for="Tags_@(index)_Value" class="control-label">@Html.DisplayFor(model => kvp.Key)</label>
 							<input type="hidden" name="Tags[@(index)].Key" value="@kvp.Key.ID">
 							<input type="hidden" name="Tags[@(index)].Value" value="false">

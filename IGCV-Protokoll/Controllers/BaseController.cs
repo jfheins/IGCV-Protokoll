@@ -375,7 +375,7 @@ namespace IGCV_Protokoll.Controllers
 			else
 				Response.StatusDescription = "Internal Server Error";
 
-			return Content(message);
+			return Content(message.PadRight(513));
 		}
 
 		/// <summary>
