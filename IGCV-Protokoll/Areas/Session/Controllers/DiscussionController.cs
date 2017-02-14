@@ -157,7 +157,7 @@ namespace IGCV_Protokoll.Areas.Session.Controllers
 
 			if (topic == null)
 				return HttpNotFound();
-			if (GetSession()?.ManagerID == GetCurrentUserID()) // Nur zulassen, wenn innerhalb einer Sitzung
+			if (GetSession()?.ManagerID != GetCurrentUserID()) // Nur zulassen, wenn innerhalb einer Sitzung
 				return HTTPStatus(HttpStatusCode.Forbidden, "Keine Sitzung gefunden.");
 
 			topic.ResubmissionDate = resubmissionDate;
