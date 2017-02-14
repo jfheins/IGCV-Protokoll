@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
+using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Mvc;
@@ -26,7 +27,7 @@ namespace IGCV_Protokoll.Controllers
 		public ActionResult Index(
 			[Bind(Include = "ShowToDos,ShowDuties,ShowPast,ShowFuture,ShowDone,UserID")] FilteredAssignments filter)
 		{
-			IQueryable<Assignment> query = db.Assignments.Include(a => a.Topic);
+			IQueryable<Assignment> query = db.Assignments.Include(a => a.Topic).Include(a => a.Owner);
 
 			if (!filter.ShowToDos)
 				query = query.Where(a => a.Type != AssignmentType.ToDo);
@@ -46,7 +47,17 @@ namespace IGCV_Protokoll.Controllers
 			if (filter.UserID != 0)
 				query = query.Where(a => a.Owner.ID == filter.UserID);
 
-			filter.Assignments = query.OrderBy(a => a.DueDate).ToList();
+			var roles = GetRolesForCurrentUser();
+			var cuid = GetCurrentUserID();
+			// Für die Anzeige werden nur solche Aufgaben áus der Datenbank geholt, bei denen der aktuelle Benutzer entweder der
+			// Besitzer ist, oder das zugehörige Thema sehen darf.
+			var displayList = (from assgn in query
+							   join t in db.FilteredTopics(roles) on assgn.TopicID equals t.ID
+							   select assgn).Union(from assgn in query
+												   where assgn.OwnerID == cuid
+												   select assgn).OrderBy(a => a.DueDate).ToList();
+
+			filter.Assignments = displayList;
 			filter.UserList = CreateUserSelectList();
 
 			return View(filter);
@@ -56,6 +67,12 @@ namespace IGCV_Protokoll.Controllers
 		public ActionResult Details(int id)
 		{
 			var a = db.Assignments.Find(id);
+
+			if (a == null)
+				return HttpNotFound();
+			if (!IsAuthorizedFor(a.Topic) && a.OwnerID != GetCurrentUserID())
+				return HTTPStatus(HttpStatusCode.Forbidden, "Sie sind zur Anzeige nicht berechtigt!");
+
 			return View(a);
 		}
 
@@ -65,13 +82,13 @@ namespace IGCV_Protokoll.Controllers
 
 			if (a == null)
 				return HttpNotFound();
-			if (!IsAuthorizedFor(a.Topic))
+			if (!IsAuthorizedFor(a.Topic) && a.OwnerID != GetCurrentUserID())
 				return HTTPStatus(HttpStatusCode.Forbidden, "Sie sind für diesen Vorgang nicht berechtigt!");
 
 			a.IsDone = true;
 			db.SaveChanges();
 
-			return RedirectToAction("Details", new {id});
+			return RedirectToAction("Details", new { id });
 		}
 
 		public ActionResult MarkAsOpen(int id)
@@ -80,7 +97,7 @@ namespace IGCV_Protokoll.Controllers
 
 			if (assignment == null)
 				return HttpNotFound();
-			if (!IsAuthorizedFor(assignment.Topic))
+			if (!IsAuthorizedFor(assignment.Topic) && assignment.OwnerID != GetCurrentUserID())
 				return HTTPStatus(HttpStatusCode.Forbidden, "Sie sind für diesen Vorgang nicht berechtigt!");
 
 			assignment.IsDone = false;
@@ -95,7 +112,7 @@ namespace IGCV_Protokoll.Controllers
 
 			db.SaveChanges();
 
-			return RedirectToAction("Details", new {id});
+			return RedirectToAction("Details", new { id });
 		}
 
 		/// <summary>
@@ -162,8 +179,8 @@ namespace IGCV_Protokoll.Controllers
 			return View(a);
 		}
 
-        // POST: Assignments/Create
-        [HttpPost]
+		// POST: Assignments/Create
+		[HttpPost]
 		[ValidateAntiForgeryToken]
 		public async Task<ActionResult> Create([Bind] AssignmentEdit input)
 		{
@@ -187,7 +204,7 @@ namespace IGCV_Protokoll.Controllers
 
 			var userlist = input.OwnerID >= 0
 				? input.OwnerID.ToEnumerable()
-				: db.SessionTypes.Find(-input.OwnerID).Attendees.Select(a => a.ID).ToList();
+				: (db.SessionTypes.Find(-input.OwnerID)?.Attendees.Select(a => a.ID).ToList() ?? Enumerable.Empty<int>());
 
 			var mailer = new UserMailer();
 			var list = new List<Assignment>();
@@ -205,7 +222,7 @@ namespace IGCV_Protokoll.Controllers
 				.Where(assignment => assignment.Type == AssignmentType.ToDo && input.IsActive)
 				.Select(a => mailer.SendNewAssignment(a)));
 
-			return RedirectToAction("Details", "Topics", new {id = input.TopicID});
+			return RedirectToAction("Details", "Topics", new { id = input.TopicID });
 		}
 
 		/// <summary>
@@ -217,8 +234,8 @@ namespace IGCV_Protokoll.Controllers
 		/// <returns>Eine Liste, in der Einzelbenutzer und Benutzergruppen enthalten sind.</returns>
 		private List<SelectListItem> CreateOwnerSelectListitems()
 		{
-			var usergroup = new SelectListGroup {Name = "Benutzer"};
-			var groupsgroup = new SelectListGroup {Name = "Gruppen"};
+			var usergroup = new SelectListGroup { Name = "Benutzer" };
+			var groupsgroup = new SelectListGroup { Name = "Gruppen" };
 
 			var listitems = db.GetUserOrdered(GetCurrentUser()).Select(u => new SelectListItem
 			{
@@ -248,6 +265,9 @@ namespace IGCV_Protokoll.Controllers
 			if (IsTopicLocked(assignment.TopicID))
 				throw new TopicLockedException();
 
+			if (!IsAuthorizedForTopic(assignment.TopicID) && assignment.OwnerID != GetCurrentUserID())
+				return HTTPStatus(HttpStatusCode.Forbidden, "Sie sind für diesen Vorgang nicht berechtigt!");
+
 			ViewBag.UserList = CreateUserSelectList();
 
 			var vm = new AssignmentEdit
@@ -275,15 +295,21 @@ namespace IGCV_Protokoll.Controllers
 				ViewBag.UserList = CreateUserSelectList();
 				return View(input);
 			}
-
 			var assignment = db.Assignments.Find(input.ID);
+
+			if (assignment == null)
+				return HttpNotFound();
 			if (IsTopicLocked(assignment.TopicID))
 				throw new TopicLockedException();
+			if (!IsAuthorizedForTopic(assignment.TopicID) && assignment.OwnerID != GetCurrentUserID())
+				return HTTPStatus(HttpStatusCode.Forbidden, "Sie sind für diesen Vorgang nicht berechtigt!");
+
+
 			if (assignment.IsActive && assignment.Type == AssignmentType.ToDo)
 				input.IsActive = true; // Verhindert, dass das Aktiv-Flag bei ToDos zurück auf false geändert wird.
 
 			if (assignment.Type == AssignmentType.ToDo && !assignment.IsActive && input.IsActive)
-				// Das Aktiv-Flag hat sich auf true geändert
+			// Das Aktiv-Flag hat sich auf true geändert
 			{
 				var mailer = new UserMailer();
 				mailer.SendNewAssignment(assignment);
@@ -293,7 +319,7 @@ namespace IGCV_Protokoll.Controllers
 			db.Entry(assignment).State = EntityState.Modified;
 			db.SaveChanges();
 
-			return RedirectToAction("Details", "Topics", new {id = input.TopicID});
+			return RedirectToAction("Details", "Topics", new { id = input.TopicID });
 		}
 
 		// GET: Assignments/Delete/5
@@ -301,12 +327,16 @@ namespace IGCV_Protokoll.Controllers
 		{
 			if (GetSession() == null)
 				return HTTPStatus(HttpStatusCode.Forbidden, "Nur im Sitzungsmodus dürfen Aufgaben gelöscht werden!");
-
 			if (id == null)
 				return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+
 			var assignment = db.Assignments.Find(id);
+
 			if (assignment == null)
 				return HttpNotFound();
+			if (!IsAuthorizedForTopic(assignment.TopicID) && assignment.OwnerID != GetCurrentUserID())
+				return HTTPStatus(HttpStatusCode.Forbidden, "Sie sind für diesen Vorgang nicht berechtigt!");
+
 			return View(assignment);
 		}
 
@@ -316,10 +346,16 @@ namespace IGCV_Protokoll.Controllers
 		public ActionResult DeleteConfirmed(int id)
 		{
 			var assignment = db.Assignments.Find(id);
+
+			if (assignment == null)
+				return HttpNotFound();
+			if (!IsAuthorizedForTopic(assignment.TopicID) && assignment.OwnerID != GetCurrentUserID())
+				return HTTPStatus(HttpStatusCode.Forbidden, "Sie sind für diesen Vorgang nicht berechtigt!");
+
 			var tid = assignment.TopicID;
 			db.Assignments.Remove(assignment);
 			db.SaveChanges();
-			return RedirectToAction("Details", "Topics", new {id = tid});
+			return RedirectToAction("Details", "Topics", new { id = tid });
 		}
 	}
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web.Mvc;
 using JetBrains.Annotations;
@@ -60,15 +61,26 @@ namespace IGCV_Protokoll.util
                  : defaultValueProvider();
         }
 
-        /// <summary>
-        ///    Kürzt den String auf eine Länge ein und versieht das Ergebnis mit einer Ellipse als Endzeichen. Wenn möglich, wid an
-        ///    einer Wortgrenze abgeschnitten. Ist <paramref name="str" /> nach Entfernung von mehrfachen Leerraumzeichen kürzer
-        ///    als <paramref name="maxLength" /> wird der String (verändert) zurückgegeben.
-        /// </summary>
-        /// <param name="str">Der Eingabestring</param>
-        /// <param name="maxLength">Die maximale Länge (in Zeichen) des Ausgabestrings</param>
-        /// <returns>Ein String, der maximal <paramref name="maxLength" /> Zeichen lang ist.</returns>
-        public static string Shorten(this string str, int maxLength)
+		public static IEnumerable<T> WhereNotNull<T>(this IEnumerable<T> sequence)
+		{
+			return sequence.Where(e => e != null);
+		}
+
+		public static IEnumerable<T> WhereNotNull<T>(this IEnumerable<T?> sequence)
+			where T : struct
+		{
+			return sequence.Where(e => e != null).Select(e => e.Value);
+		}
+
+		/// <summary>
+		///    Kürzt den String auf eine Länge ein und versieht das Ergebnis mit einer Ellipse als Endzeichen. Wenn möglich, wid an
+		///    einer Wortgrenze abgeschnitten. Ist <paramref name="str" /> nach Entfernung von mehrfachen Leerraumzeichen kürzer
+		///    als <paramref name="maxLength" /> wird der String (verändert) zurückgegeben.
+		/// </summary>
+		/// <param name="str">Der Eingabestring</param>
+		/// <param name="maxLength">Die maximale Länge (in Zeichen) des Ausgabestrings</param>
+		/// <returns>Ein String, der maximal <paramref name="maxLength" /> Zeichen lang ist.</returns>
+		public static string Shorten(this string str, int maxLength)
         {
             var stripped = Regex.Replace(str.Trim(), @"\s+", " ");
             if (stripped.Length > maxLength)
