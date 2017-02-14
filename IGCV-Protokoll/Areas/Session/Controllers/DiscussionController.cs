@@ -81,7 +81,7 @@ namespace IGCV_Protokoll.Areas.Session.Controllers
 
 			filter.UserList = CreateUserSelectList();
 			filter.PriorityList = TopicsController.PriorityChoices(filter.ShowPriority);
-			filter.SessionTypeList = new SelectList(db.GetActiveSessionTypes(), "ID", "Name");
+			filter.SessionTypeList = new SelectList(GetActiveSessionTypes(), "ID", "Name");
 
 			filter.TimespanList = TopicsController.TimespanChoices(filter.Timespan);
 

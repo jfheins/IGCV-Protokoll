@@ -11,6 +11,7 @@ using System.Web.Routing;
 using System.Web.Services.Protocols;
 using EntityFramework.Extensions;
 using IGCV_Protokoll.Areas.Administration.Controllers;
+using IGCV_Protokoll.Areas.Administration.Models;
 using IGCV_Protokoll.Areas.Session.Models;
 using IGCV_Protokoll.DataLayer;
 using IGCV_Protokoll.Models;
@@ -290,6 +291,16 @@ namespace IGCV_Protokoll.Controllers
 		{
 			var preselection = preselectedTags.Select(tt => tt.TagID).ToArray();
 			return db.Tags.ToDictionary(t => t, t => preselection.Contains(t.ID));
+		}
+
+		/// <summary>
+		/// Gibt alle Sitzungstypen sortiert zurück, die der aktuelle Benutzer sehen soll. D.h. nur solche, bei denen er Stammteilnehmer ist.
+		/// </summary>
+		/// <returns></returns>
+		public IEnumerable<SessionType> GetActiveSessionTypes()
+		{
+			var currentUserID = GetCurrentUserID();
+			return db.SessionTypes.Where(st => st.Active).Where(st => st.Attendees.Any(a => a.ID == currentUserID)).OrderBy(st => st.Name);
 		}
 
 		/// <summary>

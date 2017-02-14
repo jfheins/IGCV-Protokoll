@@ -98,11 +98,6 @@ namespace IGCV_Protokoll.DataLayer
 			return Users.Where(u => u.IsActive);
 		}
 
-		public IEnumerable<SessionType> GetActiveSessionTypes()
-		{
-			return SessionTypes.Where(st => st.Active).OrderBy(st => st.Name);
-		}
-
 		/// <summary>
 		/// Löscht ein Thema permanent aus der Datenbank.
 		/// </summary>

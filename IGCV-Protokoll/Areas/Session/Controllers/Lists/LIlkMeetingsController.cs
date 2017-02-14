@@ -19,7 +19,7 @@ namespace IGCV_Protokoll.Areas.Session.Controllers.Lists
 		public override PartialViewResult _CreateForm()
 		{
 			ViewBag.UserList = CreateUserSelectList();
-			ViewBag.SessionTypeList = new SelectList(db.GetActiveSessionTypes(), "ID", "Name");
+			ViewBag.SessionTypeList = new SelectList(GetActiveSessionTypes(), "ID", "Name");
 
 			return base._CreateForm();
 		}
@@ -27,7 +27,7 @@ namespace IGCV_Protokoll.Areas.Session.Controllers.Lists
 		public override ActionResult _BeginEdit(int id)
 		{
 			ViewBag.UserList = CreateUserSelectList();
-			ViewBag.SessionTypeList = new SelectList(db.GetActiveSessionTypes(), "ID", "Name");
+			ViewBag.SessionTypeList = new SelectList(GetActiveSessionTypes(), "ID", "Name");
 			return base._BeginEdit(id);
 		}
 

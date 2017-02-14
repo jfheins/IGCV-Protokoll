@@ -225,7 +225,7 @@ namespace IGCV_Protokoll.Controllers
 				Text = u.ShortName,
 				Value = u.ID.ToString(),
 				Group = usergroup
-			}).Concat(db.GetActiveSessionTypes().Select(x => new SelectListItem
+			}).Concat(GetActiveSessionTypes().Select(x => new SelectListItem
 			{
 				Text = x.Name,
 				Value = (-x.ID).ToString(),

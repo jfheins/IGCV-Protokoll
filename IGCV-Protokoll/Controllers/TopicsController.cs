@@ -75,7 +75,7 @@ namespace IGCV_Protokoll.Controllers
 
 			filter.UserList = CreateUserSelectList();
 			filter.PriorityList = PriorityChoices(filter.ShowPriority);
-			filter.SessionTypeList = new SelectList(db.GetActiveSessionTypes(), "ID", "Name");
+			filter.SessionTypeList = new SelectList(GetActiveSessionTypes(), "ID", "Name");
 			filter.TimespanList = TimespanChoices(filter.Timespan);
 			filter.TagList = db.Tags.Select(tag => new SelectListItem
 			{
@@ -221,8 +221,8 @@ namespace IGCV_Protokoll.Controllers
 		{
 			var viewmodel = new TopicEdit
 			{
-				SessionTypeList = new SelectList(db.GetActiveSessionTypes(), "ID", "Name"),
-				TargetSessionTypeList = new SelectList(db.GetActiveSessionTypes(), "ID", "Name"),
+				SessionTypeList = new SelectList(GetActiveSessionTypes(), "ID", "Name"),
+				TargetSessionTypeList = new SelectList(GetActiveSessionTypes(), "ID", "Name"),
 				UserList = CreateUserSelectList()
 			};
 			return View(viewmodel);
@@ -282,8 +282,8 @@ namespace IGCV_Protokoll.Controllers
 				return RedirectToAction("Index");
 			}
 
-			input.SessionTypeList = new SelectList(db.GetActiveSessionTypes(), "ID", "Name", input.SessionTypeID);
-			input.TargetSessionTypeList = new SelectList(db.GetActiveSessionTypes(), "ID", "Name", input.TargetSessionTypeID);
+			input.SessionTypeList = new SelectList(GetActiveSessionTypes(), "ID", "Name", input.SessionTypeID);
+			input.TargetSessionTypeList = new SelectList(GetActiveSessionTypes(), "ID", "Name", input.TargetSessionTypeID);
 			input.UserList = CreateUserSelectList();
 			return View(input);
 		}
@@ -311,8 +311,8 @@ namespace IGCV_Protokoll.Controllers
 				throw new TopicLockedException(auth.Reason);
 
 			TopicEdit viewmodel = TopicEdit.FromTopic(topic);
-			viewmodel.SessionTypeList = new SelectList(db.GetActiveSessionTypes(), "ID", "Name");
-			viewmodel.TargetSessionTypeList = new SelectList(db.GetActiveSessionTypes(), "ID", "Name");
+			viewmodel.SessionTypeList = new SelectList(GetActiveSessionTypes(), "ID", "Name");
+			viewmodel.TargetSessionTypeList = new SelectList(GetActiveSessionTypes(), "ID", "Name");
 			viewmodel.UserList = CreateUserSelectList(viewmodel.OwnerID);
 
 			return View(viewmodel);
@@ -385,8 +385,8 @@ namespace IGCV_Protokoll.Controllers
 				return RedirectToAction("Details", new { Area = "", id = input.ID });
 			}
 			input.SessionType = topic.SessionType;
-			input.SessionTypeList = new SelectList(db.GetActiveSessionTypes(), "ID", "Name", input.SessionTypeID);
-			input.TargetSessionTypeList = new SelectList(db.GetActiveSessionTypes(), "ID", "Name", input.TargetSessionTypeID);
+			input.SessionTypeList = new SelectList(GetActiveSessionTypes(), "ID", "Name", input.SessionTypeID);
+			input.TargetSessionTypeList = new SelectList(GetActiveSessionTypes(), "ID", "Name", input.TargetSessionTypeID);
 			input.UserList = CreateUserSelectList();
 			return View(input);
 		}
