@@ -143,14 +143,14 @@
 				<td>
 					@{ Html.RenderPartial("_StateDropdown", item.Lock); }
 				</td>
-				<td class="hidden-xs" style="text-align: right;" id="resubmissionCell_@item.ID">
+				<td class="hidden-xs col-sm-1" style="text-align: right;" id="resubmissionCell_@item.ID">
 					@{
 						string valuestr = null;
 					}
 					<span class="datestr">
 						@if (item.ResubmissionDate != null)
 						{
-							@item.ResubmissionDate.Value.ToString("dd.MM")
+							@item.ResubmissionDate.Value.ToString("dd.MM.yyyy")
 							valuestr = item.ResubmissionDate.Value.ToString("yyyy-MM-dd");
 						}
 					</span>
@@ -201,7 +201,7 @@
 
 				if (date > new Date()) {
 					datestr = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
-					localestr = date.getDate() + '.' + (date.getMonth() + 1) + '.';
+					localestr = date.getDate() + '.' + (date.getMonth() + 1) + '.' + date.getFullYear();
 				}
 
 				$.ajax({
