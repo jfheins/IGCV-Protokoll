@@ -144,25 +144,30 @@ namespace IGCV_Protokoll.Models
 		{
 			if (IsReadOnly)
 				return new AuthResult("Dieser Diskussionspunkt ist nicht bearbeitbar.");
-			else if (Lock != null)
+			if (Lock != null)
 			{
-				if (!u.Equals(Lock.Session.Manager))
-					return new AuthResult("Dieser Diskussionspunkt ist gesperrt, und nur durch den Sitzungsleiter bearbeitbar.");
-			}
-			else
-			{
-				if (u.Equals(Owner))
+				// Von einer Sitzung gesperrt
+				if (u.Equals(Lock.Session.Manager)) // Der Punkt ist in einer Sitzung, aber der aktuelle Benutzer ist der Sitzungsleiter
 					return new AuthResult(true);
 
-				if (s == null)
-					return new AuthResult("Sie können diesen Diskussionspunkt nicht bearbeiten, da sie nicht der Besitzer sind.");
-				else if (s.SessionType.ID != SessionTypeID)
-				{
-					return
-						new AuthResult("Sie können diesen Diskussionspunkt nicht bearbeiten, da der Punkt nicht in ihre Sitzung fällt.");
-				}
+				return new AuthResult("Dieser Diskussionspunkt ist gesperrt, und nur durch den Sitzungsleiter bearbeitbar.");
 			}
-			return new AuthResult(true);
+
+			// Besitzer darf bearbeiten
+			if (u.Equals(Owner))
+				return new AuthResult(true);
+
+			if (s == null)
+				return new AuthResult("Sie können diesen Diskussionspunkt nicht bearbeiten, da sie nicht der Besitzer sind.");
+			if (s.SessionType.ID != SessionTypeID)
+			{
+				return
+					new AuthResult("Sie können diesen Diskussionspunkt nicht bearbeiten, da der Punkt nicht in ihre Sitzung fällt.");
+			}
+
+			// Der aktuelle Benutzer ist zwar Sitzungsleiter einer Sitzung, in die dieser Punkt fallen würde.
+			// Er wurde aber beim erstellen der Sitzung nicht erfasst, z.B. weil er nach Sitzungsbeginn erstellt wurde.
+			return new AuthResult("Dieser Punkt ist in ihrer Sitzung nicht enthalten.");
 		}
 
 		public void IncorporateUpdates(TopicEdit updates)
