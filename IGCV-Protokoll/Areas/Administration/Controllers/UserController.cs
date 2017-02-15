@@ -13,6 +13,7 @@ using IGCV_Protokoll.Controllers;
 using IGCV_Protokoll.DataLayer;
 using IGCV_Protokoll.Mailers;
 using IGCV_Protokoll.Models;
+using IGCV_Protokoll.util;
 using JetBrains.Annotations;
 using StackExchange.Profiling;
 
@@ -360,7 +361,7 @@ namespace IGCV_Protokoll.Areas.Administration.Controllers
 				var user = db.Users.FirstOrDefault(u => u.Guid == item.Guid);
 				if (user != null)
 				{
-					var newMemberships = parentStack.ToArray();
+					var newMemberships = parentStack.Concat(item.ToEnumerable()).ToArray();
 					var oldMemberships = user.AdGroups.Select(x => x.AdEntity).ToArray();
 					var toRemove = oldMemberships.Except(newMemberships).Select(x => x.ID).ToArray();
 					if (toRemove.Length > 0)

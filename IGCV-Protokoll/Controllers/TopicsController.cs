@@ -692,7 +692,7 @@ namespace IGCV_Protokoll.Controllers
 		{
 			var topic = db.Topics
 						.Include(t => t.Acl)
-						.SingleOrDefault(t => t.ID == topicID); ;
+						.SingleOrDefault(t => t.ID == topicID);
 
 			if (topic == null)
 				return HttpNotFound(); 

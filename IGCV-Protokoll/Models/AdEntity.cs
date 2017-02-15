@@ -19,6 +19,7 @@ namespace IGCV_Protokoll.Models
 		{
 			Name = "";
 			SamAccountName = "";
+			Children = new List<AdEntity>();
 		}
 		public AdEntity(Principal p) : this()
 		{
