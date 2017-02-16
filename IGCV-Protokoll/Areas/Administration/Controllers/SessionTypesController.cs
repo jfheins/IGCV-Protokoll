@@ -27,17 +27,6 @@ namespace IGCV_Protokoll.Areas.Administration.Controllers
 			return View(db.SessionTypes.Include(st => st.Agenda).ToList());
 		}
 
-		// GET: Administration/SessionTypes/Details/5
-		public ActionResult Details(int? id)
-		{
-			if (id == null)
-				return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-			SessionType sessionType = db.SessionTypes.Find(id);
-			if (sessionType == null)
-				return HttpNotFound();
-			return View(sessionType);
-		}
-
 		// GET: SessionTypes/Create
 		public ActionResult Create()
 		{

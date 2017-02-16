@@ -14,7 +14,7 @@
 <table class="table table-striped">
     <thead>
         <tr>
-            <th>
+            <th class="hidden">
                 @Html.DisplayNameFor(model => model.ID)
             </th>
             <th class="col-xs-2">
@@ -39,7 +39,7 @@
         @foreach (SessionType item in Model)
         {
             <tr>
-                <td>
+                <td class="hidden">
                     @Html.DisplayFor(modelItem => item.ID)
                 </td>
                 <td>
@@ -70,11 +70,13 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.Active)
                 </td>
-                <td>
-                    @Html.ActionLink("Bearbeiten", "Edit", new { id = item.ID }) |
-                    @Html.ActionLink("Details", "Details", new { id = item.ID })
-                </td>
-            </tr>
+				<td>
+					@if (item.Attendees.Contains(ViewBag.CurrentUser))
+					{
+						@Html.ActionLink("Bearbeiten", "Edit", new {id = item.ID})
+					}
+				</td>
+			</tr>
         }
     </tbody>
 </table>

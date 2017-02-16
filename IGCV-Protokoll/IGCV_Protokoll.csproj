@@ -627,7 +627,6 @@
     <Content Include="Areas\Administration\Views\User\Index.cshtml" />
     <Content Include="Areas\Administration\Views\SessionTypes\Create.cshtml" />
     <Content Include="Areas\Administration\Views\SessionTypes\Delete.cshtml" />
-    <Content Include="Areas\Administration\Views\SessionTypes\Details.cshtml" />
     <Content Include="Areas\Administration\Views\SessionTypes\Edit.cshtml" />
     <Content Include="Areas\Administration\Views\SessionTypes\Index.cshtml" />
     <Content Include="Areas\Session\Views\web.config" />
