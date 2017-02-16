@@ -72,9 +72,13 @@ namespace IGCV_Protokoll.Areas.Administration.Controllers
 		{
 			if (id == null)
 				return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-			SessionType sessionType = db.SessionTypes.Include(st => st.Agenda).First(st => st.ID == id);
+
+			SessionType sessionType = db.SessionTypes.Include(st => st.Agenda).FirstOrDefault(st => st.ID == id);
+
 			if (sessionType == null)
 				return HttpNotFound();
+			if (!sessionType.Attendees.Contains(GetCurrentUser()))
+				return HTTPStatus(HttpStatusCode.Forbidden, "Nur Stammteilnehmer dürfen Sitzungstypen bearbeiten.");
 
 			var vm = SessionTypeVM.fromModel(sessionType);
 
@@ -94,6 +98,8 @@ namespace IGCV_Protokoll.Areas.Administration.Controllers
 
 				if (sessionType == null)
 					return HttpNotFound("SessionType not found!");
+				if (!sessionType.Attendees.Contains(GetCurrentUser()))
+					return HTTPStatus(HttpStatusCode.Forbidden, "Nur Stammteilnehmer dürfen Sitzungstypen bearbeiten.");
 
 				input.updateModel(sessionType);
 				sessionType.Attendees.Clear();
