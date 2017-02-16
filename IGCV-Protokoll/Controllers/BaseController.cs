@@ -145,6 +145,7 @@ namespace IGCV_Protokoll.Controllers
 					where aclitem.ParentId == obj.AclID.Value
 					select aclitem.ID).Any();
 		}
+
 		protected bool IsAuthorizedForTopic(int topicID)
 		{
 			var userRoles = GetRolesForCurrentUser();
@@ -156,6 +157,22 @@ namespace IGCV_Protokoll.Controllers
 									 where userRoles.Contains(adEntity.ID)
 									 where aclitem.ParentId == aclID.Value
 									 select aclitem.ID).Any();
+		}
+
+		protected void AuthorizeCurrentUserFor([NotNull] IAccessible obj)
+		{
+			if (obj.AclID == null)
+				return; // Keine Aktion nötig
+
+			var userRoles = GetRolesForCurrentUser();
+			var thisUserGuid = GetCurrentUser().Guid;
+			var thisUserAdEnitiy = db.AdEntities.FirstOrDefault(e => e.Guid == thisUserGuid);
+
+			if (thisUserAdEnitiy != null && !obj.Acl.Items.Any(item => userRoles.Contains(item.AdEntityID)))
+			{
+				// Autorisierung möglich, aber aktuell nicht autorisiert
+				obj.Acl.Items.Add(new ACLItem {AdEntity = thisUserAdEnitiy });
+			}
 		}
 
 		/// <summary>

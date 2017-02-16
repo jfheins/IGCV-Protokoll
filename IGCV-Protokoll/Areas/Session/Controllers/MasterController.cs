@@ -173,6 +173,8 @@ namespace IGCV_Protokoll.Areas.Session.Controllers
 			foreach (var topic in topics)
 			{
 				MarkAsUnread(topic, skipCurrentUser: false);
+
+				AuthorizeCurrentUserFor(topic);
 				session.LockedTopics.Add(new TopicLock
 				{
 					Topic = topic,
