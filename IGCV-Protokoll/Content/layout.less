@@ -1,5 +1,4 @@
 ﻿body {
-	padding-top: 57px;
 	padding-bottom: 20px;
 	overflow-y: scroll;
 }
@@ -115,26 +114,8 @@ p.navbar-right.navbar-text {
 }
 
 .navbar-secondary {
-	top: 56px;
+	margin-top: -@navbar-margin-bottom;
 	z-index: 1;
-}
-
-.navbar-secondary + .body-content {
-	margin-top: 50px;
-}
-
-@media (min-width: @screen-sm-min) and (max-width: @screen-sm-max) {
-	.navbar-secondary {
-		top: 107px;
-	}
-
-	#main-navbar + .body-content {
-		margin-top: 60px;
-	}
-
-	.navbar-secondary + .body-content {
-		margin-top: 100px;
-	}
 }
 
 .navbar-secondary .navbar-nav > li > a:hover {
