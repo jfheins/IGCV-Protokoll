@@ -3,10 +3,10 @@
 }
 
 <div class="index-action">
-	<a class="btn btn-default" onclick=" collapseListsOut(); "> Alle Listen ausklappen</a>
-	<a class="btn btn-default" onclick=" collapseListsIn(); "> Alle Listen einklappen</a>
-	@Html.ActionLink("Zurück", "Edit", "Master", new {Area = "Session"}, new {@class = "btn btn-default"})
-	@Html.ActionLink("Weiter", "Index", "Agenda", new {Area = "Session"}, new {@class = "btn btn-primary"})
+	<a class="btn btn-default" onclick="collapseListsOut();"> Alle Listen ausklappen</a>
+	<a class="btn btn-default" onclick="collapseListsIn();"> Alle Listen einklappen</a>
+	@Html.ActionLink("Zurück", "Index", "Discussion", new {Area = "Session"}, new {@class = "btn btn-default"})
+	@Html.ActionLink("Weiter", "Index", "Finalize", new {Area = "Session"}, new {@class = "btn btn-primary"})
 </div>
 
 <h2>@ViewBag.Title</h2>

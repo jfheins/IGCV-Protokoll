@@ -109,7 +109,7 @@ namespace IGCV_Protokoll.Areas.Session.Controllers
 
 			db.SaveChanges();
 
-			return RedirectToAction("Index", "Lists", new { Area = "Session" });
+			return RedirectToAction("Index", "Agenda", new { Area = "Session" });
 		}
 
 		[HttpPost]

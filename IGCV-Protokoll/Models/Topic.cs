@@ -165,6 +165,7 @@ namespace IGCV_Protokoll.Models
 					new AuthResult("Sie können diesen Diskussionspunkt nicht bearbeiten, da der Punkt nicht in ihre Sitzung fällt.");
 			}
 
+			// Lock == null && s != null && s.SessionType.ID == SessionTypeID
 			// Der aktuelle Benutzer ist zwar Sitzungsleiter einer Sitzung, in die dieser Punkt fallen würde.
 			// Er wurde aber beim erstellen der Sitzung nicht erfasst, z.B. weil er nach Sitzungsbeginn erstellt wurde.
 			return new AuthResult("Dieser Punkt ist in ihrer Sitzung nicht enthalten.");
