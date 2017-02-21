@@ -17,8 +17,8 @@ namespace IGCV_Protokoll.Controllers
 		// GET: SessionReports
 		public ActionResult Index()
 		{
-			var curUser = GetCurrentUser();
-			var allowedSessionTypes = curUser.SessionTypes.Select(st => st.ID).ToArray();
+			var cuid = GetCurrentUserID();
+			var allowedSessionTypes = db.SessionTypes.Where(st => st.Attendees.Any(a => a.ID == cuid)).Select(st => st.ID).ToArray();
 			var visibleReports = db.SessionReports.Include(sr => sr.Manager).Where(sr => allowedSessionTypes.Contains(sr.SessionType.ID)).ToList();
 			return View(visibleReports);
 		}
@@ -30,8 +30,8 @@ namespace IGCV_Protokoll.Controllers
 				return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 
 			SessionReport sessionReport = db.SessionReports.Find(id);
-			var curUser = GetCurrentUser();
-			var allowedSessionTypes = curUser.SessionTypes.Select(st => st.ID).ToArray();
+			var cuid = GetCurrentUserID();
+			var allowedSessionTypes = db.SessionTypes.Where(st => st.Attendees.Any(a => a.ID == cuid)).Select(st => st.ID).ToArray();
 
 			if (sessionReport == null)
 				return HttpNotFound();
