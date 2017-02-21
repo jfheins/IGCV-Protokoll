@@ -31,6 +31,7 @@ namespace IGCV_Protokoll.Areas.Session.Models.Lists
 
 		[Required]
 		[DisplayName("Kommentar")]
+		[DataType(DataType.MultilineText)]
 		public string Comment { get; set; }
 
 		[DisplayName("Genehmigt")]

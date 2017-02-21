@@ -47,7 +47,8 @@ namespace IGCV_Protokoll.Areas.Session.Models.Lists
 
         [Required(AllowEmptyStrings = true)]
         [DisplayName("Anmerkungen")]
-        public string Description { get; set; }
+		[DataType(DataType.MultilineText)]
+		public string Description { get; set; }
     }
     public enum ResearchProposalState
     {

@@ -43,6 +43,7 @@ namespace IGCV_Protokoll.Areas.Session.Models.Lists
 		[Required(AllowEmptyStrings = true)]
 		[DisplayFormat(ConvertEmptyStringToNull = false)]
 		[DisplayName("Anmerkung")]
+		[DataType(DataType.MultilineText)]
 		public string Comments { get; set; }
 	}
 }

@@ -34,6 +34,7 @@ namespace IGCV_Protokoll.Areas.Session.Models.Lists
 
 		[Required]
 		[DisplayName("Beschreibung / Profil")]
+		[DataType(DataType.MultilineText)]
 		public string Description { get; set; }
 	}
 }

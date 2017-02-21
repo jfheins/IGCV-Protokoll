@@ -30,6 +30,7 @@ namespace IGCV_Protokoll.Areas.Session.Models.Lists
 
 		[Required]
 		[DisplayName("Name / Ort")]
+		[DataType(DataType.MultilineText)]
 		public string Description { get; set; }
 
 		[DisplayName("ILK")]

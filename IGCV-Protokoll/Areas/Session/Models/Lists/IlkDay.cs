@@ -48,6 +48,7 @@ namespace IGCV_Protokoll.Areas.Session.Models.Lists
 
 		[Required]
 		[DisplayName("Themen")]
+		[DataType(DataType.MultilineText)]
 		public string Topics { get; set; }
 
 		[Required]

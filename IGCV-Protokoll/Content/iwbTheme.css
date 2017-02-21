@@ -7053,6 +7053,9 @@ p.panel-title {
 .table-sortable > thead > tr > th {
   border-bottom-width: 3px;
 }
+.table-responsive {
+  overflow-x: visible;
+}
 .faketable {
   width: 100%;
 }
