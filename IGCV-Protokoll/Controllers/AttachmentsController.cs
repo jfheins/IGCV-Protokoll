@@ -188,7 +188,7 @@ namespace IGCV_Protokoll.Controllers
 
 				var revision = new Revision
 				{
-					SafeName = InvalidChars.Replace(filename, ""),
+					SafeName = InvalidChars.Replace(filename, "").Truncate(100),
 					FileSize = file.ContentLength,
 					UploaderID = GetCurrentUserID(),
 					Extension = fileext,
