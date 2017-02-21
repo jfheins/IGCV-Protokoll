@@ -17,7 +17,10 @@ namespace IGCV_Protokoll.Controllers
 		// GET: SessionReports
 		public ActionResult Index()
 		{
-			return View(db.SessionReports.Include(sr => sr.Manager).ToList());
+			var curUser = GetCurrentUser();
+			var allowedSessionTypes = curUser.SessionTypes.Select(st => st.ID).ToArray();
+			var visibleReports = db.SessionReports.Include(sr => sr.Manager).Where(sr => allowedSessionTypes.Contains(sr.SessionType.ID)).ToList();
+			return View(visibleReports);
 		}
 
 		// GET: SessionReports/Details/5
@@ -25,10 +28,17 @@ namespace IGCV_Protokoll.Controllers
 		{
 			if (id == null)
 				return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-			SessionReport SessionReport = db.SessionReports.Find(id);
-			if (SessionReport == null)
+
+			SessionReport sessionReport = db.SessionReports.Find(id);
+			var curUser = GetCurrentUser();
+			var allowedSessionTypes = curUser.SessionTypes.Select(st => st.ID).ToArray();
+
+			if (sessionReport == null)
 				return HttpNotFound();
-			return File(SessionReport.Directory + SessionReport.FileName, "application/pdf");
+			if (!allowedSessionTypes.Contains(sessionReport.SessionType.ID))
+				return HTTPStatus(HttpStatusCode.Forbidden, "Nur Stammteilnehmer dürfen Sitzungsprotokolle abrufen.");
+
+			return File(SessionReport.Directory + sessionReport.FileName, "application/pdf");
 		}
 
 		protected override void Dispose(bool disposing)

@@ -63,10 +63,6 @@ namespace IGCV_Protokoll.DataLayer
 		}
 		public IQueryable<Decision> FilteredDecisions(int[] userRoles)
 		{
-			//return from d in Decisions
-			//	   join t in Topics on d.ID equals t.ID
-			//	   where t.Acl == null || t.Acl.Items.Select(i => i.AdEntityID).Intersect(userRoles).Any()
-			//	   select d;
 			return FilteredTopics(userRoles).Where(t => t.Decision != null).Select(t => t.Decision);
 		}
 
