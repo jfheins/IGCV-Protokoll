@@ -579,7 +579,9 @@ namespace IGCV_Protokoll.Controllers
 		[AllowAnonymous]
 		public ActionResult Download(Guid id)
 		{
-			var file = db.Revisions.Include(rev => rev.ParentDocument).Single(rev => rev.GUID == id);
+			var file = db.Revisions.Include(rev => rev.ParentDocument).FirstOrDefault(rev => rev.GUID == id);
+			if (file == null)
+				return HttpNotFound("Revision nicht gefunden.");
 
 			var isAuthenticated = User.Identity != null;
 
@@ -606,8 +608,8 @@ namespace IGCV_Protokoll.Controllers
 		[AllowAnonymous]
 		public ActionResult DownloadNewest(Guid id)
 		{
-			var document = db.Documents.Single(doc => doc.GUID == id);
-			return Download(document.LatestRevision.GUID);
+			var document = db.Documents.FirstOrDefault(doc => doc.GUID == id);
+			return document == null ? HttpNotFound("Dokument nicht gefunden.") : Download(document.LatestRevision.GUID);
 		}
 
 		public ActionResult _BeginEdit(int documentID)
