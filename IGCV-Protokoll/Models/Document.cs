@@ -32,24 +32,10 @@ namespace IGCV_Protokoll.Models
 
 		public Guid GUID { get; set; }
 
-		//----------------------------------------------------------------------------------------------------
-		[Display(Name = "Diskussion")]
-		[InverseProperty("Attachments")]
-		public int? TopicID { get; set; }
-
-		[ForeignKey("TopicID")]
-		public virtual Topic Topic { get; set; }
-
-		//----------------------------------------------------------------------------------------------------
-
-		[Display(Name = "Präsentation")]
-		[InverseProperty("Attachments")]
-		public int? EmployeePresentationID { get; set; }
-
-		[ForeignKey("EmployeePresentationID")]
-		public virtual EmployeePresentation EmployeePresentation { get; set; }
-
-		//----------------------------------------------------------------------------------------------------
+		[Display(Name = "Container")]
+		public DocumentContainer ParentContainer { get; set; }
+		[ForeignKey("ParentContainer")]
+		public int ParentContainerID { get; set; }
 
 		/// <summary>
 		///    Enthält das Lockdatum, falls das Dokument gesperrt ist, sonst null.
@@ -100,7 +86,7 @@ namespace IGCV_Protokoll.Models
 		}
 	}
 
-	public enum DocumentContainer
+	public enum DocumentContainerKind
 	{
 		Topic,
 		EmployeePresentation

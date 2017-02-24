@@ -73,25 +73,20 @@ namespace IGCV_Protokoll.Controllers
 		}
 
 		// GET: Attachments
-		public PartialViewResult _List(int id, DocumentContainer entityKind, bool makeList = false, bool showActions = true)
+		public PartialViewResult _List(int id, bool makeList = false, bool showActions = true) // id = DocumentContainer.ID
 		{
 			var documents = db.Documents
 				.Where(a => a.Deleted == null)
+				.Where(d => d.ParentContainerID == id)
 				.OrderBy(a => a.DisplayName)
 				.Include(a => a.Revisions)
 				.Include(a => a.LatestRevision)
 				.Include(a => a.LatestRevision.Uploader);
 
-			if (entityKind == DocumentContainer.Topic)
-				documents = documents.Where(a => a.TopicID == id);
-			else if (entityKind == DocumentContainer.EmployeePresentation)
-				documents = documents.Where(a => a.EmployeePresentationID == id);
-
-
 			KnownExtensions = (from path in Directory.GetFiles(Server.MapPath("~/img/fileicons"), "*.png")
 							   select Path.GetFileNameWithoutExtension(path)).ToDictionary(x => x, StringComparer.OrdinalIgnoreCase);
 
-			ViewBag.EntityID = id;
+			ViewBag.ContainerID = id;
 			ViewBag.KnownExtensions = KnownExtensions;
 			ViewBag.OfficeExtensions = OfficeExtensions;
 			ViewBag.SeamlessEnabled = isInternetExplorer;
@@ -106,17 +101,17 @@ namespace IGCV_Protokoll.Controllers
 			}
 		}
 
-		public ActionResult Details(int id)
+		public ActionResult Details(int id) // id = Document.ID
 		{
-			var document = db.Documents.Include(d => d.LockUser).Single(doc => doc.ID == id);
+			var document = db.Documents.Include(d => d.LockUser).SingleOrDefault(doc => doc.ID == id);
 			if (document == null)
 				return HTTPStatus(HttpStatusCode.NotFound, "Datei nicht gefunden");
 
 			ViewBag.ShowUpload = document.LockTime == null;
-			if (ViewBag.ShowUpload && document.TopicID != null)
+			var topic = document.ParentContainer.Topic;
+			if (ViewBag.ShowUpload && topic != null)
 			{
-				var topic = db.Topics.Find(document.TopicID.Value);
-				ViewBag.ShowUpload = !topic.IsReadOnly && !IsTopicLocked(document.TopicID.Value);
+				ViewBag.ShowUpload = !topic.IsReadOnly && !IsTopicLocked(topic.ID);
 			}
 
 			ViewBag.SeamlessEnabled = isInternetExplorer && OfficeExtensions.Contains(document.LatestRevision.Extension);
@@ -126,30 +121,33 @@ namespace IGCV_Protokoll.Controllers
 			return View(document);
 		}
 
-		public ActionResult _UploadForm(int id, DocumentContainer entityKind)
+		public ActionResult _UploadForm(int id) // id = DocumentContainer.ID
 		{
-			if (entityKind == DocumentContainer.Topic && IsTopicLocked(id))
+			var container = db.DocumentContainers.Find(id);
+			if (container == null)
+				return HttpNotFound();
+
+			if (container.TopicID.HasValue && IsTopicLocked(container.TopicID.Value))
 				return Content("<div class=\"panel-footer\">Da das Thema gesperrt ist, können Sie keine Dateien hochladen.</div>");
 			else
-				return PartialView("_DocumentCreateDropZone", Tuple.Create(entityKind, id));
+				return PartialView("_DocumentCreateDropZone", container);
 		}
 
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public ActionResult _CreateDocuments(DocumentContainer entityKind, int id)
+		public ActionResult _CreateDocuments(int id) // id = DocumentContainer.ID
 		{
 			if (Request.Files.Count == 0)
 				return HTTPStatus(HttpStatusCode.BadRequest, "Es wurden keine Dateien empfangen.");
 
-			if (id <= 0)
+			var container = db.DocumentContainers.Find(id);
+			if (container == null)
 				return HTTPStatus(HttpStatusCode.BadRequest, "Die Dateien können keinem Ziel zugeordnet werden.");
 
-			Topic topic = null;
-			if (entityKind == DocumentContainer.Topic)
+			Topic topic = container.Topic;
+			if (topic != null)
 			{
-				topic = db.Topics.Find(id);
-
-				if (IsTopicLocked(id))
+				if (IsTopicLocked(topic.ID))
 					return HTTPStatus(HttpStatusCode.Forbidden, "Da das Thema gesperrt ist, können Sie keine Dateien hochladen.");
 
 				if (topic.IsReadOnly)
@@ -199,20 +197,9 @@ namespace IGCV_Protokoll.Controllers
 				Document document = new Document(revision)
 				{
 					Deleted = null,
-					DisplayName = fullName
+					DisplayName = fullName,
+					ParentContainer = container
 				};
-
-				switch (entityKind)
-				{
-					case DocumentContainer.Topic:
-						document.TopicID = id;
-						break;
-					case DocumentContainer.EmployeePresentation:
-						document.EmployeePresentationID = id;
-						break;
-					default:
-						throw new InvalidEnumArgumentException("entityKind", (int)entityKind, typeof(DocumentContainer));
-				}
 
 				try
 				{
@@ -246,12 +233,12 @@ namespace IGCV_Protokoll.Controllers
 
 			ViewBag.StatusMessage = statusMessage.ToString();
 
-			return _List(id, entityKind);
+			return _List(id);
 		}
 
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public ActionResult CreateNewRevision(int id)
+		public ActionResult CreateNewRevision(int id) // id = Document.ID
 		{
 			if (Request.Files.Count != 1)
 				return HTTPStatus(HttpStatusCode.BadRequest, "Keine Datei empfangen");
@@ -335,12 +322,11 @@ namespace IGCV_Protokoll.Controllers
 			if (document.LockTime != null)
 				return HTTPStatus(HttpStatusCode.Forbidden, "Das Dokument ist derzeit gesperrt.");
 
-			if (document.TopicID == null)
+			topic = document.ParentContainer.Topic;
+			if (topic == null)
 				return null; // Alle Checks bestanden
 
-			topic = db.Topics.Find(document.TopicID.Value);
-
-			if (IsTopicLocked(document.TopicID.Value))
+			if (IsTopicLocked(topic.ID))
 				return HTTPStatus(HttpStatusCode.Forbidden, "Da das Thema gesperrt ist, können Sie keine Dateien hochladen.");
 
 			if (topic.IsReadOnly)
@@ -358,7 +344,7 @@ namespace IGCV_Protokoll.Controllers
 		/// </summary>
 		/// <param name="id">Die ID des Dokuments, zu dem eine neue Revision erzeugt werden soll.</param>
 		//[HttpPost]
-		public ActionResult BeginNewRevision(int id)
+		public ActionResult BeginNewRevision(int id) // id = Document.ID
 		{
 			// Checks
 			Document document;
@@ -406,8 +392,7 @@ namespace IGCV_Protokoll.Controllers
 			return HTTPStatus(HttpStatusCode.Created, "file://" + _hostname + "/Temp/" + revision.FileName);
 		}
 
-		//[HttpPost]
-		public ActionResult CancelNewRevision(int id)
+		public ActionResult CancelNewRevision(int id)  // id = Document.ID
 		{
 			try
 			{
@@ -444,8 +429,7 @@ namespace IGCV_Protokoll.Controllers
 			}
 		}
 
-		//[HttpPost]
-		public ActionResult FinishNewRevision(int id)
+		public ActionResult FinishNewRevision(int id) // id = Document.ID
 		{
 			// Checks
 			var document = db.Documents.Find(id);
@@ -456,11 +440,10 @@ namespace IGCV_Protokoll.Controllers
 			if (document.LockTime == null)
 				return HTTPStatus(HttpStatusCode.Forbidden, "Das Dokument ist derzeit nicht in Bearbeitung.");
 
-			if (document.TopicID != null)
+			var topic = document.ParentContainer.Topic;
+			if (topic != null)
 			{
-				var topic = db.Topics.Find(document.TopicID.Value);
-
-				if (IsTopicLocked(document.TopicID.Value))
+				if (IsTopicLocked(topic.ID))
 					return HTTPStatus(HttpStatusCode.Forbidden, "Da das Thema gesperrt ist, können Sie keine Dateien hochladen.");
 
 				if (topic.IsReadOnly)
@@ -510,15 +493,16 @@ namespace IGCV_Protokoll.Controllers
 			if (document.Deleted != null)
 				return HTTPStatus(422, "Das Objekt befindet sich bereits im Papierkorb.");
 
-			if (document.TopicID.HasValue && IsTopicLocked(document.TopicID.Value))
-				return HTTPStatus(HttpStatusCode.Forbidden, "Da das Thema gesperrt ist, können Sie keine Dateien bearbeiten.");
-
-			if (document.TopicID.HasValue && document.Topic.IsReadOnly)
+			var topic = document.ParentContainer.Topic;
+			if (topic != null)
 			{
-				return HTTPStatus(HttpStatusCode.Forbidden,
-					"Da das Thema schreibgeschützt ist, können Sie keine Dateien bearbeiten.");
-			}
+				if (IsTopicLocked(topic.ID))
+					return HTTPStatus(HttpStatusCode.Forbidden, "Da das Thema gesperrt ist, können Sie keine Dateien bearbeiten.");
 
+				if (topic.IsReadOnly)
+					return HTTPStatus(HttpStatusCode.Forbidden,
+						"Da das Thema schreibgeschützt ist, können Sie keine Dateien bearbeiten.");
+			}
 
 			document.Deleted = DateTime.Now; // In den Papierkorb
 			try
@@ -538,7 +522,7 @@ namespace IGCV_Protokoll.Controllers
 		{
 			var document = db.Documents.Include(d => d.LatestRevision).Single(d => d.ID == documentID);
 
-			if (document.Deleted == null) // In den Papierkorb
+			if (document.Deleted == null) // Ist nicht im Papierkorb
 				return HTTPStatus(422, "Das Objekt befindet sich noch nicht im Papierkorb.");
 
 			try
@@ -577,7 +561,7 @@ namespace IGCV_Protokoll.Controllers
 		/// <param name="id">ID der Datei</param>
 		/// <returns></returns>
 		[AllowAnonymous]
-		public ActionResult Download(Guid id)
+		public ActionResult Download(Guid id) // id = Revision.GUID
 		{
 			var file = db.Revisions.Include(rev => rev.ParentDocument).FirstOrDefault(rev => rev.GUID == id);
 			if (file == null)
@@ -606,7 +590,7 @@ namespace IGCV_Protokoll.Controllers
 		/// <param name="id">ID des Dokuments</param>
 		/// <returns></returns>
 		[AllowAnonymous]
-		public ActionResult DownloadNewest(Guid id)
+		public ActionResult DownloadNewest(Guid id) // id = Document.GUID
 		{
 			var document = db.Documents.FirstOrDefault(doc => doc.GUID == id);
 			return document == null ? HttpNotFound("Dokument nicht gefunden.") : Download(document.LatestRevision.GUID);
@@ -614,10 +598,15 @@ namespace IGCV_Protokoll.Controllers
 
 		public ActionResult _BeginEdit(int documentID)
 		{
-			var a = db.Documents.Find(documentID);
-			if (a.Topic != null && a.Topic.IsReadOnly)
+			var doc = db.Documents.Find(documentID);
+			if (doc == null)
+				return HttpNotFound();
+
+			var topic = doc.ParentContainer.Topic;
+			if (topic != null && topic.IsReadOnly)
 				return HTTPStatus(HttpStatusCode.Forbidden, "Das Thema ist schreibgeschützt!");
-			return PartialView("_NameEditor", a);
+
+			return PartialView("_NameEditor", doc);
 		}
 
 		public PartialViewResult _FetchDisplayName(int documentID)
@@ -648,11 +637,14 @@ namespace IGCV_Protokoll.Controllers
 
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public ActionResult _SubmitEdit(int id, string displayName)
+		public ActionResult _SubmitEdit(int id, string displayName) // id = Document.ID
 		{
 			var document = db.Documents.Find(id);
+			if (document == null)
+				return HttpNotFound();
+			var topic = document.ParentContainer.Topic;
 
-			if (document.Topic != null && document.Topic.IsReadOnly)
+			if (topic != null && topic.IsReadOnly)
 				return HTTPStatus(HttpStatusCode.Forbidden, "Das Thema ist schreibgeschützt!");
 
 			displayName = Path.ChangeExtension(displayName, Path.GetExtension(document.LatestRevision.FileName));

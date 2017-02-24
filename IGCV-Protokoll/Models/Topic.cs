@@ -7,6 +7,7 @@ using IGCV_Protokoll.Areas.Administration.Models;
 using IGCV_Protokoll.Areas.Session.Models;
 using IGCV_Protokoll.util;
 using IGCV_Protokoll.ViewModels;
+using JetBrains.Annotations;
 
 namespace IGCV_Protokoll.Models
 {
@@ -19,10 +20,10 @@ namespace IGCV_Protokoll.Models
 			Comments = new List<Comment>();
 			Votes = new List<Vote>();
 			Assignments = new List<Assignment>();
-			Documents = new List<Document>();
 			Created = DateTime.Now;
 			ValidFrom = DateTime.Now;
 			UnreadBy = new List<UnreadState>();
+			Documents = new DocumentContainer();
 			// ReSharper restore DoNotCallOverridableMethodsInConstructor
 		}
 
@@ -94,7 +95,7 @@ namespace IGCV_Protokoll.Models
 		public Priority Priority { get; set; }
 
 		[Display(Name = "Dokumente")]
-		public virtual ICollection<Document> Documents { get; set; }
+		public DocumentContainer Documents { get; set; }
 
 		[Display(Name = "Erstellt")]
 		[Required]

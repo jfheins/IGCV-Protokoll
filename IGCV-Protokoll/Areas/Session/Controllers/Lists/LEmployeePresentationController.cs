@@ -24,10 +24,10 @@ namespace IGCV_Protokoll.Areas.Session.Controllers.Lists
 			var items = Entities.ToList();
 			foreach (var emp in items)
 			{
-				emp.FileCount = emp.Documents.Count(a => a.Deleted == null);
+				emp.FileCount = emp.Documents.Documents.Count(a => a.Deleted == null);
 				if (emp.FileCount > 0)
 				{
-					var document = emp.Documents.Where(a => a.Deleted == null).OrderByDescending(a => a.Created).First();
+					var document = emp.Documents.Documents.Where(a => a.Deleted == null).OrderByDescending(a => a.Created).First();
 					emp.FileURL = Url.Action("DownloadNewest", "Attachments", new {Area = "", id = document.GUID});
 				}
 			}
@@ -98,10 +98,10 @@ namespace IGCV_Protokoll.Areas.Session.Controllers.Lists
 				db.SaveChanges();
 			}
 			ViewBag.Reporting = false;
-			emp.FileCount = emp.Documents.Count(a => a.Deleted == null);
+			emp.FileCount = emp.Documents.Documents.Count(a => a.Deleted == null);
 			if (emp.FileCount > 0)
 			{
-				var document = emp.Documents.Where(a => a.Deleted == null).OrderByDescending(a => a.Created).First();
+				var document = emp.Documents.Documents.Where(a => a.Deleted == null).OrderByDescending(a => a.Created).First();
 				emp.FileURL = Url.Action("DownloadNewest", "Attachments", new {Area = "", id = document.GUID});
 			}
 
@@ -113,17 +113,12 @@ namespace IGCV_Protokoll.Areas.Session.Controllers.Lists
 			if (id == null)
 				return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 
-			EmployeePresentation ep = _dbSet.Find(id.Value);
+			EmployeePresentation ep = _dbSet.FirstOrDefault(x => x.ID == id.Value);
 			if (ep == null)
 				return HttpNotFound();
-
-			var linkedFiles = db.Documents.Include(d => d.LatestRevision).Where(a => a.EmployeePresentationID == id);
-
-			foreach (var file in linkedFiles)
-			{
-				file.EmployeePresentationID = null;
-				file.Deleted = file.Deleted ?? DateTime.Now;
-			}
+			
+			ep.Documents.Orphaned = DateTime.Now;
+			ep.Documents = null;
 			try
 			{
 				db.SaveChanges();
@@ -134,8 +129,7 @@ namespace IGCV_Protokoll.Areas.Session.Controllers.Lists
 				return HTTPStatus(HttpStatusCode.InternalServerError, msg);
 			}
 
-			ep.Documents.Clear();
-			_dbSet.Remove(_dbSet.Find(id));
+			_dbSet.Remove(ep);
 			db.SaveChanges();
 
 			return new HttpStatusCodeResult(HttpStatusCode.NoContent);

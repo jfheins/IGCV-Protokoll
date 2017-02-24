@@ -298,11 +298,11 @@ else
 				<div class="panel-body" id="attachments_@Model.ID">Keine Dokumente vorhanden.</div>}
 			else
 			{
-				@Html.Action("_List", "Attachments", new { entityKind = DocumentContainer.Topic, id = Model.ID, showActions = !Model.IsReadOnly })
+				@Html.Action("_List", "Attachments", new { entityKind = DocumentContainerKind.Topic, id = Model.ID, showActions = !Model.IsReadOnly })
 			}
 			@if (!Model.IsReadOnly)
 			{
-				@Html.Action("_UploadForm", "Attachments", new { entityKind = DocumentContainer.Topic, id = Model.ID })
+				@Html.Action("_UploadForm", "Attachments", new { entityKind = DocumentContainerKind.Topic, id = Model.ID })
 			}
 		</div>
 	</div>

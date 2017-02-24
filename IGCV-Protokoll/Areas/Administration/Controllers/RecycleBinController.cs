@@ -29,15 +29,12 @@ namespace IGCV_Protokoll.Areas.Administration.Controllers
 
 		public ActionResult _Restore(int documentID)
 		{
-			var attachment = db.Documents.Include(a => a.LatestRevision).Single(d => d.ID == documentID);
-
-			if (attachment.TopicID == null && attachment.EmployeePresentationID == null) // Verwaist
-				return HTTPStatus(422, "Wiederherstellungsziel ist nicht mehr vorhanden");
-
-			if (attachment.TopicID != null && attachment.Topic.IsReadOnly)
+			var document = db.Documents.Include(a => a.LatestRevision).Single(d => d.ID == documentID);
+			
+			if (document.ParentContainer.TopicID != null && document.ParentContainer.Topic.IsReadOnly)
 				return HTTPStatus(422, "Wiederherstellungsziel ist schreibgeschützt");
 
-			attachment.Deleted = null;
+			document.Deleted = null;
 
 			try
 			{

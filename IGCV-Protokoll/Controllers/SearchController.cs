@@ -424,7 +424,7 @@ namespace IGCV_Protokoll.Controllers
 
 		private void SearchAttachments(Topic topic, Regex[] searchterms, SearchResultList resultlist)
 		{
-			foreach (Document attachment in topic.Documents)
+			foreach (Document attachment in topic.Documents.Documents)
 			{
 				float score = 0.0f;
 				foreach (Regex pattern in searchterms)
@@ -571,7 +571,7 @@ namespace IGCV_Protokoll.Controllers
 				}
 			}
 			// Die Dokumente, die Diskussionen zugeordnet sind, wurden oben bereits durchsucht.
-			foreach (var doc in db.Documents.Where(doc => doc.EmployeePresentationID != null))
+			foreach (var doc in db.Documents.Where(doc => doc.ParentContainer.TopicID == null))
 			{
 				if (searchterms.All(pattern => pattern.IsMatch(doc.DisplayName)))
 				{

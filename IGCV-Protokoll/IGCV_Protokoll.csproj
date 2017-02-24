@@ -165,6 +165,7 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Areas\Session\Views\SessionBase\" />
+    <Folder Include="Views\DocumentContainer\" />
     <Folder Include="Views\ScheduledTasks\" />
   </ItemGroup>
   <ItemGroup>
@@ -221,6 +222,7 @@
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\CommentsController.cs" />
     <Compile Include="Controllers\DecisionsController.cs" />
+    <Compile Include="Controllers\DocumentContainerController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\PushController.cs" />
     <Compile Include="GlobalSuppressions.cs" />
@@ -275,6 +277,7 @@
     <Compile Include="Models\ACL.cs" />
     <Compile Include="Models\AclItem.cs" />
     <Compile Include="Models\AdEntity.cs" />
+    <Compile Include="Models\DocumentContainer.cs" />
     <Compile Include="util\IAccessible.cs" />
     <Compile Include="util\PermissiveAuthorizationAttribute.cs" />
     <Compile Include="ViewModels\AccessControlViewModels.cs" />

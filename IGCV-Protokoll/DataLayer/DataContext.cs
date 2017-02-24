@@ -34,6 +34,7 @@ namespace IGCV_Protokoll.DataLayer
 		public DbSet<Comment> Comments { get; set; }
 		public DbSet<Decision> Decisions { get; set; }
 		public DbSet<Document> Documents { get; set; }
+		public DbSet<DocumentContainer> DocumentContainers { get; set; }
 		public DbSet<Conference> LConferences { get; set; }
 		public DbSet<EmployeePresentation> LEmployeePresentations { get; set; }
 		public DbSet<Event> LEvents { get; set; }
@@ -109,13 +110,12 @@ namespace IGCV_Protokoll.DataLayer
 		public void DeleteTopic(int topicID)
 		{
 			var topic = Topics.Find(topicID);
+			if (topic == null)
+				return;
 
-			// Dokumente separat löschen, damit keine verwaisten Dateien übrig bleiben
-			foreach (var document in topic.Documents)
-			{
-				document.Deleted = document.Deleted ?? DateTime.Now;
-				document.TopicID = null;
-			}
+			// Dokumente bleiben erhalten, der Dokumentencontainer ist dann allerdings verwaist.
+			topic.Documents.Topic = null;
+			topic.Documents.Orphaned = DateTime.Now;
 			SaveChanges();
 
 			Votes.RemoveRange(Votes.Where(v => v.Topic.ID == topicID));

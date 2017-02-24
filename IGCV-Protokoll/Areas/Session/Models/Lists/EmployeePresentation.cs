@@ -17,7 +17,7 @@ namespace IGCV_Protokoll.Areas.Session.Models.Lists
 		public EmployeePresentation()
 		{
 			LastPresentation = DateTime.Today;
-			Documents = new List<Document>();
+			Documents = new DocumentContainer();
 		}
 
 		[Required]
@@ -39,7 +39,7 @@ namespace IGCV_Protokoll.Areas.Session.Models.Lists
 		public DateTime LastPresentation { get; set; }
 
 		[DisplayName("Dokumente")]
-		public ICollection<Document> Documents { get; set; }
+		public DocumentContainer Documents { get; set; }
 
 		[DisplayName("Vorgemerkt")]
 		public bool Selected { get; set; }

@@ -102,9 +102,9 @@
 			}
 			else
 			{
-				@Html.Action("_List", "Attachments", new {Area = "", entityKind = DocumentContainer.EmployeePresentation, id = Model.ID})
+				@Html.Action("_List", "Attachments", new {Area = "", entityKind = DocumentContainerKind.EmployeePresentation, id = Model.ID})
 			}
-			@Html.Action("_UploadForm", "Attachments", new {Area = "", entityKind = DocumentContainer.EmployeePresentation, id = Model.ID})
+			@Html.Action("_UploadForm", "Attachments", new {Area = "", entityKind = DocumentContainerKind.EmployeePresentation, id = Model.ID})
 		</div>
 	</div>
 </div>

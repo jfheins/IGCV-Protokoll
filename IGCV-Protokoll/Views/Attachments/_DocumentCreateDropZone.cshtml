@@ -1,4 +1,4 @@
-﻿@model Tuple<IGCV_Protokoll.Models.DocumentContainer, int>
+﻿@model IGCV_Protokoll.Models.DocumentContainer
 <div class="panel-footer">
     @using (Html.BeginForm("_CreateDocuments", "Attachments",
                                         FormMethod.Post,
@@ -6,8 +6,7 @@
     {
         <div>
             @Html.AntiForgeryToken()
-            @Html.Hidden("entityKind", Model.Item1.ToString())
-            @Html.Hidden("id", Model.Item2)
+            @Html.Hidden("id", Model.ID)
             <div class="dz-message clearfix" style="position: relative;">
                 <div class="glyphicon glyphicon-cloud-upload" style="font-size: 70px; float: left; margin-right: 20px;"></div>
                 <div style="font-size: 150%; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);">Dateien per Drag 'n' Drop ablegen um neue Dokumente anzuhängen.</div>
@@ -30,10 +29,10 @@
                 this.on("complete", function (dzFile) {
                     if (dzFile.status == "success" && dzFile.xhr) {
                         if (dzFile.xhr.status == 200) {
-                            $('#attachments_@Model.Item2').replaceWith(dzFile.xhr.responseText);
+                            $('#attachments_@Model.ID').replaceWith(dzFile.xhr.responseText);
                             $('#attachment_uploader_status').html('');
-                            $('#attachments_@Model.Item2').tablesorter();
-                            $('#attachments_@Model.Item2').timeago();
+                            $('#attachments_@Model.ID').tablesorter();
+                            $('#attachments_@Model.ID').timeago();
                             var dz = this;
                             window.setTimeout(function () { dz.removeFile(dzFile); }, 2500);
 

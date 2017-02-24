@@ -1,6 +1,6 @@
 ﻿@model IEnumerable<IGCV_Protokoll.Models.Document>
 
-<div class="file-list" id="attachments_@ViewBag.EntityID">
+<div class="file-list" id="attachments_@ViewBag.ContainerID">
 	@foreach (var file in Model)
 	{
 		Html.RenderPartial("~/Views/Attachments/_AttachmentTile.cshtml", file);
