@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Web.Mvc;
 using IGCV_Protokoll.Models;
+using IGCV_Protokoll.ViewModels;
 
 namespace IGCV_Protokoll.Controllers
 {
@@ -15,16 +16,15 @@ namespace IGCV_Protokoll.Controllers
 			if (!IsAuthorizedFor(topic))
 				return HTTPStatus(HttpStatusCode.Forbidden, "Sie sind für diesen Vorgang nicht berechtigt!");
 
-			var comments = db.Comments.Include(c => c.Author).Where(c => c.TopicID == topic.ID).OrderBy(c => c.Created).ToList();
-			ViewBag.TopicID = topic.ID;
-			ViewBag.ShowCreateForm = !topic.IsReadOnly && !IsTopicLocked(topic);
+			var vm = new CommentListViewModel
+			{
+				Items = db.Comments.Include(c => c.Author).Where(c => c.TopicID == topic.ID).OrderBy(c => c.Created).ToList(),
+				ParentTopicID = topic.ID,
+				ShowCreateForm = !topic.IsReadOnly && !IsTopicLocked(topic),
+				AllowDeletion = true
+			};
 
-			Comment lastcomment = comments.LastOrDefault();
-			ViewBag.AllowDeletion = (lastcomment != null) && !topic.IsReadOnly && (lastcomment.AuthorID == GetCurrentUserID())
-				? lastcomment.ID
-				: -1;
-
-			return PartialView("_CommentList", comments);
+			return PartialView("_CommentList", vm);
 		}
 
 		public ActionResult _CreateForm(int topicID)

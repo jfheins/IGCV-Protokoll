@@ -14,21 +14,11 @@
 	</div>
 }
 <dl class="dl-horizontal">
-	@if (Model.TopicID != null)
+	@if (Model.ParentContainer.TopicID != null)
 	{
-		<dt>@Html.DisplayNameFor(model => Model.TopicID)</dt>
+		<dt>@Html.DisplayNameFor(model => Model.ParentContainer.TopicID)</dt>
 		<dd>
-			@Html.ActionLink(Model.Topic.Title, "Details", "Topics", new {Area = "", id = Model.TopicID}, null)
-		</dd>
-	}
-	@if (Model.EmployeePresentationID != null)
-	{
-		<dt>@Html.DisplayNameFor(model => Model.EmployeePresentationID)</dt>
-		<dd>
-			@{
-				string url = Request.Url != null ? Request.Url.PathAndQuery : null;
-			}
-			@Html.ActionLink(Model.EmployeePresentation.ToString(), "Edit", "LEmployeePresentations", new {Area = "Session", id = Model.EmployeePresentationID, returnURL = url}, null)
+			@Html.ActionLink(Model.ParentContainer.Topic.Title, "Details", "Topics", new {Area = "", id = Model.ParentContainer.TopicID}, null)
 		</dd>
 	}
 
@@ -46,7 +36,7 @@
 	{
 		<dt>@Html.DisplayNameFor(model => model.Deleted)</dt>
 		<dd>
-			@Html.DisplayFor(model => model.Created)
+			@Html.DisplayFor(model => model.Deleted.Value)
 		</dd>
 	}
 

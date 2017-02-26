@@ -262,17 +262,17 @@ else
 		<h3 class="panel-title">Aufgaben</h3>
 	</div>
 	@if (Model.Assignments.Any())
-			{
-				Html.RenderPartial("~/Views/Assignments/_DetailedTable.cshtml", Model.Assignments.OrderBy(a => a.Type).ThenByDescending(a => a.DueDate));
-			}
-			else
-			{
+	{
+		Html.RenderPartial("~/Views/Assignments/_DetailedTable.cshtml", Model.Assignments.OrderBy(a => a.Type).ThenByDescending(a => a.DueDate));
+	}
+	else
+	{
 		<div class="panel-body">
 			Diese Diskussion enthält keine Aufgaben.
 		</div>
-			}
+	}
 	@if (!Model.IsReadOnly)
-			{
+	{
 		<div class="panel-footer">
 			@if (Model.IsLocked)
 			{
@@ -283,7 +283,7 @@ else
 				@Html.ActionLink("Neue Aufgabe erstellen", "Create", "Assignments", new { topicID = Model.ID }, null)
 			}
 		</div>
-			}
+	}
 </div>
 
 
@@ -293,16 +293,16 @@ else
 			<div class="panel-heading">
 				<h3 class="panel-title">@Html.DisplayNameFor(model => model.Documents)</h3>
 			</div>
-			@if (Model.Documents.Count(d => d.Deleted == null) == 0)
+			@if (!Model.Documents.VisibleDocuments.Any())
 			{
 				<div class="panel-body" id="attachments_@Model.ID">Keine Dokumente vorhanden.</div>}
 			else
 			{
-				@Html.Action("_List", "Attachments", new { entityKind = DocumentContainerKind.Topic, id = Model.ID, showActions = !Model.IsReadOnly })
+				@Html.Action("_List", "Attachments", new { id = Model.Documents.ID, showActions = !Model.IsReadOnly })
 			}
 			@if (!Model.IsReadOnly)
 			{
-				@Html.Action("_UploadForm", "Attachments", new { entityKind = DocumentContainerKind.Topic, id = Model.ID })
+				@Html.Action("_UploadForm", "Attachments", new { id = Model.Documents.ID })
 			}
 		</div>
 	</div>

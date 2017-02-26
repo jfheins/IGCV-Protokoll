@@ -101,9 +101,23 @@ namespace IGCV_Protokoll.Controllers
 			}
 		}
 
+		public ActionResult ContainerDetails(int id) // id = DocumentContainer.ID
+		{
+			var container = db.DocumentContainers.Include(dc => dc.Topic).SingleOrDefault(dc => dc.ID == id);
+			if (container == null)
+				return HTTPStatus(HttpStatusCode.NotFound, "Container nicht gefunden");
+
+			ViewBag.ShowUpload = true;
+			var topic = container.Topic;
+			if (topic != null)
+				ViewBag.ShowUpload = !topic.IsReadOnly && !IsTopicLocked(topic.ID);
+			
+			return View(container);
+		}
+
 		public ActionResult Details(int id) // id = Document.ID
 		{
-			var document = db.Documents.Include(d => d.LockUser).SingleOrDefault(doc => doc.ID == id);
+			var document = db.Documents.Include(d => d.LockUser).Include(d => d.ParentContainer).SingleOrDefault(doc => doc.ID == id);
 			if (document == null)
 				return HTTPStatus(HttpStatusCode.NotFound, "Datei nicht gefunden");
 
@@ -321,7 +335,7 @@ namespace IGCV_Protokoll.Controllers
 
 			if (document.LockTime != null)
 				return HTTPStatus(HttpStatusCode.Forbidden, "Das Dokument ist derzeit gesperrt.");
-
+			
 			topic = document.ParentContainer.Topic;
 			if (topic == null)
 				return null; // Alle Checks bestanden
@@ -488,7 +502,7 @@ namespace IGCV_Protokoll.Controllers
 		[HttpPost]
 		public ActionResult _Delete(int documentID)
 		{
-			var document = db.Documents.Include(d => d.LatestRevision).Single(d => d.ID == documentID);
+			var document = db.Documents.Include(d => d.ParentContainer).Include(d => d.LatestRevision).Single(d => d.ID == documentID);
 
 			if (document.Deleted != null)
 				return HTTPStatus(422, "Das Objekt befindet sich bereits im Papierkorb.");

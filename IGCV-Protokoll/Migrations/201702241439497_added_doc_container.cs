@@ -11,7 +11,7 @@ namespace IGCV_Protokoll.Migrations
 			DropForeignKey("dbo.Document", "EmployeePresentationID", "dbo.L_EmployeePresentation");
 			DropIndex("dbo.Document", new[] { "TopicID" });
 			DropIndex("dbo.Document", new[] { "EmployeePresentationID" });
-			RenameColumn(table: "dbo.L_EmployeePresentation", name: "EmployeePresentationID", newName: "DocumentsID");
+			AddColumn("dbo.L_EmployeePresentation", "DocumentsID", c => c.Int(nullable: false));
 			CreateTable(
 				"dbo.DocumentContainer",
 				c => new
@@ -24,25 +24,52 @@ namespace IGCV_Protokoll.Migrations
 				.PrimaryKey(t => t.ID)
 				.ForeignKey("dbo.ACL", t => t.AclID)
 				.ForeignKey("dbo.Topic", t => t.TopicID)
-				.Index(t => t.TopicID, unique: true)
 				.Index(t => t.AclID);
+
+			Sql(@"CREATE UNIQUE NONCLUSTERED INDEX idx_TopicID_notnull
+					ON [dbo].[DocumentContainer](TopicID)
+					WHERE TopicID IS NOT NULL;");
+
+			AddColumn("dbo.DocumentContainer", "EmpP", c => c.Int()); // Temporary Column
 
 			AddColumn("dbo.Document", "ParentContainerID", c => c.Int(nullable: false));
 			CreateIndex("dbo.Document", "ParentContainerID");
 			CreateIndex("dbo.L_EmployeePresentation", "DocumentsID");
-			AddForeignKey("dbo.Document", "ParentContainerID", "dbo.DocumentContainer", "ID", cascadeDelete: true);
-			AddForeignKey("dbo.L_EmployeePresentation", "DocumentsID", "dbo.DocumentContainer", "ID", cascadeDelete: true);
 
+			// Dokumente im Papierkorb löschen
+			Sql(@"DELETE FROM [dbo].[Document]
+					WHERE (EmployeePresentationID IS NULL) AND (TopicID IS NULL)");
+
+			// Dokumente von Diskussionen übertragen
 			Sql(@"INSERT INTO [dbo].[DocumentContainer]
-								  ([TopicID])
+									([TopicID])
 							SELECT DISTINCT TopicID
 							FROM [dbo].Document
 							WHERE TopicID IS NOT NULL");
 
-			Sql(@"UPDATE [dbo].[Document] as doc
+			Sql(@"UPDATE doc
 					SET ParentContainerID = (SELECT ID FROM [dbo].[DocumentContainer] as dc WHERE dc.TopicID = doc.TopicID)
-							WHERE doc.TopicID IS NOT NULL");
+					FROM [dbo].[Document] doc
+					WHERE doc.TopicID IS NOT NULL");
+			// Dokumente von Listeneinträgen übertragen
+			Sql(@"INSERT INTO [dbo].[DocumentContainer]
+									(EmpP)
+							SELECT ID
+							FROM [dbo].[L_EmployeePresentation]");
+			Sql(@"UPDATE doc
+					SET ParentContainerID = (SELECT ID FROM [dbo].[DocumentContainer] as dc WHERE dc.EmpP = doc.EmployeePresentationID)
+					FROM [dbo].[Document] doc
+					WHERE doc.EmployeePresentationID IS NOT NULL");
 
+			Sql(@"UPDATE empPres
+					SET DocumentsID = (SELECT ID FROM [dbo].[DocumentContainer] as dc WHERE dc.EmpP = empPres.ID)
+					FROM [dbo].[L_EmployeePresentation] empPres");
+
+
+			AddForeignKey("dbo.Document", "ParentContainerID", "dbo.DocumentContainer", "ID", cascadeDelete: true);
+			AddForeignKey("dbo.L_EmployeePresentation", "DocumentsID", "dbo.DocumentContainer", "ID", cascadeDelete: true);
+
+			DropColumn("dbo.DocumentContainer", "EmpP");
 			DropColumn("dbo.Document", "TopicID");
 			DropColumn("dbo.Document", "EmployeePresentationID");
 		}

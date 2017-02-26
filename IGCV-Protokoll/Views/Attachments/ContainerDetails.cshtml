@@ -1,0 +1,37 @@
+﻿@using IGCV_Protokoll.util
+@model IGCV_Protokoll.Models.DocumentContainer
+@{
+	ViewBag.Title = "Details (Dokumentencontainer)";
+}
+<h2>@ViewBag.Title</h2>
+<hr />
+<div>
+	@if (Model.Orphaned != null)
+	{
+		<div class="alert alert-info">
+			Dieser Container befindet sich im @Html.ActionLink("Papierkorb", "Index", "RecycleBin", new { Area = "Administration" }, new { @class = "alert-link" }).
+		</div>
+	}
+	@if (Model.TopicID != null)
+	{
+		<div style="margin-bottom: 25px;">
+			<strong>@Html.DisplayNameFor(model => Model.TopicID):</strong>
+			@Html.ActionLink(Model.Topic.Title, "Details", "Topics", new { Area = "", id = Model.TopicID }, null)
+		</div>
+	}
+
+	<div class="panel panel-primary">
+		<div class="panel-heading">
+			<h3 class="panel-title">Enthaltene Dokumente:</h3>
+		</div>
+		@Html.Action("_List", "Attachments", new { id = Model.ID, showActions = ViewBag.ShowUpload })
+		@if (!ViewBag.ShowUpload)
+		{
+			<p>Es dürfen keine neuen Versionen hochgeladen werden.</p>
+		}
+		else
+		{
+			@Html.Action("_UploadForm", "Attachments", new {id = Model.ID})
+		}
+	</div>
+</div>

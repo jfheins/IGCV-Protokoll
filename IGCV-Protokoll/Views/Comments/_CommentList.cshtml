@@ -1,16 +1,22 @@
 ﻿@using IGCV_Protokoll.Models
-@model IEnumerable<IGCV_Protokoll.Models.Comment>
-
-@if (ViewBag.ShowCreateForm || Model.Any())
+@model IGCV_Protokoll.ViewModels.CommentListViewModel
+@if (Model.ShowCreateForm || Model.Items.Any())
 {
 	<div class="panel-body">
-		@foreach (Comment comment in Model)
-		{
-			Html.RenderPartial("~/Views/Comments/_Comment.cshtml", comment);
-		}
-		@if (ViewBag.ShowCreateForm)
-		{
-			@Html.Action("_CreateForm", "Comments", new {ViewBag.TopicID})
+		@{
+			ViewBag.AllowDeletion = Model.AllowDeletion;
+
+			foreach (Comment comment in Model.Items)
+			{
+				Html.RenderPartial("~/Views/Comments/_Comment.cshtml", comment);
+			}
+			if (Model.ShowCreateForm)
+			{
+				ViewBag.TopicID = Model.ParentTopicID;
+				var c = new Comment { TopicID = Model.ParentTopicID };
+
+				Html.RenderPartial("~/Views/Comments/_CreateForm.cshtml", c);
+			}
 		}
 	</div>
 }

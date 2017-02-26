@@ -33,7 +33,7 @@ namespace IGCV_Protokoll.Models
 		public Guid GUID { get; set; }
 
 		[Display(Name = "Container")]
-		public DocumentContainer ParentContainer { get; set; }
+		public virtual DocumentContainer ParentContainer { get; set; }
 		[ForeignKey("ParentContainer")]
 		public int ParentContainerID { get; set; }
 

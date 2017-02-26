@@ -124,7 +124,7 @@ else if (Model.LockUserID != null) // locked by someone else
 {
 	<script type="text/javascript">
 		function ajaxError(xhr) {
-			DisplayErrorMessage("#attachments_@Model.TopicID", xhr.responseText);
+			DisplayErrorMessage("#attachments_@Model.ParentContainerID", xhr.responseText);
 		}
 
 		function reloadRow(docid) {

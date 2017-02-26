@@ -5,6 +5,7 @@ using System.Linq;
 using System.Web.Mvc;
 using IGCV_Protokoll.Models;
 using IGCV_Protokoll.ViewModels;
+using Microsoft.Ajax.Utilities;
 using StackExchange.Profiling;
 
 namespace IGCV_Protokoll.Controllers
@@ -56,13 +57,12 @@ namespace IGCV_Protokoll.Controllers
 		public ActionResult _FetchTopics()
 		{
 			var userID = GetCurrentUserID();
-			List<Topic> topics;
+			var viewModel = new CompleteTopicList();
+
 			using (MiniProfiler.Current.Step("Themen"))
 			{
 				var cutoff = DateTime.Now.AddDays(3);
-				topics = db.FilteredTopics(GetRolesForCurrentUser())
-					.Include(t => t.Comments)
-					.Include(t => t.Documents)
+				viewModel.Topics = db.FilteredTopics(GetRolesForCurrentUser())
 					.Include(t => t.Lock)
 					.Include(t => t.Owner)
 					.Include(t => t.SessionType)
@@ -77,7 +77,22 @@ namespace IGCV_Protokoll.Controllers
 					.ThenByDescending(t => t.ValidFrom).ToList();
 			}
 
-			return PartialView("~/Views/Home/_Topics.cshtml", topics);
+			var topicids = viewModel.Topics.Select(t => t.ID).Distinct().ToArray();
+			viewModel.IsLocked = topicids.ToDictionary(id => id, IsTopicLocked);
+
+			using (MiniProfiler.Current.Step("Kommentare, Dokumente"))
+			{
+				viewModel.Comments =
+					db.Comments.Include(c => c.Author).Where(c => topicids.Contains(c.TopicID)).ToLookup(c => c.TopicID);
+
+				viewModel.Documents = db.DocumentContainers.Include(dc => dc.Documents)
+						.Where(dc => dc.TopicID.HasValue)
+						.Where(dc => topicids.Contains(dc.TopicID.Value))
+					// ReSharper disable once PossibleInvalidOperationException
+						.ToDictionary(dc => dc.TopicID.Value);
+			}
+
+			return PartialView("~/Views/Home/_Topics.cshtml", viewModel);
 		}
 
 		/// <summary>

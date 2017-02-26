@@ -285,6 +285,8 @@
     <Compile Include="util\IAccessible.cs" />
     <Compile Include="util\PermissiveAuthorizationAttribute.cs" />
     <Compile Include="ViewModels\AccessControlViewModels.cs" />
+    <Compile Include="ViewModels\CommentListViewModel.cs" />
+    <Compile Include="ViewModels\CompleteTopicList.cs" />
     <Compile Include="ViewModels\SearchResultList.cs" />
     <Compile Include="Controllers\StatisticsController.cs" />
     <Compile Include="Controllers\ViewListsController.cs" />
@@ -911,6 +913,7 @@
     <Content Include="Views\Acl\_DisplayAuthorized.cshtml" />
     <Content Include="Views\Acl\_AclEditorFor.cshtml" />
     <Content Include="Views\Topics\_AclDisplay.cshtml" />
+    <Content Include="Views\Attachments\ContainerDetails.cshtml" />
     <None Include="Web.Integration.config" />
     <None Include="Web.Production.config" />
     <None Include="Web.Testing.config" />

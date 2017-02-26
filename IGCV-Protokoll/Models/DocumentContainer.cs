@@ -39,6 +39,11 @@ namespace IGCV_Protokoll.Models
 		[NotNull]
 		public virtual ICollection<Document> Documents { get; set; }
 
+		/// <summary>
+		/// Listet nur die nicht-gelöschten Dokumente
+		/// </summary>
+		public IEnumerable<Document> VisibleDocuments => Documents.Where(d => d.Deleted == null);
+
 		public int? AclID { get; set; }
 		public ACL Acl { get; set; }
 	}

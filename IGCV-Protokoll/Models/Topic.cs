@@ -23,7 +23,7 @@ namespace IGCV_Protokoll.Models
 			Created = DateTime.Now;
 			ValidFrom = DateTime.Now;
 			UnreadBy = new List<UnreadState>();
-			DocumentContainer = new List<DocumentContainer> { new DocumentContainer() };
+			DocumentContainer = new List<DocumentContainer> { };
 			// ReSharper restore DoNotCallOverridableMethodsInConstructor
 		}
 
@@ -104,7 +104,19 @@ namespace IGCV_Protokoll.Models
 
 		[Display(Name = "Dokumente")]
 		[NotMapped]
-		public DocumentContainer Documents => DocumentContainer.First();
+		public DocumentContainer Documents
+		{
+			get
+			{
+				var d = DocumentContainer.FirstOrDefault();
+				if (d == null)
+				{
+					d = new DocumentContainer();
+					DocumentContainer.Add(d);
+				}
+				return d;
+			}
+		}
 
 		[Display(Name = "Erstellt")]
 		[Required]
