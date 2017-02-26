@@ -274,6 +274,10 @@
     <Compile Include="Migrations\201702062052436_added_principal_type.Designer.cs">
       <DependentUpon>201702062052436_added_principal_type.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201702241439497_added_doc_container.cs" />
+    <Compile Include="Migrations\201702241439497_added_doc_container.Designer.cs">
+      <DependentUpon>201702241439497_added_doc_container.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\ACL.cs" />
     <Compile Include="Models\AclItem.cs" />
     <Compile Include="Models\AdEntity.cs" />
@@ -1076,6 +1080,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201702062052436_added_principal_type.resx">
       <DependentUpon>201702062052436_added_principal_type.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201702241439497_added_doc_container.resx">
+      <DependentUpon>201702241439497_added_doc_container.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

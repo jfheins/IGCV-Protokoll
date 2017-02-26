@@ -23,7 +23,7 @@ namespace IGCV_Protokoll.Models
 			Created = DateTime.Now;
 			ValidFrom = DateTime.Now;
 			UnreadBy = new List<UnreadState>();
-			Documents = new DocumentContainer();
+			DocumentContainer = new List<DocumentContainer> { new DocumentContainer() };
 			// ReSharper restore DoNotCallOverridableMethodsInConstructor
 		}
 
@@ -94,8 +94,17 @@ namespace IGCV_Protokoll.Models
 		[Required]
 		public Priority Priority { get; set; }
 
+		/// <summary>
+		/// DO NOT USE
+		/// Damit das EF einen Fremdschlüssel in den DokumentenContainer einfügt, muss diese Eigenschaft als
+		/// 1:n deklariert werden. Tatsächlich gibt es immer nur genau einen Container pro Thema. Dieser kann
+		/// über die Property Documents abferufen werden.
+		/// </summary>
+		public virtual ICollection<DocumentContainer> DocumentContainer { get; set; }
+
 		[Display(Name = "Dokumente")]
-		public DocumentContainer Documents { get; set; }
+		[NotMapped]
+		public DocumentContainer Documents => DocumentContainer.First();
 
 		[Display(Name = "Erstellt")]
 		[Required]

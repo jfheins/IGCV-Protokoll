@@ -41,6 +41,9 @@ namespace IGCV_Protokoll.Areas.Session.Models.Lists
 		[DisplayName("Dokumente")]
 		public DocumentContainer Documents { get; set; }
 
+		[ForeignKey("Documents")]
+		public int DocumentsID { get; set; }
+
 		[DisplayName("Vorgemerkt")]
 		public bool Selected { get; set; }
 

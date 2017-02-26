@@ -70,6 +70,9 @@ namespace IGCV_Protokoll.DataLayer
 		protected override void OnModelCreating(DbModelBuilder modelBuilder)
 		{
 			modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
+
+			modelBuilder.Entity<EmployeePresentation>()
+			.HasRequired(x => x.Documents);
 		}
 
 		/// <summary>
