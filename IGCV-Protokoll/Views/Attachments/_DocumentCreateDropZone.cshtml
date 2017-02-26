@@ -18,9 +18,9 @@
 
 <script src="~/Scripts/dropzone/dropzone.js"></script>
 <script type="text/javascript">
-    $(document).ready(function () {
+	$(document).ready(function () {
 
-        Dropzone.options.attachmentUploader = {
+    	$('#attachment_uploader').dropzone({
             paramName: "files", // The name that will be used to transfer the file
             maxFilesize: 20, // MB
             uploadMultiple: true,
@@ -48,6 +48,6 @@
                     }
                 });
             }
-        };
+        });
     });
 </script>
