@@ -10,7 +10,7 @@ namespace IGCV_Protokoll.Areas.Session.Controllers.Lists
 		public LHolidaysController()
 		{
 			_dbSet = db.LHolidays;
-			Entities = _dbSet.Include(h => h.Person).OrderBy(h => h.Start).ThenBy(h => h.Person.LongName);
+			SetAndFilterEntities(_dbSet.Include(h => h.Person).OrderBy(h => h.Start).ThenBy(h => h.Person.LongName));
 		}
 
 		public override PartialViewResult _CreateForm()

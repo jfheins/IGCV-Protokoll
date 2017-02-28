@@ -694,24 +694,9 @@ namespace IGCV_Protokoll.Controllers
 						.Include(t => t.Acl)
 						.SingleOrDefault(t => t.ID == topicID);
 
-			if (topic == null)
-				return HttpNotFound(); 
-			if (!IsAuthorizedFor(topic))
-				return HTTPStatus(HttpStatusCode.Forbidden, "Sie sind für diesen Vorgang nicht berechtigt!");
+			var result = SaveAclFor(topic, aclTree);
 
-			var selectedAclTree = JsonConvert.DeserializeObject<List<SelectedAdEntity>>(aclTree);
-			var newAclTree = selectedAclTree.Where(x => x.selected).Select(x => x.id);
-
-			try
-			{
-				ApplyNewACLFor(topic, newAclTree);
-			}
-			catch (NotAuthorizedException e)
-			{
-				return HTTPStatus(HttpStatusCode.Forbidden, e.Message);
-			}
-
-			return PartialView("_AclDisplay", topic);
+			return result ?? PartialView("_AclDisplay", topic);
 		}
 	}
 }

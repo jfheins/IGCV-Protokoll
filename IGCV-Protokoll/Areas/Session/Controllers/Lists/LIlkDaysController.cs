@@ -13,7 +13,7 @@ namespace IGCV_Protokoll.Areas.Session.Controllers.Lists
 		public LIlkDaysController()
 		{
 			_dbSet = db.LIlkDays;
-			Entities = _dbSet.OrderBy(id => id.Start).ThenBy(id => id.Place);
+			SetAndFilterEntities(_dbSet.OrderBy(id => id.Start).ThenBy(id => id.Place));
 		}
 
 		public override PartialViewResult _CreateForm()

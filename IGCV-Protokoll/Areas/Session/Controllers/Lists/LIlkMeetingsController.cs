@@ -13,7 +13,7 @@ namespace IGCV_Protokoll.Areas.Session.Controllers.Lists
 		public LIlkMeetingsController()
 		{
 			_dbSet = db.LIlkMeetings;
-			Entities = _dbSet.OrderBy(im => im.Start).ThenBy(im => im.Place);
+			SetAndFilterEntities(_dbSet.OrderBy(im => im.Start).ThenBy(im => im.Place));
 		}
 
 		public override PartialViewResult _CreateForm()

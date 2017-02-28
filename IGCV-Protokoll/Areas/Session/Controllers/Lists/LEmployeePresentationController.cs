@@ -13,7 +13,7 @@ namespace IGCV_Protokoll.Areas.Session.Controllers.Lists
 		public LEmployeePresentationsController()
 		{
 			_dbSet = db.LEmployeePresentations;
-			Entities = _dbSet.Include(ep => ep.Documents).OrderByDescending(x => x.Selected).ThenBy(x => x.LastPresentation);
+			SetAndFilterEntities(_dbSet.Include(ep => ep.Documents).OrderByDescending(x => x.Selected).ThenBy(x => x.LastPresentation));
 		}
 
 		public override PartialViewResult _List(bool reporting = false)

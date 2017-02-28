@@ -278,6 +278,10 @@
     <Compile Include="Migrations\201702241439497_added_doc_container.Designer.cs">
       <DependentUpon>201702241439497_added_doc_container.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201702281922027_added_acl_for_listitems.cs" />
+    <Compile Include="Migrations\201702281922027_added_acl_for_listitems.Designer.cs">
+      <DependentUpon>201702281922027_added_acl_for_listitems.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\ACL.cs" />
     <Compile Include="Models\AclItem.cs" />
     <Compile Include="Models\AdEntity.cs" />
@@ -915,6 +919,7 @@
     <Content Include="Views\Acl\_AclEditorFor.cshtml" />
     <Content Include="Views\Topics\_AclDisplay.cshtml" />
     <Content Include="Views\Attachments\ContainerDetails.cshtml" />
+    <Content Include="Views\Acl\_StandaloneEditor.cshtml" />
     <None Include="Web.Integration.config" />
     <None Include="Web.Production.config" />
     <None Include="Web.Testing.config" />
@@ -1087,6 +1092,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201702241439497_added_doc_container.resx">
       <DependentUpon>201702241439497_added_doc_container.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201702281922027_added_acl_for_listitems.resx">
+      <DependentUpon>201702281922027_added_acl_for_listitems.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

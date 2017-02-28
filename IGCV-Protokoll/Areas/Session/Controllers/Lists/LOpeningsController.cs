@@ -8,7 +8,7 @@ namespace IGCV_Protokoll.Areas.Session.Controllers.Lists
 		public LOpeningsController()
 		{
 			_dbSet = db.LOpenings;
-			Entities = _dbSet.OrderBy(o => o.Start).ThenBy(o => o.Project);
+			SetAndFilterEntities(_dbSet.OrderBy(o => o.Start).ThenBy(o => o.Project));
 		}
 	}
 }

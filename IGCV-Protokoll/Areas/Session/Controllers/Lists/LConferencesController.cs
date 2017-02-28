@@ -13,7 +13,7 @@ namespace IGCV_Protokoll.Areas.Session.Controllers.Lists
 		public LConferencesController()
 		{
 			_dbSet = db.LConferences;
-			Entities = _dbSet.OrderBy(conf => conf.StartDate).ThenBy(conf => conf.EndDate);
+			SetAndFilterEntities(_dbSet.OrderBy(conf => conf.StartDate).ThenBy(conf => conf.EndDate));
 		}
 
 		public override PartialViewResult _CreateForm()

@@ -8,7 +8,7 @@ namespace IGCV_Protokoll.Areas.Session.Controllers.Lists
 		public LExtensionsController()
 		{
 			_dbSet = db.LExtensions;
-			Entities = _dbSet.OrderBy(ext => ext.EndDate).ThenBy(ext => ext.Employee);
+			SetAndFilterEntities(_dbSet.OrderBy(ext => ext.EndDate).ThenBy(ext => ext.Employee));
 		}
 	}
 }

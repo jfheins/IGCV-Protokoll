@@ -23,16 +23,26 @@ namespace IGCV_Protokoll.Areas.Session.Controllers.Lists
 	{
 		private readonly TimeSpan _editDuration = TimeSpan.FromMinutes(5);
 		protected DbSet<TModel> _dbSet;
-		private IQueryable<TModel> _entities;
+		private int[] userRoles = new int[0];
+
+		protected void SetAndFilterEntities(IQueryable<TModel> entities)
+		{
+			// .Contains muss hier explizit aufgerufen werden, sonst kommt ein "Data Provider error 1025"
+			// ReSharper disable once ConvertClosureToMethodGroup
+			Entities = entities.Include(x => x.Acl).Where(x => x.Acl == null || x.Acl.Items.Select(i => i.AdEntityID).Any(y => userRoles.Contains(y)));
+			// userRoles kann im Konstruktor nicht befüllt werden, da noch keine Session vorhanden ist. (Die Rollen werden in dieser gecached)
+			// Dank verzögerter Auswertung kann die Variable hier referenziert und später befüllt werden.
+		}
+		protected override void OnActionExecuting(ActionExecutingContext filterContext)
+		{
+			base.OnActionExecuting(filterContext);
+			userRoles = GetRolesForCurrentUser();
+		}
 
 		/// <summary>
 		/// Die Liste der Datensätze, die angezeigt werden sollen. In der Kindklasse können hier noch Einschränkungen oder Sortierungen vorgenommen werden.
 		/// </summary>
-		protected IQueryable<TModel> Entities
-		{
-			get { return _entities ?? _dbSet; }
-			set { _entities = value; }
-		}
+		protected IQueryable<TModel> Entities { get; private set; }
 
 		public virtual PartialViewResult _List(bool reporting = false)
 		{

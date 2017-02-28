@@ -14,8 +14,10 @@ namespace IGCV_Protokoll.Areas.Session.Controllers.Lists
 		public LIndustryProjectsController()
 		{
 			_dbSet = db.LIndustryProject;
-			Entities = _dbSet.OrderBy(e => e.StartDate).ThenBy(e => e.Name);
+			SetAndFilterEntities(_dbSet.OrderBy(e => e.StartDate).ThenBy(e => e.Name));
         }
+
+
 
         public override PartialViewResult _CreateForm()
         {

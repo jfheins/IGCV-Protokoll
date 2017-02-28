@@ -134,7 +134,11 @@ namespace IGCV_Protokoll.Controllers
 		/// </summary>
 		protected bool IsAuthorizedFor([NotNull] IAccessible obj)
 		{
-			if (obj.AclID == null)
+			return IsAuthorizedFor(obj.AclID);
+		}
+		protected bool IsAuthorizedFor(int? aclID)
+		{
+			if (aclID == null)
 				return true;
 
 			var userRoles = GetRolesForCurrentUser();
@@ -142,7 +146,7 @@ namespace IGCV_Protokoll.Controllers
 			return (from aclitem in db.ACLItems
 					join adEntity in db.AdEntities on aclitem.AdEntityID equals adEntity.ID
 					where userRoles.Contains(adEntity.ID)
-					where aclitem.ParentId == obj.AclID.Value
+					where aclitem.ParentId == aclID.Value
 					select aclitem.ID).Any();
 		}
 
@@ -175,6 +179,64 @@ namespace IGCV_Protokoll.Controllers
 			}
 		}
 
+		protected ActionResult SaveAclForExisting(int aclID, string aclTree)
+		{
+			if (!IsAuthorizedFor(aclID))
+				return HTTPStatus(HttpStatusCode.Forbidden, "Sie sind für diesen Vorgang nicht berechtigt!");
+
+			var selectedAclTree = JsonConvert.DeserializeObject<List<SelectedAdEntity>>(aclTree);
+			var newAclTree = selectedAclTree.Where(x => x.selected).Select(x => x.id);
+			try
+			{
+				var acl = db.ACLs.Find(aclID);
+				if (acl == null)
+					return HttpNotFound();
+
+				// TODO: Codedopplung reduzieren
+				HashSet<int> newIDs = PrepareAclList(newAclTree);
+				var oldEntities = db.GetACL(aclID).Select(item => item.AdEntity).ToList();
+				// Vorhandene ACL bearbeiten
+				var oldIDs = new HashSet<int>(oldEntities.Select(x => x.ID));
+
+				var toRemove = oldIDs.Except(newIDs).ToArray();
+				if (toRemove.Length > 0)
+					db.ACLItems.Where(i => i.ParentId == aclID && toRemove.Contains(i.AdEntityID)).Delete();
+
+				newIDs.ExceptWith(oldIDs);
+
+				foreach (var newID in newIDs)
+					acl.Items.Add(new ACLItem { AdEntityID = newID });
+
+				db.SaveChanges();
+			}
+			catch (NotAuthorizedException e)
+			{
+				return HTTPStatus(HttpStatusCode.Forbidden, e.Message);
+			}
+			return null;
+		}
+
+		protected ActionResult SaveAclFor(IAccessible obj, string aclTree)
+		{
+			if (obj == null)
+				return HttpNotFound();
+			if (!IsAuthorizedFor(obj))
+				return HTTPStatus(HttpStatusCode.Forbidden, "Sie sind für diesen Vorgang nicht berechtigt!");
+
+			var selectedAclTree = JsonConvert.DeserializeObject<List<SelectedAdEntity>>(aclTree);
+			var newAclTree = selectedAclTree.Where(x => x.selected).Select(x => x.id);
+
+			try
+			{
+				ApplyNewACLFor(obj, newAclTree);
+			}
+			catch (NotAuthorizedException e)
+			{
+				return HTTPStatus(HttpStatusCode.Forbidden, e.Message);
+			}
+			return null;
+		}
+
 		/// <summary>
 		/// Ändert die ACL des übergeben Objekts.
 		/// </summary>
@@ -185,16 +247,7 @@ namespace IGCV_Protokoll.Controllers
 			if (!IsAuthorizedFor(obj))
 				throw new NotAuthorizedException("Sie sind für dieses Thema nicht berechtigt!");
 
-			var newAclList = newAcl.ToList();
-			// Es sollte nicht möglich sein, sich selbst die Rechte zu entziehen. Ansonsten könnte man einen derartigen Fehler nicht rückgängig machen.
-			// Falls es einen Eintrag in den AdEntities gibt, der nur diesem User entspricht, wird er automatisch angehakt.
-			var thisUserGuid = GetCurrentUser().Guid;
-			var thisUser = db.AdEntities.Where(e => e.Guid == thisUserGuid).Select(e => e.ID).Cast<int?>().FirstOrDefault();
-			if (thisUser != null && !newAclList.Contains(thisUser.Value))
-				newAclList.Add(thisUser.Value);
-
-			// Unnötige Datenbankeinträge vermeiden
-			var newIDs = new HashSet<int>(SimplifyTree(newAclList));
+			HashSet<int> newIDs = PrepareAclList(newAcl);
 
 			if (obj.Acl == null)
 			{
@@ -203,7 +256,7 @@ namespace IGCV_Protokoll.Controllers
 				if (obj is Topic)
 					((Topic)obj).Documents.Acl = obj.Acl;
 				else if (obj is IFileContainer)
-					((IFileContainer) obj).Documents.Acl = obj.Acl;
+					((IFileContainer)obj).Documents.Acl = obj.Acl;
 			}
 			else
 			{
@@ -222,6 +275,20 @@ namespace IGCV_Protokoll.Controllers
 				obj.Acl.Items.Add(new ACLItem { AdEntityID = newID });
 
 			db.SaveChanges();
+		}
+
+		private HashSet<int> PrepareAclList(IEnumerable<int> newAcl)
+		{
+			var newAclList = newAcl.ToList();
+			// Es sollte nicht möglich sein, sich selbst die Rechte zu entziehen. Ansonsten könnte man einen derartigen Fehler nicht rückgängig machen.
+			// Falls es einen Eintrag in den AdEntities gibt, der nur diesem User entspricht, wird er automatisch angehakt.
+			var thisUserGuid = GetCurrentUser().Guid;
+			var thisUser = db.AdEntities.Where(e => e.Guid == thisUserGuid).Select(e => e.ID).Cast<int?>().FirstOrDefault();
+			if (thisUser != null && !newAclList.Contains(thisUser.Value))
+				newAclList.Add(thisUser.Value);
+
+			// Unnötige Datenbankeinträge vermeiden
+			return new HashSet<int>(SimplifyTree(newAclList));
 		}
 
 		/// <summary>

@@ -14,7 +14,7 @@ namespace IGCV_Protokoll.Areas.Session.Controllers.Lists
 		public LResearchProposalsController()
 		{
 			_dbSet = db.LResearchProposal;
-			Entities = _dbSet.OrderBy(e => e.DueDate).ThenBy(e => e.Sponsor);
+			SetAndFilterEntities(_dbSet.OrderBy(e => e.DueDate).ThenBy(e => e.Sponsor));
 		}
 
 		public override PartialViewResult _CreateForm()

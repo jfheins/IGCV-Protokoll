@@ -60,6 +60,8 @@ namespace IGCV_Protokoll.DataLayer
 
 		public IQueryable<Topic> FilteredTopics(int[] userRoles)
 		{
+			// .Contains muss hier explizit aufgerufen werden, sonst kommt ein "Data Provider error 1025"
+			// ReSharper disable once ConvertClosureToMethodGroup
 			return Topics.Where(t => t.Acl == null || t.Acl.Items.Select(i => i.AdEntityID).Any(x => userRoles.Contains(x)));
 		}
 		public IQueryable<Decision> FilteredDecisions(int[] userRoles)
@@ -129,6 +131,10 @@ namespace IGCV_Protokoll.DataLayer
 		public IQueryable<ACLItem> GetACL([NotNull] IAccessible obj)
 		{
 			return obj.AclID == null ? null : ACLItems.Include(i => i.AdEntity).Where(item => item.ParentId == obj.AclID);
+		}
+		public IQueryable<ACLItem> GetACL(int aclID)
+		{
+			return ACLItems.Include(i => i.AdEntity).Where(item => item.ParentId == aclID);
 		}
 
 		public int[] GetRolesForUser(int userid)

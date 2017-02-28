@@ -1,9 +1,12 @@
 ﻿using System;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using IGCV_Protokoll.Models;
+using IGCV_Protokoll.util;
 
 namespace IGCV_Protokoll.Areas.Session.Models.Lists
 {
-	public class BaseItem
+	public class BaseItem : IAccessible
 	{
 		protected BaseItem()
 		{
@@ -32,5 +35,10 @@ namespace IGCV_Protokoll.Areas.Session.Models.Lists
 		///    Enthält eine GUID, falls eine vergeben ist.
 		/// </summary>
 		public Guid? GUID { get; set; }
+
+		[Display(Name = "Rechteverwaltung")]
+		public int? AclID { get; set; }
+
+		public ACL Acl { get; set; }
 	}
 }
