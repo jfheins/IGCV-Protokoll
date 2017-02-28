@@ -283,6 +283,7 @@
     <Compile Include="Models\AdEntity.cs" />
     <Compile Include="Models\DocumentContainer.cs" />
     <Compile Include="util\IAccessible.cs" />
+    <Compile Include="util\IFileContainer.cs" />
     <Compile Include="util\PermissiveAuthorizationAttribute.cs" />
     <Compile Include="ViewModels\AccessControlViewModels.cs" />
     <Compile Include="ViewModels\CommentListViewModel.cs" />

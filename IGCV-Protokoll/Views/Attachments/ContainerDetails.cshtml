@@ -2,6 +2,7 @@
 @model IGCV_Protokoll.Models.DocumentContainer
 @{
 	ViewBag.Title = "Details (Dokumentencontainer)";
+	var aclElementId = $"standaloneAcl_{Model.ID}";
 }
 <h2>@ViewBag.Title</h2>
 <hr />
@@ -25,13 +26,23 @@
 			<h3 class="panel-title">Enthaltene Dokumente:</h3>
 		</div>
 		@Html.Action("_List", "Attachments", new { id = Model.ID, showActions = ViewBag.ShowUpload })
-		@if (!ViewBag.ShowUpload)
-		{
-			<p>Es dürfen keine neuen Versionen hochgeladen werden.</p>
-		}
-		else
+		@if (ViewBag.ShowUpload)
 		{
 			@Html.Action("_UploadForm", "Attachments", new {id = Model.ID})
 		}
+		else
+		{
+			<p>Es dürfen keine neuen Versionen hochgeladen werden.</p>
+		}
+	</div>
+	
+	
+	<div class="panel panel-primary">
+		<div class="panel-heading">
+			<h3 class="panel-title">@Html.DisplayNameFor(model => model.AclID)</h3>
+		</div>
+		<div class="panel-body" id="accessControl_@Model.ID">
+			@Html.Action("_AclEditorFor", "Acl", new { obj = Model, htmlId = @aclElementId })
+		</div>
 	</div>
 </div>

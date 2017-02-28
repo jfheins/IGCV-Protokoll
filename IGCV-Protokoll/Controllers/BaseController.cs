@@ -171,7 +171,7 @@ namespace IGCV_Protokoll.Controllers
 			if (thisUserAdEnitiy != null && !obj.Acl.Items.Any(item => userRoles.Contains(item.AdEntityID)))
 			{
 				// Autorisierung möglich, aber aktuell nicht autorisiert
-				obj.Acl.Items.Add(new ACLItem {AdEntity = thisUserAdEnitiy });
+				obj.Acl.Items.Add(new ACLItem { AdEntity = thisUserAdEnitiy });
 			}
 		}
 
@@ -200,6 +200,10 @@ namespace IGCV_Protokoll.Controllers
 			{
 				// Neue ACL erstellen
 				obj.Acl = db.ACLs.Add(new ACL());
+				if (obj is Topic)
+					((Topic)obj).Documents.Acl = obj.Acl;
+				else if (obj is IFileContainer)
+					((IFileContainer) obj).Documents.Acl = obj.Acl;
 			}
 			else
 			{

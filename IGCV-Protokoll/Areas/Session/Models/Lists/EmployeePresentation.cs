@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics.CodeAnalysis;
 using IGCV_Protokoll.Models;
+using IGCV_Protokoll.util;
 
 namespace IGCV_Protokoll.Areas.Session.Models.Lists
 {
@@ -12,7 +13,7 @@ namespace IGCV_Protokoll.Areas.Session.Models.Lists
 	///    Mitarbeiterpräsentation
 	/// </summary>
 	[Table("L_EmployeePresentation")]
-	public class EmployeePresentation : BaseItem
+	public class EmployeePresentation : BaseItem, IFileContainer
 	{
 		public EmployeePresentation()
 		{

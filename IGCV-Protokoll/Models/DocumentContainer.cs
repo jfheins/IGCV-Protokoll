@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -44,6 +45,7 @@ namespace IGCV_Protokoll.Models
 		/// </summary>
 		public IEnumerable<Document> VisibleDocuments => Documents.Where(d => d.Deleted == null);
 
+		[DisplayName("Zugriffsrechte")]
 		public int? AclID { get; set; }
 		public ACL Acl { get; set; }
 	}

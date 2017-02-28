@@ -57,6 +57,10 @@ namespace IGCV_Protokoll.Controllers
 
 		private static string TemporaryServerpath => ConfigurationManager.AppSettings["TempPath"];
 
+		private static bool EnableSeamlessEditing => Convert.ToBoolean(ConfigurationManager.AppSettings["EnableSeamlessEditing"]);
+
+		private static bool EnableSeamlessDownload => Convert.ToBoolean(ConfigurationManager.AppSettings["EnableSeamlessDownload"]);
+
 #if DEBUG
 		private readonly string _hostname = Dns.GetHostName();
 #else
@@ -73,8 +77,14 @@ namespace IGCV_Protokoll.Controllers
 		}
 
 		// GET: Attachments
-		public PartialViewResult _List(int id, bool makeList = false, bool showActions = true) // id = DocumentContainer.ID
+		public ActionResult _List(int id, bool makeList = false, bool showActions = true) // id = DocumentContainer.ID
 		{
+			var container = db.DocumentContainers.Find(id);
+			if (container == null)
+				return HTTPStatus(HttpStatusCode.NotFound, "Container nicht gefunden");
+			if (!IsAuthorizedFor(container))
+				return HTTPStatus(HttpStatusCode.Forbidden, "Sie sind für diese Dokumente nicht berechtigt!");
+
 			var documents = db.Documents
 				.Where(a => a.Deleted == null)
 				.Where(d => d.ParentContainerID == id)
@@ -89,7 +99,7 @@ namespace IGCV_Protokoll.Controllers
 			ViewBag.ContainerID = id;
 			ViewBag.KnownExtensions = KnownExtensions;
 			ViewBag.OfficeExtensions = OfficeExtensions;
-			ViewBag.SeamlessEnabled = isInternetExplorer;
+			ViewBag.SeamlessEnabled = EnableSeamlessEditing && isInternetExplorer;
 
 			if (makeList)
 				return PartialView("_AttachmentList", documents.ToList());
@@ -106,12 +116,14 @@ namespace IGCV_Protokoll.Controllers
 			var container = db.DocumentContainers.Include(dc => dc.Topic).SingleOrDefault(dc => dc.ID == id);
 			if (container == null)
 				return HTTPStatus(HttpStatusCode.NotFound, "Container nicht gefunden");
+			if (!IsAuthorizedFor(container))
+				return HTTPStatus(HttpStatusCode.Forbidden, "Sie sind für diese Dokumente nicht berechtigt!");
 
 			ViewBag.ShowUpload = true;
 			var topic = container.Topic;
 			if (topic != null)
 				ViewBag.ShowUpload = !topic.IsReadOnly && !IsTopicLocked(topic.ID);
-			
+
 			return View(container);
 		}
 
@@ -120,15 +132,16 @@ namespace IGCV_Protokoll.Controllers
 			var document = db.Documents.Include(d => d.LockUser).Include(d => d.ParentContainer).SingleOrDefault(doc => doc.ID == id);
 			if (document == null)
 				return HTTPStatus(HttpStatusCode.NotFound, "Datei nicht gefunden");
+			if (!IsAuthorizedFor(document.ParentContainer))
+				return HTTPStatus(HttpStatusCode.Forbidden, "Sie sind für dieses Dokument nicht berechtigt!");
 
 			ViewBag.ShowUpload = document.LockTime == null;
 			var topic = document.ParentContainer.Topic;
 			if (ViewBag.ShowUpload && topic != null)
-			{
 				ViewBag.ShowUpload = !topic.IsReadOnly && !IsTopicLocked(topic.ID);
-			}
 
-			ViewBag.SeamlessEnabled = isInternetExplorer && OfficeExtensions.Contains(document.LatestRevision.Extension);
+			ViewBag.SeamlessEnabled = EnableSeamlessEditing && isInternetExplorer && OfficeExtensions.Contains(document.LatestRevision.Extension);
+
 			if (document.LockUserID == GetCurrentUserID())
 				ViewBag.TempFileURL = "file://" + _hostname + "/Temp/" + document.Revisions.OrderByDescending(r => r.Created).First().FileName;
 
@@ -140,6 +153,8 @@ namespace IGCV_Protokoll.Controllers
 			var container = db.DocumentContainers.Find(id);
 			if (container == null)
 				return HttpNotFound();
+			if (!IsAuthorizedFor(container))
+				return HTTPStatus(HttpStatusCode.Forbidden, "Sie sind für diese Dokumente nicht berechtigt!");
 
 			if (container.TopicID.HasValue && IsTopicLocked(container.TopicID.Value))
 				return Content("<div class=\"panel-footer\">Da das Thema gesperrt ist, können Sie keine Dateien hochladen.</div>");
@@ -157,6 +172,8 @@ namespace IGCV_Protokoll.Controllers
 			var container = db.DocumentContainers.Find(id);
 			if (container == null)
 				return HTTPStatus(HttpStatusCode.BadRequest, "Die Dateien können keinem Ziel zugeordnet werden.");
+			if (!IsAuthorizedFor(container))
+				return HTTPStatus(HttpStatusCode.Forbidden, "Sie sind für diesen Container nicht berechtigt!");
 
 			Topic topic = container.Topic;
 			if (topic != null)
@@ -335,7 +352,10 @@ namespace IGCV_Protokoll.Controllers
 
 			if (document.LockTime != null)
 				return HTTPStatus(HttpStatusCode.Forbidden, "Das Dokument ist derzeit gesperrt.");
-			
+
+			if (!IsAuthorizedFor(document.ParentContainer))
+				return HTTPStatus(HttpStatusCode.Forbidden, "Sie sind für diesen Container nicht berechtigt!");
+
 			topic = document.ParentContainer.Topic;
 			if (topic == null)
 				return null; // Alle Checks bestanden
@@ -366,6 +386,9 @@ namespace IGCV_Protokoll.Controllers
 			var actionResult = CheckConstraints(id, out topic, out document);
 			if (actionResult != null)
 				return actionResult;
+
+			if (!EnableSeamlessEditing)
+				return HTTPStatus(HttpStatusCode.BadRequest, "Dieser Vorgang ist global deaktiviert.");
 
 			if (!isInternetExplorer || !OfficeExtensions.Contains(document.LatestRevision.Extension))
 				return HTTPStatus(HttpStatusCode.BadRequest, "Dieser Vorgang ist nur mit MSIE und Office-Dokumenten zulässig.");
@@ -408,6 +431,15 @@ namespace IGCV_Protokoll.Controllers
 
 		public ActionResult CancelNewRevision(int id)  // id = Document.ID
 		{
+			if (!EnableSeamlessEditing)
+				return HTTPStatus(HttpStatusCode.BadRequest, "Dieser Vorgang ist global deaktiviert.");
+
+			var container = db.Documents.Find(id)?.ParentContainer;
+			if (container == null)
+				return HTTPStatus(HttpStatusCode.NotFound, "Container nicht gefunden");
+			if (!IsAuthorizedFor(container))
+				return HTTPStatus(HttpStatusCode.Forbidden, "Sie sind für diese Dokumente nicht berechtigt!");
+			
 			try
 			{
 				ForceReleaseLock(id);
@@ -425,6 +457,9 @@ namespace IGCV_Protokoll.Controllers
 			using (var db = new DataContext())
 			{
 				var doc = db.Documents.Find(documentID);
+				if (doc == null)
+					return;
+
 				var cutoff = doc.LatestRevision.Created;
 				var unused = doc.Revisions.Where(r => r.Created > cutoff).ToArray();
 
@@ -445,6 +480,9 @@ namespace IGCV_Protokoll.Controllers
 
 		public ActionResult FinishNewRevision(int id) // id = Document.ID
 		{
+			if (!EnableSeamlessEditing)
+				return HTTPStatus(HttpStatusCode.BadRequest, "Dieser Vorgang ist global deaktiviert.");
+
 			// Checks
 			var document = db.Documents.Find(id);
 
@@ -453,6 +491,9 @@ namespace IGCV_Protokoll.Controllers
 
 			if (document.LockTime == null)
 				return HTTPStatus(HttpStatusCode.Forbidden, "Das Dokument ist derzeit nicht in Bearbeitung.");
+
+			if (!IsAuthorizedFor(document.ParentContainer))
+				return HTTPStatus(HttpStatusCode.Forbidden, "Sie sind für diesen Container nicht berechtigt!");
 
 			var topic = document.ParentContainer.Topic;
 			if (topic != null)
@@ -507,6 +548,9 @@ namespace IGCV_Protokoll.Controllers
 			if (document.Deleted != null)
 				return HTTPStatus(422, "Das Objekt befindet sich bereits im Papierkorb.");
 
+			if (!IsAuthorizedFor(document.ParentContainer))
+				return HTTPStatus(HttpStatusCode.Forbidden, "Sie sind für diesen Container nicht berechtigt!");
+
 			var topic = document.ParentContainer.Topic;
 			if (topic != null)
 			{
@@ -538,6 +582,8 @@ namespace IGCV_Protokoll.Controllers
 
 			if (document.Deleted == null) // Ist nicht im Papierkorb
 				return HTTPStatus(422, "Das Objekt befindet sich noch nicht im Papierkorb.");
+			if (!IsAuthorizedFor(document.ParentContainer))
+				return HTTPStatus(HttpStatusCode.Forbidden, "Sie sind für diesen Container nicht berechtigt!");
 
 			try
 			{
@@ -574,28 +620,26 @@ namespace IGCV_Protokoll.Controllers
 		/// </summary>
 		/// <param name="id">ID der Datei</param>
 		/// <returns></returns>
-		[AllowAnonymous]
 		public ActionResult Download(Guid id) // id = Revision.GUID
 		{
 			var file = db.Revisions.Include(rev => rev.ParentDocument).FirstOrDefault(rev => rev.GUID == id);
 			if (file == null)
 				return HttpNotFound("Revision nicht gefunden.");
 
-			var isAuthenticated = User.Identity != null;
+			if (!IsAuthorizedFor(file.ParentDocument.ParentContainer))
+				return HTTPStatus(HttpStatusCode.Forbidden, "Sie sind für diese Datei nicht berechtigt!");
 
-			if (isAuthenticated && OfficeExtensions.Contains(file.Extension) && isInternetExplorer)
+			if (EnableSeamlessDownload && OfficeExtensions.Contains(file.Extension) && isInternetExplorer)
 				return Redirect("file://" + _hostname + "/Uploads/" + file.FileName);
-			else
-			{
-				var cd = new ContentDisposition
-				{
-					FileName = file.ParentDocument.DisplayName,
-					Inline = true
-				};
-				Response.AppendHeader("Content-Disposition", cd.ToString());
 
-				return File(Path.Combine(Serverpath, file.FileName), MimeMapping.GetMimeMapping(file.FileName));
-			}
+			var cd = new ContentDisposition
+			{
+				FileName = file.ParentDocument.DisplayName,
+				Inline = true
+			};
+			Response.AppendHeader("Content-Disposition", cd.ToString());
+
+			return File(Path.Combine(Serverpath, file.FileName), MimeMapping.GetMimeMapping(file.FileName));
 		}
 
 		/// <summary>
@@ -615,6 +659,8 @@ namespace IGCV_Protokoll.Controllers
 			var doc = db.Documents.Find(documentID);
 			if (doc == null)
 				return HttpNotFound();
+			if (!IsAuthorizedFor(doc.ParentContainer))
+				return HTTPStatus(HttpStatusCode.Forbidden, "Sie sind für diesen Container nicht berechtigt!");
 
 			var topic = doc.ParentContainer.Topic;
 			if (topic != null && topic.IsReadOnly)
@@ -638,13 +684,18 @@ namespace IGCV_Protokoll.Controllers
 			return "file://" + _hostname + "/Uploads/" + file.FileName;
 		}
 
-		public PartialViewResult _FetchTableRow(int documentID)
+		public ActionResult _FetchTableRow(int documentID)
 		{
 			var document = db.Documents.Find(documentID);
 
+			if (document == null)
+				return HttpNotFound();
+			if (!IsAuthorizedFor(document.ParentContainer))
+				return HTTPStatus(HttpStatusCode.Forbidden, "Sie sind für diesen Container nicht berechtigt!");
+
 			ViewBag.KnownExtensions = KnownExtensions;
 			ViewBag.OfficeExtensions = OfficeExtensions;
-			ViewBag.SeamlessEnabled = isInternetExplorer;
+			ViewBag.SeamlessEnabled = EnableSeamlessEditing && isInternetExplorer;
 
 			return PartialView("_AttachmentRow", document);
 		}
@@ -656,6 +707,9 @@ namespace IGCV_Protokoll.Controllers
 			var document = db.Documents.Find(id);
 			if (document == null)
 				return HttpNotFound();
+			if (!IsAuthorizedFor(document.ParentContainer))
+				return HTTPStatus(HttpStatusCode.Forbidden, "Sie sind für diesen Container nicht berechtigt!");
+
 			var topic = document.ParentContainer.Topic;
 
 			if (topic != null && topic.IsReadOnly)

@@ -47,6 +47,11 @@ namespace IGCV_Protokoll.Migrations
 							FROM [dbo].Document
 							WHERE TopicID IS NOT NULL");
 
+			Sql(@"UPDATE dc 
+					SET AclID = (SELECT AclID FROM [dbo].[Topic] t WHERE t.ID = dc.TopicID)
+					FROM [dbo].[DocumentContainer] AS dc
+					WHERE dc.TopicID IS NOT NULL");
+
 			Sql(@"UPDATE doc
 					SET ParentContainerID = (SELECT ID FROM [dbo].[DocumentContainer] as dc WHERE dc.TopicID = doc.TopicID)
 					FROM [dbo].[Document] doc
