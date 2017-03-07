@@ -21,38 +21,16 @@ namespace IGCV_Protokoll.Areas.Administration.Controllers
 		// GET: Administration/RecycleBin
 		public ActionResult Index()
 		{
-			var items =
-				db.Documents.Where(a => a.Deleted != null).OrderByDescending(a => a.Created).ToList();
-			return View(items);
-		}
-
-
-		public ActionResult _Restore(int documentID)
-		{
-			var document = db.Documents.Include(a => a.LatestRevision).Single(d => d.ID == documentID);
-			
-			if (document.ParentContainer.TopicID != null && document.ParentContainer.Topic.IsReadOnly)
-				return HTTPStatus(422, "Wiederherstellungsziel ist schreibgeschützt");
-
-			document.Deleted = null;
-
-			try
-			{
-				db.SaveChanges();
-			}
-			catch (DbEntityValidationException e)
-			{
-				var message = ErrorMessageFromException(e);
-				return HTTPStatus(HttpStatusCode.InternalServerError, message);
-			}
-
-			return new HttpStatusCodeResult(HttpStatusCode.NoContent);
+			var roles = GetRolesForCurrentUser();
+			var items = db.FilteredDocumentContainers(roles).Where(dc => dc.Orphaned != null);
+			return View(items.ToList());
 		}
 
 		[HttpGet]
 		public ActionResult Purge()
 		{
-			var itemcount = db.Documents.Count(a => a.Deleted != null);
+			var roles = GetRolesForCurrentUser();
+			var itemcount = db.FilteredDocumentContainers(roles).Count(dc => dc.Orphaned != null);
 			return View(itemcount);
 		}
 
@@ -60,10 +38,13 @@ namespace IGCV_Protokoll.Areas.Administration.Controllers
 		[ValidateAntiForgeryToken]
 		public ActionResult PurgeConfirmed()
 		{
-			var ac = new AttachmentsController();
-			foreach (var doc in db.Documents.Where(a => a.Deleted != null))
+			var roles = GetRolesForCurrentUser();
+			var items = db.FilteredDocumentContainers(roles).Where(dc => dc.Orphaned != null);
+
+			var dcController = new DocumentContainerController();
+			foreach (var dc in items)
 			{
-				ac._PermanentDelete(doc.ID);
+				dcController._PermanentDelete(dc.ID);
 			}
 			return RedirectToAction("Index");
 		}

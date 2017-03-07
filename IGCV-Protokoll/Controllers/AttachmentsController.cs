@@ -53,7 +53,7 @@ namespace IGCV_Protokoll.Controllers
 		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2211:NonConstantFieldsShouldNotBeVisible")]
 		public static Dictionary<string, string> KnownExtensions = new Dictionary<string, string>();
 
-		private static string Serverpath => ConfigurationManager.AppSettings["UploadPath"];
+		public static string Serverpath => ConfigurationManager.AppSettings["UploadPath"];
 
 		private static string TemporaryServerpath => ConfigurationManager.AppSettings["TempPath"];
 
@@ -565,45 +565,6 @@ namespace IGCV_Protokoll.Controllers
 			document.Deleted = DateTime.Now; // In den Papierkorb
 			try
 			{
-				db.SaveChanges();
-			}
-			catch (DbEntityValidationException e)
-			{
-				var message = ErrorMessageFromException(e);
-				return HTTPStatus(HttpStatusCode.InternalServerError, message);
-			}
-
-			return new HttpStatusCodeResult(HttpStatusCode.NoContent);
-		}
-
-		public ActionResult _PermanentDelete(int documentID)
-		{
-			var document = db.Documents.Include(d => d.LatestRevision).Single(d => d.ID == documentID);
-
-			if (document.Deleted == null) // Ist nicht im Papierkorb
-				return HTTPStatus(422, "Das Objekt befindet sich noch nicht im Papierkorb.");
-			if (!IsAuthorizedFor(document.ParentContainer))
-				return HTTPStatus(HttpStatusCode.Forbidden, "Sie sind für diesen Container nicht berechtigt!");
-
-			try
-			{
-				foreach (var revision in document.Revisions)
-				{
-					string path = Path.Combine(Serverpath, revision.FileName);
-					System.IO.File.Delete(path);
-				}
-			}
-			catch (IOException ex)
-			{
-				return HTTPStatus(HttpStatusCode.InternalServerError, ex.Message);
-			}
-
-			try
-			{
-				document.LatestRevisionID = null;
-				db.Revisions.RemoveRange(document.Revisions);
-				db.SaveChanges();
-				db.Documents.Remove(document);
 				db.SaveChanges();
 			}
 			catch (DbEntityValidationException e)

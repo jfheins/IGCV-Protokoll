@@ -68,6 +68,12 @@ namespace IGCV_Protokoll.DataLayer
 		{
 			return FilteredTopics(userRoles).Where(t => t.Decision != null).Select(t => t.Decision);
 		}
+		public IQueryable<DocumentContainer> FilteredDocumentContainers(int[] userRoles)
+		{
+			// .Contains muss hier explizit aufgerufen werden, sonst kommt ein "Data Provider error 1025"
+			// ReSharper disable once ConvertClosureToMethodGroup
+			return DocumentContainers.Where(t => t.Acl == null || t.Acl.Items.Select(i => i.AdEntityID).Any(x => userRoles.Contains(x)));
+		}
 
 		protected override void OnModelCreating(DbModelBuilder modelBuilder)
 		{
@@ -121,6 +127,7 @@ namespace IGCV_Protokoll.DataLayer
 			// Dokumente bleiben erhalten, der Dokumentencontainer ist dann allerdings verwaist.
 			topic.Documents.Topic = null;
 			topic.Documents.Orphaned = DateTime.Now;
+			topic.Documents.Title = $"Diskussion: {topic.Title}";
 			SaveChanges();
 
 			Votes.RemoveRange(Votes.Where(v => v.Topic.ID == topicID));

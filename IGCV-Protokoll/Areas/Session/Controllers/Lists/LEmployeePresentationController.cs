@@ -118,6 +118,7 @@ namespace IGCV_Protokoll.Areas.Session.Controllers.Lists
 				return HttpNotFound();
 			
 			ep.Documents.Orphaned = DateTime.Now;
+			ep.Documents.Title = $"Mitarbeiterpräsentation: {ep.Employee}";
 			ep.Documents = null;
 			try
 			{

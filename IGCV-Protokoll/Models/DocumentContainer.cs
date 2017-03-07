@@ -45,6 +45,11 @@ namespace IGCV_Protokoll.Models
 		/// </summary>
 		public IEnumerable<Document> VisibleDocuments => Documents.Where(d => d.Deleted == null);
 
+		/// <summary>
+		/// Titel des Elternelements. Ist nur gesetzt, wenn der Container verwaist ist.
+		/// </summary>
+		public string Title { get; set; }
+
 		[DisplayName("Zugriffsrechte")]
 		public int? AclID { get; set; }
 		public ACL Acl { get; set; }

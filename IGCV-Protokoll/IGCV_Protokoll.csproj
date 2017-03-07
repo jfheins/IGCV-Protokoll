@@ -282,6 +282,10 @@
     <Compile Include="Migrations\201702281922027_added_acl_for_listitems.Designer.cs">
       <DependentUpon>201702281922027_added_acl_for_listitems.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201703071619271_added_dc_title.cs" />
+    <Compile Include="Migrations\201703071619271_added_dc_title.Designer.cs">
+      <DependentUpon>201703071619271_added_dc_title.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\ACL.cs" />
     <Compile Include="Models\AclItem.cs" />
     <Compile Include="Models\AdEntity.cs" />
@@ -1096,6 +1100,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201702281922027_added_acl_for_listitems.resx">
       <DependentUpon>201702281922027_added_acl_for_listitems.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703071619271_added_dc_title.resx">
+      <DependentUpon>201703071619271_added_dc_title.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
