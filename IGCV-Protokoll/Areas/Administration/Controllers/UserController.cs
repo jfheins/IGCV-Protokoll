@@ -29,10 +29,10 @@ namespace IGCV_Protokoll.Areas.Administration.Controllers
 
 		// Benutzer dieser Gruppen werden automatisch hinzugefügt
 		public static readonly string[] AuthorizeGroups =
-			ConfigurationManager.AppSettings["AuthorizeGroups"].Split(',').Select(s => s.Trim()).ToArray();
+			ConfigurationManager.AppSettings["AuthorizeGroups"].Split(new[]{','}, StringSplitOptions.RemoveEmptyEntries).Select(s => s.Trim()).ToArray();
 		// Diese Benutzer werden zusätzlich automatisch hinzugefügt
 		public static readonly string[] AuthorizeUsers =
-			ConfigurationManager.AppSettings["AuthorizeUsers"].Split(',').Select(s => s.Trim()).ToArray();
+			ConfigurationManager.AppSettings["AuthorizeUsers"].Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(s => s.Trim()).ToArray();
 
 		// Wurzelelement für den Rechtebaum
 		private static readonly string _rootGroup = ConfigurationManager.AppSettings["RootGroup"];
@@ -122,14 +122,18 @@ namespace IGCV_Protokoll.Areas.Administration.Controllers
 
 		private IEnumerable<UserPrincipal> EnumerateAuthorizedUsers(PrincipalContext context)
 		{
+			var returned = new HashSet<Guid>();
 			foreach (var userName in AuthorizeUsers)
 			{
 				using (UserPrincipal userPrincipal = UserPrincipal.FindByIdentity(context, IdentityType.SamAccountName, userName))
 				{
 					if (userPrincipal == null)
 						throw new InvalidConfigurationException($"Der Benutzer \"{userName}\" wurde nicht gefunden.");
+					if (userPrincipal.Guid == null)
+						throw new InvalidConfigurationException($"Der Benutzer \"{userName}\" hat keine GUID.");
 
-					yield return userPrincipal;
+					if (returned.Add(userPrincipal.Guid.Value))
+						yield return userPrincipal;
 				}
 			}
 			foreach (var group in AuthorizeGroups)
@@ -141,7 +145,8 @@ namespace IGCV_Protokoll.Areas.Administration.Controllers
 
 					foreach (var adUser in groupPrincipal.GetMembers(true).OfType<UserPrincipal>())
 					{
-						yield return adUser;
+						if (adUser.Guid != null && returned.Add(adUser.Guid.Value))
+							yield return adUser;
 					}
 				}
 			}
