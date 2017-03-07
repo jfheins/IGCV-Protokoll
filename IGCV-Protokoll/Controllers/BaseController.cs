@@ -243,7 +243,7 @@ namespace IGCV_Protokoll.Controllers
 				throw new InvalidOperationException("ACL existiert bereits!");
 
 			var adroot = db.AdEntities.First(ade => ade.ParentID == null);
-			var acl = new ACL();
+			obj.Acl = new ACL();
 			obj.Acl.Items.Add(new ACLItem { AdEntity = adroot });
 			if (obj is IFileContainer)
 				((IFileContainer)obj).Documents.Acl = obj.Acl;

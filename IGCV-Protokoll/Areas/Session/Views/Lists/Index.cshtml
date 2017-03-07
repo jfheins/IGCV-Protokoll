@@ -1,12 +1,13 @@
-﻿@{
+﻿@using IGCV_Protokoll.util
+@{
 	ViewBag.Title = "Listen";
 }
 
 <div class="index-action">
 	<a class="btn btn-default" onclick="collapseListsOut();"> Alle Listen ausklappen</a>
 	<a class="btn btn-default" onclick="collapseListsIn();"> Alle Listen einklappen</a>
-	@Html.ActionLink("Zurück", "Index", "Discussion", new {Area = "Session"}, new {@class = "btn btn-default"})
-	@Html.ActionLink("Weiter", "Index", "Finalize", new {Area = "Session"}, new {@class = "btn btn-primary"})
+	@Html.ActionLink("Zurück", "Index", "Discussion", new { Area = "Session" }, new { @class = "btn btn-default" })
+	@Html.ActionLink("Weiter", "Index", "Finalize", new { Area = "Session" }, new { @class = "btn btn-primary" })
 </div>
 
 <h2>@ViewBag.Title</h2>
@@ -33,25 +34,28 @@ else
 
 	var returnURL = "@(Request.Url != null ? Request.Url.AbsolutePath : "")";
 </script>
-@* jsTree ist erforderlich für die ACL Bäume der Listenzeilen *@
-<script src="~/Scripts/jstree.js"></script>
-		
+
 @Html.Action("_List", "LEvents", new { Area = "Session" })
 
 @Html.Action("_List", "LResearchProposals", new { Area = "Session" })
 
 @Html.Action("_List", "LIndustryProjects", new { Area = "Session" })
 
-@Html.Action("_List", "LConferences", new {Area = "Session"})
+@Html.Action("_List", "LConferences", new { Area = "Session" })
 
-@Html.Action("_List", "LExtensions", new {Area = "Session"})
+@Html.Action("_List", "LExtensions", new { Area = "Session" })
 
-@Html.Action("_List", "LEmployeePresentations", new {Area = "Session"})
+@Html.Action("_List", "LEmployeePresentations", new { Area = "Session" })
 
-@Html.Action("_List", "LIlkDays", new {Area = "Session"})
+@Html.Action("_List", "LIlkDays", new { Area = "Session" })
 
-@Html.Action("_List", "LIlkMeetings", new {Area = "Session"})
+@Html.Action("_List", "LIlkMeetings", new { Area = "Session" })
 
-@Html.Action("_List", "LOpenings", new {Area = "Session"})
+@Html.Action("_List", "LOpenings", new { Area = "Session" })
 
 @Html.Action("_List", "LHolidays", new { Area = "Session" })
+
+
+@* jsTree ist erforderlich für die ACL Bäume der Listenzeilen *@
+<script src="~/Scripts/jstree.js"></script>
+@{ Html.RenderPartial("~/Areas/Session/Views/Lists/_AclScriptSection.cshtml"); }

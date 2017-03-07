@@ -1,4 +1,5 @@
-﻿@{
+﻿@using IGCV_Protokoll.util
+@{
 	ViewBag.Title = "Listen";
 }
 
@@ -22,9 +23,6 @@
 
 	var returnURL = "@(Request.Url != null ? Request.Url.AbsolutePath : "")";
 </script>
-@* jsTree ist erforderlich für die ACL Bäume der Listenzeilen *@
-<script src="~/Scripts/jstree.js"></script>
-
 	
 @Html.Action("_List", "LEvents", new { Area = "Session" })
 
@@ -45,3 +43,8 @@
 @Html.Action("_List", "LOpenings", new {Area = "Session"})
 
 @Html.Action("_List", "LHolidays", new { Area = "Session" })
+
+
+@* jsTree ist erforderlich für die ACL Bäume der Listenzeilen *@
+<script src="~/Scripts/jstree.js"></script>
+@{ Html.RenderPartial("~/Areas/Session/Views/Lists/_AclScriptSection.cshtml"); }
