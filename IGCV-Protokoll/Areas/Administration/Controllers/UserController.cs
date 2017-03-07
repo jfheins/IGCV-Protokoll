@@ -335,6 +335,9 @@ namespace IGCV_Protokoll.Areas.Administration.Controllers
 			}
 			else
 			{
+				if (touched.Contains(source.Guid.Value))
+					return;
+
 				// Neuer Datensatz
 				newEntity = db.AdEntities.Add(new AdEntity(source)
 				{

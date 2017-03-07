@@ -23,7 +23,7 @@ namespace IGCV_Protokoll.util
 			yield return item;
 		}
 
-		public static IQueryable<T> Filtered<T>(this IQueryable<T> items, int[] userRoles) where T : IAccessible
+		public static IQueryable<T> Filtered<T>(this IQueryable<T> items, int[] userRoles) where T : class, IAccessible
 		{
 			// ReSharper disable once ConvertClosureToMethodGroup
 			return items.Where(t => t.Acl == null || t.Acl.Items.Select(i => i.AdEntityID).Any(x => userRoles.Contains(x)));
