@@ -9,19 +9,25 @@ using TuesPechkin;
 
 namespace IGCV_Protokoll.util
 {
-    public static class HelperMethods
-    {
-        /// <summary>
-        ///    Verpackt den angegebenen Wert in eine Enumeration mit einem Element.
-        /// </summary>
-        /// <typeparam name="T">Ein beliebiger Typ.</typeparam>
-        /// <param name="item">Der Wert, der verpackt werden soll.</param>
-        /// <returns>Eine Enumeration, die genau einen Wert enthält.</returns>
-        [NotNull]
-        public static IEnumerable<T> ToEnumerable<T>(this T item)
-        {
-            yield return item;
-        }
+	public static class HelperMethods
+	{
+		/// <summary>
+		///    Verpackt den angegebenen Wert in eine Enumeration mit einem Element.
+		/// </summary>
+		/// <typeparam name="T">Ein beliebiger Typ.</typeparam>
+		/// <param name="item">Der Wert, der verpackt werden soll.</param>
+		/// <returns>Eine Enumeration, die genau einen Wert enthält.</returns>
+		[NotNull]
+		public static IEnumerable<T> ToEnumerable<T>(this T item)
+		{
+			yield return item;
+		}
+
+		public static IQueryable<T> Filtered<T>(this IQueryable<T> items, int[] userRoles) where T : IAccessible
+		{
+			// ReSharper disable once ConvertClosureToMethodGroup
+			return items.Where(t => t.Acl == null || t.Acl.Items.Select(i => i.AdEntityID).Any(x => userRoles.Contains(x)));
+		}
 
 		/// <summary>
 		///    Liefert zu einer Enumeration alle Paare zurück. Eine Enumeration mit n Elementen hat genau n-1 Paare.
@@ -34,32 +40,32 @@ namespace IGCV_Protokoll.util
 		///    weniger als zwei Elmenten besteht.
 		/// </returns>
 		[NotNull]
-        public static IEnumerable<Tuple<T, T>> Pairwise<T>(this IEnumerable<T> source)
-        {
-            using (var it = source.GetEnumerator())
-            {
-                if (!it.MoveNext())
-                    yield break;
+		public static IEnumerable<Tuple<T, T>> Pairwise<T>(this IEnumerable<T> source)
+		{
+			using (var it = source.GetEnumerator())
+			{
+				if (!it.MoveNext())
+					yield break;
 
-                var previous = it.Current;
+				var previous = it.Current;
 
-                while (it.MoveNext())
-                    yield return Tuple.Create(previous, previous = it.Current);
-            }
-        }
+				while (it.MoveNext())
+					yield return Tuple.Create(previous, previous = it.Current);
+			}
+		}
 
-        public static TValue GetValueOrDefault<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key, TValue defaultValue)
-        {
-            TValue value;
-            return dictionary.TryGetValue(key, out value) ? value : defaultValue;
-        }
+		public static TValue GetValueOrDefault<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key, TValue defaultValue)
+		{
+			TValue value;
+			return dictionary.TryGetValue(key, out value) ? value : defaultValue;
+		}
 
-        public static TValue GetValueOrDefault<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key, Func<TValue> defaultValueProvider)
-        {
-            TValue value;
-            return dictionary.TryGetValue(key, out value) ? value
-                 : defaultValueProvider();
-        }
+		public static TValue GetValueOrDefault<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key, Func<TValue> defaultValueProvider)
+		{
+			TValue value;
+			return dictionary.TryGetValue(key, out value) ? value
+				 : defaultValueProvider();
+		}
 
 		public static IEnumerable<T> WhereNotNull<T>(this IEnumerable<T> sequence)
 		{
@@ -81,101 +87,101 @@ namespace IGCV_Protokoll.util
 		/// <param name="maxLength">Die maximale Länge (in Zeichen) des Ausgabestrings</param>
 		/// <returns>Ein String, der maximal <paramref name="maxLength" /> Zeichen lang ist.</returns>
 		public static string Shorten(this string str, int maxLength)
-        {
-            var stripped = Regex.Replace(str.Trim(), @"\s+", " ");
-            if (stripped.Length > maxLength)
-            {
-                var lastspace = stripped.LastIndexOf(' ', maxLength - 1, 12);
-                if (lastspace >= 0)
-                    return stripped.Substring(0, lastspace) + "…";
-                else
-                    return stripped.Substring(0, maxLength - 1) + "…";
-            }
-            else
-                return stripped;
-        }
+		{
+			var stripped = Regex.Replace(str.Trim(), @"\s+", " ");
+			if (stripped.Length > maxLength)
+			{
+				var lastspace = stripped.LastIndexOf(' ', maxLength - 1, 12);
+				if (lastspace >= 0)
+					return stripped.Substring(0, lastspace) + "…";
+				else
+					return stripped.Substring(0, maxLength - 1) + "…";
+			}
+			else
+				return stripped;
+		}
 
-        /// <summary>
-        ///    Kürzt den String hart auf eine Länge ein.
-        /// </summary>
-        /// <param name="str">Der Eingabestring</param>
-        /// <param name="maxLength">Die maximale Länge (in Zeichen) des Ausgabestrings</param>
-        /// <returns>Ein String, der maximal <paramref name="maxLength" /> Zeichen lang ist.</returns>
-        public static string Truncate(this string str, int maxLength)
-        {
-            return str.Length <= maxLength ? str : str.Substring(0, maxLength);
-        }
+		/// <summary>
+		///    Kürzt den String hart auf eine Länge ein.
+		/// </summary>
+		/// <param name="str">Der Eingabestring</param>
+		/// <param name="maxLength">Die maximale Länge (in Zeichen) des Ausgabestrings</param>
+		/// <returns>Ein String, der maximal <paramref name="maxLength" /> Zeichen lang ist.</returns>
+		public static string Truncate(this string str, int maxLength)
+		{
+			return str.Length <= maxLength ? str : str.Substring(0, maxLength);
+		}
 
-        public static string RenderViewAsString(ControllerContext controllerContext, string viewName, object model)
-        {
-            // create a string writer to receive the HTML code
-            StringWriter stringWriter = new StringWriter();
-            // get the view to render
-            ViewEngineResult viewResult = ViewEngines.Engines.FindView(controllerContext, viewName, null);
-            // create a context to render a view based on a model
-            ViewContext viewContext = new ViewContext(
-                controllerContext,
-                viewResult.View,
-                new ViewDataDictionary(model),
-                new TempDataDictionary(),
-                stringWriter);
+		public static string RenderViewAsString(ControllerContext controllerContext, string viewName, object model)
+		{
+			// create a string writer to receive the HTML code
+			StringWriter stringWriter = new StringWriter();
+			// get the view to render
+			ViewEngineResult viewResult = ViewEngines.Engines.FindView(controllerContext, viewName, null);
+			// create a context to render a view based on a model
+			ViewContext viewContext = new ViewContext(
+				controllerContext,
+				viewResult.View,
+				new ViewDataDictionary(model),
+				new TempDataDictionary(),
+				stringWriter);
 
-            // render the view to a HTML code
-            viewResult.View.Render(viewContext, stringWriter);
+			// render the view to a HTML code
+			viewResult.View.Render(viewContext, stringWriter);
 
-            var htmlstring = stringWriter.ToString();
-            var localURL = controllerContext.HttpContext.Server.MapPath("~").Replace('\\', '/');
+			var htmlstring = stringWriter.ToString();
+			var localURL = controllerContext.HttpContext.Server.MapPath("~").Replace('\\', '/');
 
-            var request = controllerContext.RequestContext.HttpContext.Request;
+			var request = controllerContext.RequestContext.HttpContext.Request;
 
-            if (request == null || request.Url == null || request.ApplicationPath == null)
-                throw new InvalidOperationException();
+			if (request == null || request.Url == null || request.ApplicationPath == null)
+				throw new InvalidOperationException();
 
-            string baseURL = request.Url.Scheme + "://" + request.Url.Authority +
-                             request.ApplicationPath.TrimEnd('/') + "/";
+			string baseURL = request.Url.Scheme + "://" + request.Url.Authority +
+							 request.ApplicationPath.TrimEnd('/') + "/";
 
-            htmlstring = Regex.Replace(htmlstring, "(img src|script src|link href)(=\")/([\\w./_-]+)\"",
-                "$1$2file:///" + localURL + "$3\"");
-            htmlstring = Regex.Replace(htmlstring, "(src|href)(=\")/([\\w./_-]+)\"", "$1$2" + baseURL + "$3\"");
+			htmlstring = Regex.Replace(htmlstring, "(img src|script src|link href)(=\")/([\\w./_-]+)\"",
+				"$1$2file:///" + localURL + "$3\"");
+			htmlstring = Regex.Replace(htmlstring, "(src|href)(=\")/([\\w./_-]+)\"", "$1$2" + baseURL + "$3\"");
 
-            // return the HTML code
-            return htmlstring;
-        }
+			// return the HTML code
+			return htmlstring;
+		}
 
-        public static byte[] ConvertHTMLToPDF(string sourceHTML)
-        {
-            var document = new HtmlToPdfDocument
-            {
-                GlobalSettings =
-                {
-                    ProduceOutline = true,
-                    DocumentTitle = "Sitzungsprotokoll",
-                    DPI = 600,
-                    ImageDPI = 1200,
-                    ImageQuality = 100,
-                    Margins =
-                    {
-                        All = 1,
-                        Unit = Unit.Centimeters
-                    }
-                },
-                Objects =
-                {
-                    new ObjectSettings
-                    {
-                        HtmlText = sourceHTML,
-                        WebSettings =
-                        {
-                            EnableJavascript = true,
-                            PrintBackground = true,
-                            PrintMediaType = false,
-                            EnableIntelligentShrinking = false
-                        }
-                    }
-                }
-            };
-            IPechkin converter = Factory.Create();
-            return converter.Convert(document);
-        }
-    }
+		public static byte[] ConvertHTMLToPDF(string sourceHTML)
+		{
+			var document = new HtmlToPdfDocument
+			{
+				GlobalSettings =
+				{
+					ProduceOutline = true,
+					DocumentTitle = "Sitzungsprotokoll",
+					DPI = 600,
+					ImageDPI = 1200,
+					ImageQuality = 100,
+					Margins =
+					{
+						All = 1,
+						Unit = Unit.Centimeters
+					}
+				},
+				Objects =
+				{
+					new ObjectSettings
+					{
+						HtmlText = sourceHTML,
+						WebSettings =
+						{
+							EnableJavascript = true,
+							PrintBackground = true,
+							PrintMediaType = false,
+							EnableIntelligentShrinking = false
+						}
+					}
+				}
+			};
+			IPechkin converter = Factory.Create();
+			return converter.Convert(document);
+		}
+	}
 }

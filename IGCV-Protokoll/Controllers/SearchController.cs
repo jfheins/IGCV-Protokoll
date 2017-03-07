@@ -83,7 +83,7 @@ namespace IGCV_Protokoll.Controllers
 				.Include(t => t.Assignments)
 				.Include(t => t.Comments)
 				.Include(t => t.Decision)
-				.Include(t => t.Documents)
+				.Include(t => t.DocumentContainer)
 				.Include(t => t.Tags);
 
 			ILookup<string, string> tokens = Tokenize(searchterm);
@@ -455,7 +455,7 @@ namespace IGCV_Protokoll.Controllers
 				}
 			}
 		}
-
+		
 		/// <summary>
 		///    Durchsucht alle vorhandenen Listen. Jede Liste wird separat durchsucht, und die Treffer ggf. zur Trefferliste
 		///    hinzugefügt. Falsl kein Suchbegriff eingegbeen wurde, werden alle Listeneinträge gefunden.
@@ -464,7 +464,9 @@ namespace IGCV_Protokoll.Controllers
 		/// <param name="resultlist">Die Ergebnisliste, zu der die Ergebnisse hinzugefügt werden.</param>
 		private void SearchLists(Regex[] searchterms, SearchResultList resultlist)
 		{
-			foreach (var item in db.LEvents)
+			var roles = GetRolesForCurrentUser();
+
+			foreach (var item in db.LEvents.Filtered(roles))
 			{
 				float score = 0.0f;
 				foreach (Regex pattern in searchterms)
@@ -504,7 +506,7 @@ namespace IGCV_Protokoll.Controllers
 			}
 
 			// Da ohnehin nur ein feld durchsucht wird, kann die Schleife über die Suchbegriffe mit der .All() Methode verkürzt weren. Negativ: Mehrfache Vorkommen des Suchbegriffs resultieren nicht in einem höheren score.
-			foreach (var item in db.LConferences)
+			foreach (var item in db.LConferences.Filtered(roles))
 			{
 				if (searchterms.All(pattern => pattern.IsMatch(item.Description)))
 				{
@@ -526,7 +528,7 @@ namespace IGCV_Protokoll.Controllers
 				}
 			}
 
-			foreach (var item in db.LExtensions)
+			foreach (var item in db.LExtensions.Filtered(roles))
 			{
 				if (searchterms.All(pattern => pattern.IsMatch(item.Comment)))
 				{
@@ -550,7 +552,7 @@ namespace IGCV_Protokoll.Controllers
 
 			//-----------------------------------------------------------------------------------------------------
 			// Da es quasi unmöglich ist, dass alle Suchbegriffe auf ein Mitarbeiterkürzel zutreffen, werden die Kürzel mit .Any() durchsucht. Eine Suche nach "ab ba" findet also beide Mitarbeiter (statt keinem).
-			foreach (var item in db.LEmployeePresentations)
+			foreach (var item in db.LEmployeePresentations.Filtered(roles))
 			{
 				if (searchterms.Any(pattern => pattern.IsMatch(item.Employee)))
 				{
@@ -571,7 +573,7 @@ namespace IGCV_Protokoll.Controllers
 				}
 			}
 			// Die Dokumente, die Diskussionen zugeordnet sind, wurden oben bereits durchsucht.
-			foreach (var doc in db.Documents.Where(doc => doc.ParentContainer.TopicID == null))
+			foreach (var doc in db.FilteredDocumentContainers(roles).Where(dc => dc.TopicID == null).SelectMany(dc => dc.Documents))
 			{
 				if (searchterms.All(pattern => pattern.IsMatch(doc.DisplayName)))
 				{
@@ -588,7 +590,7 @@ namespace IGCV_Protokoll.Controllers
 			}
 			//-----------------------------------------------------------------------------------------------------
 
-			foreach (var item in db.LIlkDays)
+			foreach (var item in db.LIlkDays.Filtered(roles))
 			{
 				if (searchterms.All(pattern => pattern.IsMatch(item.Topics)))
 				{
@@ -610,7 +612,7 @@ namespace IGCV_Protokoll.Controllers
 				}
 			}
 
-			foreach (var item in db.LIlkMeetings)
+			foreach (var item in db.LIlkMeetings.Filtered(roles))
 			{
 				if (searchterms.All(pattern => pattern.IsMatch(item.Comments)))
 				{
@@ -632,7 +634,7 @@ namespace IGCV_Protokoll.Controllers
 				}
 			}
 
-			foreach (var item in db.LOpenings)
+			foreach (var item in db.LOpenings.Filtered(roles))
 			{
 				if (searchterms.All(pattern => pattern.IsMatch(item.Description) || pattern.IsMatch(item.Project)))
 				{
