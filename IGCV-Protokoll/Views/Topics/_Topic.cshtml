@@ -101,13 +101,13 @@
 			</div>
 		</div>
 		<div class="panel-footer">
-			@if (!Model.Documents.VisibleDocuments.Any())
+			@if (Model.Documents.VisibleDocuments.Any())
 			{
-				@:Keine Dokumente vorhanden
+				@Html.Action("_List", "Attachments", new {entityKind = DocumentContainerKind.Topic, id = Model.ID, makeList = true, Area = ""})
 			}
 			else
 			{
-				@Html.Action("_List", "Attachments", new {entityKind = DocumentContainerKind.Topic, id = Model.ID, makeList = true, Area = ""})
+				@:Keine Dokumente vorhanden
 			}
 		</div>
 	</div>

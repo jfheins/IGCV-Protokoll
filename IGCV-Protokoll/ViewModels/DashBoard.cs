@@ -5,7 +5,7 @@ namespace IGCV_Protokoll.ViewModels
 {
 	public class DashBoard
 	{
-		public IEnumerable<Topic> MyTopics { get; set; }
+		public CompleteTopicList MyTopics { get; set; }
 
 		public IEnumerable<Assignment> MyToDos { get; set; }
 

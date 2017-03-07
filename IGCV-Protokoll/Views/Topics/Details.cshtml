@@ -303,12 +303,13 @@ else
 				</div>
 				<h3 class="panel-title">@Html.DisplayNameFor(model => model.Documents)</h3>
 			</div>
-			@if (!Model.Documents.VisibleDocuments.Any())
+			@if (Model.Documents.VisibleDocuments.Any())
 			{
-				<div class="panel-body" id="attachments_@Model.Documents.ID">Keine Dokumente vorhanden.</div>}
+				@Html.Action("_List", "Attachments", new {id = Model.Documents.ID, showActions = !Model.IsReadOnly})
+			}
 			else
 			{
-				@Html.Action("_List", "Attachments", new { id = Model.Documents.ID, showActions = !Model.IsReadOnly })
+				<div class="panel-body" id="attachments_@(Model.Documents.ID)">Keine Dokumente vorhanden.</div>
 			}
 			@if (!Model.IsReadOnly)
 			{

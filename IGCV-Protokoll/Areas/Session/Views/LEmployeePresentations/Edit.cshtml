@@ -96,13 +96,13 @@
 			<div class="panel-heading">
 				<h3 class="panel-title">@Html.DisplayNameFor(model => model.Documents)</h3>
 			</div>
-			@if (!Model.Documents.VisibleDocuments.Any())
+			@if (Model.Documents.VisibleDocuments.Any())
 			{
-				<div class="panel-body" id="attachments_@Model.ID">Keine Dokumente vorhanden.</div>
+				@Html.Action("_List", "Attachments", new {Area = "", entityKind = DocumentContainerKind.EmployeePresentation, id = Model.ID})
 			}
 			else
 			{
-				@Html.Action("_List", "Attachments", new {Area = "", entityKind = DocumentContainerKind.EmployeePresentation, id = Model.ID})
+				<div class="panel-body" id="attachments_@(Model.ID)">Keine Dokumente vorhanden.</div>
 			}
 			@Html.Action("_UploadForm", "Attachments", new {Area = "", entityKind = DocumentContainerKind.EmployeePresentation, id = Model.ID})
 		</div>

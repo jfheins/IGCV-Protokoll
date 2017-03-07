@@ -112,13 +112,13 @@
 					</div>
 				</div>
 				<div class="panel-footer">
-					@if (!topic.Documents.VisibleDocuments.Any())
+					@if (topic.Documents.VisibleDocuments.Any())
 					{
-						@:Keine Dokumente vorhanden
+						@Html.Action("_List", "Attachments", new {id = topic.Documents.ID, makeList = true, Area = ""})
 					}
 					else
 					{
-						@Html.Action("_List", "Attachments", new { id = topic.Documents.ID, makeList = true, Area = "" })
+						@:Keine Dokumente vorhanden
 					}
 				</div>
 			</div>

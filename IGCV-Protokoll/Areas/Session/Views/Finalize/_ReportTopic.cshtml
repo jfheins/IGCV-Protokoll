@@ -137,13 +137,13 @@
 			<div class="panel-heading">
 				<h3 class="panel-title">@Html.DisplayNameFor(model => model.Documents)</h3>
 			</div>
-			@if (Model.Documents.Count(a => a.Deleted == null) == 0)
+			@if (Model.Documents.VisibleDocuments.Any())
 			{
-				<div class="panel-body" id="attachments_@Model.ID">Keine Dokumente vorhanden.</div>
+				Html.RenderPartial("_ReportAttachments", Model.Documents.VisibleDocuments);
 			}
 			else
 			{
-				Html.RenderPartial("_ReportAttachments", Model.Documents.Where(a => a.Deleted == null));
+				<div class="panel-body" id="attachments_@(Model.ID)">Keine Dokumente vorhanden.</div>
 			}
 		</div>
 	</div>
