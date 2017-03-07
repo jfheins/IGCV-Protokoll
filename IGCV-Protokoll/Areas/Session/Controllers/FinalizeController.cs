@@ -66,27 +66,34 @@ namespace IGCV_Protokoll.Areas.Session.Controllers
 				return HTTPStatus(HttpStatusCode.InternalServerError, message);
 			}
 
-			string html;
-			byte[] pdfcontent;
-			using (MiniProfiler.Current.Step("Rendering des Reports"))
-			{
-				html = HelperMethods.RenderViewAsString(ControllerContext, "SessionReport", session);
-			}
-			using (MiniProfiler.Current.Step("PDF Generierung"))
-			{
-				pdfcontent = HelperMethods.ConvertHTMLToPDF(html);
-			}
-
 			try
 			{
+				string html;
+				using (MiniProfiler.Current.Step("Rendering des Reports"))
+				{
+					html = HelperMethods.RenderViewAsString(ControllerContext, "SessionReport", session);
+				}
+				byte[] pdfcontent;
+				using (MiniProfiler.Current.Step("PDF Generierung"))
+				{
+					pdfcontent = HelperMethods.ConvertHTMLToPDF(html);
+				}
 				System.IO.File.WriteAllBytes(SessionReport.Directory + report.FileName, pdfcontent);
 			}
+			// Im Fehlerfall müssen die Diskussionen wieder sichtbar werden ==> Readonly = false
 			catch (IOException e)
 			{
+				RevertTopicReadonlyFlag(session.LockedTopics);
 				return HTTPStatus(HttpStatusCode.InternalServerError, e.Message);
 			}
 			catch (UnauthorizedAccessException e)
 			{
+				RevertTopicReadonlyFlag(session.LockedTopics);
+				return HTTPStatus(HttpStatusCode.InternalServerError, e.Message);
+			}
+			catch (Exception e)
+			{
+				RevertTopicReadonlyFlag(session.LockedTopics);
 				return HTTPStatus(HttpStatusCode.InternalServerError, e.Message);
 			}
 
@@ -112,6 +119,13 @@ namespace IGCV_Protokoll.Areas.Session.Controllers
 			}
 
 			return PartialView("_ReportSuccess", report.ID);
+		}
+
+		private void RevertTopicReadonlyFlag(IEnumerable<TopicLock> topics)
+		{
+			foreach (TopicLock tl in topics)
+				tl.Topic.IsReadOnly = false;
+			db.SaveChanges();
 		}
 
 		private async Task<ActionResult> ProcessTopics(ActiveSession session, SessionReport report)
