@@ -98,13 +98,13 @@
 			</div>
 			@if (Model.Documents.VisibleDocuments.Any())
 			{
-				@Html.Action("_List", "Attachments", new {Area = "", entityKind = DocumentContainerKind.EmployeePresentation, id = Model.ID})
+				@Html.Action("_List", "Attachments", new {Area = "", id = Model.DocumentsID})
 			}
 			else
 			{
 				<div class="panel-body" id="attachments_@(Model.ID)">Keine Dokumente vorhanden.</div>
 			}
-			@Html.Action("_UploadForm", "Attachments", new {Area = "", entityKind = DocumentContainerKind.EmployeePresentation, id = Model.ID})
+			@Html.Action("_UploadForm", "Attachments", new {Area = "", id = Model.DocumentsID})
 		</div>
 	</div>
 </div>

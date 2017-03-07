@@ -21,16 +21,13 @@ else
 		<thead>
 			<tr>
 				<th>
-					Ort
+					ID
 				</th>
 				<th>
 					@Html.DisplayNameFor(model => model.Orphaned)
 				</th>
 				<th>
-					@Html.DisplayNameFor(model => model.Name)
-				</th>
-				<th>
-					@Html.DisplayNameFor(model => model.)
+					@Html.DisplayNameFor(model => model.Title)
 				</th>
 				<th>
 					@Html.DisplayNameFor(model => model.FileSizeSum)
@@ -39,45 +36,26 @@ else
 			</tr>
 		</thead>
 		<tbody>
-			@foreach (Document item in Model)
+			@foreach (DocumentContainer item in Model)
 			{
-				<tr id="attachment_@item.ID">
+				var elementId = $"container_{item.ID}";
+				<tr id="@elementId">
 					<td>
-						@if (item.TopicID != null)
-						{
-							<h6>@Html.DisplayNameFor(model => model.TopicID)</h6>
-							@Html.ActionLink(item.Topic.Title, "Details", "Topics", new {Area = "", id = item.TopicID}, null)
-						}
-						else if (item.EmployeePresentationID != null)
-						{
-							<h6>@Html.DisplayNameFor(model => model.EmployeePresentationID)</h6>
-							@Html.ActionLink(item.EmployeePresentation.ToString(), "Edit", "LEmployeePresentations", new {Area = "Session", id = item.EmployeePresentationID}, null)
-						}
+						@item.ID
 					</td>
 					<td>
-						@Html.DisplayFor(modelItem => item.Deleted)
+						@Html.DisplayFor(modelItem => item.Orphaned)
 					</td>
 					<td>
-						@Html.ActionLink(item.DisplayName, "Details", "Attachments", new {id = item.ID, Area = ""}, null)
-					</td>
-					<td>
-						@Html.DisplayFor(modelItem => item.Created)
+						@Html.ActionLink(item.Title, "ContainerDetails", "Attachments", new {id = item.ID, Area = ""}, null)
 					</td>
 					<td>
 						@Html.DisplayFor(modelItem => item.FileSizeSum)
 					</td>
 					<td>
-						@if ((item.TopicID != null) && !item.Topic.IsReadOnly || item.EmployeePresentationID != null)
-						{
-							@Ajax.ActionLink("Wiederherstellen", "_Restore", "RecycleBin",
-								new {documentID = item.ID},
-								new AjaxOptions {HttpMethod = "POST", OnSuccess = "removeFile('#attachment_" + @item.ID + "');"},
-								new {@class = "text-success"})
-							<br />
-						}
-						@Ajax.ActionLink("Löschen", "_PermanentDelete", "Attachments",
-							new {area = "", documentID = item.ID},
-							new AjaxOptions {Confirm = "Dokument endgültig löschen?", HttpMethod = "POST", OnSuccess = "removeFile('#attachment_" + @item.ID + "');"},
+						@Ajax.ActionLink("Löschen", "_PermanentDelete", "DocumentContainer",
+							new {area = "", containerID = item.ID},
+							new AjaxOptions {Confirm = "Container endgültig löschen?", HttpMethod = "POST", OnSuccess = $"removeContainerRow('{elementId}');" },
 							new {@class = "text-danger"})
 					</td>
 				</tr>
@@ -87,7 +65,7 @@ else
 }
 
 <script type="text/javascript">
-	function removeFile(element) {
+	function removeContainerRow(element) {
 		if ($(element).siblings().length == 0) {
 			$(element).parent().parent().replaceWith("<p>Der Papierkorb ist leer.</p>"); // Remove the whole table
 		} else {

@@ -22,7 +22,10 @@ namespace IGCV_Protokoll.Areas.Administration.Controllers
 		public ActionResult Index()
 		{
 			var roles = GetRolesForCurrentUser();
-			var items = db.FilteredDocumentContainers(roles).Where(dc => dc.Orphaned != null);
+			var items = db.FilteredDocumentContainers(roles)
+				.Include(dc => dc.Documents)
+				.Include(dc => dc.Documents.Select(d => d.Revisions))
+				.Where(dc => dc.Orphaned != null);
 			return View(items.ToList());
 		}
 

@@ -53,5 +53,13 @@ namespace IGCV_Protokoll.Models
 		[DisplayName("Zugriffsrechte")]
 		public int? AclID { get; set; }
 		public ACL Acl { get; set; }
+
+		[NotMapped]
+		[UIHint("FileSize")]
+		[Display(Name = "Gesamtgröße")]
+		public int FileSizeSum
+		{
+			get { return Documents.Sum(doc => doc.FileSizeSum); }
+		}
 	}
 }

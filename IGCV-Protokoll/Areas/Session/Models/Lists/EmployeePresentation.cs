@@ -18,7 +18,6 @@ namespace IGCV_Protokoll.Areas.Session.Models.Lists
 		public EmployeePresentation()
 		{
 			LastPresentation = DateTime.Today;
-			Documents = new DocumentContainer();
 		}
 
 		[Required]
@@ -40,7 +39,7 @@ namespace IGCV_Protokoll.Areas.Session.Models.Lists
 		public DateTime LastPresentation { get; set; }
 
 		[DisplayName("Dokumente")]
-		public DocumentContainer Documents { get; set; }
+		public virtual DocumentContainer Documents { get; set; }
 
 		[ForeignKey("Documents")]
 		public int DocumentsID { get; set; }

@@ -51,10 +51,12 @@ namespace IGCV_Protokoll.Areas.Session.Controllers.Lists
 			if (id == null)
 				return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 
-			EmployeePresentation presentation = _dbSet.Include(ep => ep.Documents).Single(ep => ep.ID == id);
+			var presentation = _dbSet.Include(ep => ep.Documents)
+				.Include(ep => ep.Documents.Documents.Select(d => d.Revisions))
+				.Single(ep => ep.ID == id);
 			if (presentation == null)
 				return HttpNotFound();
-
+			
 			ViewBag.UserList = CreateUserSelectList();
 			ViewBag.ReturnURL = returnURL ?? GetFallbackUri();
 			ViewBag.StatusMessage = statusMessage;
@@ -119,7 +121,6 @@ namespace IGCV_Protokoll.Areas.Session.Controllers.Lists
 			
 			ep.Documents.Orphaned = DateTime.Now;
 			ep.Documents.Title = $"Mitarbeiterpräsentation: {ep.Employee}";
-			ep.Documents = null;
 			try
 			{
 				db.SaveChanges();

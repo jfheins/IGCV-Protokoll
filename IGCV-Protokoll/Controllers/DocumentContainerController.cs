@@ -28,9 +28,9 @@ namespace IGCV_Protokoll.Controllers
 			if (!IsAuthorizedFor(container))
 				return HTTPStatus(HttpStatusCode.Forbidden, "Sie sind für diesen Container nicht berechtigt!");
 			
-		    foreach (var document in container.Documents)
+		    foreach (var documentID in container.Documents.Select(d => d.ID).ToArray())
 		    {
-			    var errorMsg = _PermanentDeleteDocument(document.ID);
+			    var errorMsg = _PermanentDeleteDocument(documentID);
 			    if (errorMsg != null)
 				    return HTTPStatus(HttpStatusCode.InternalServerError, errorMsg);
 		    }
