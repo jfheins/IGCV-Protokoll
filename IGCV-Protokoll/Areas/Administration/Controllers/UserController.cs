@@ -25,11 +25,17 @@ namespace IGCV_Protokoll.Areas.Administration.Controllers
 	[DisplayName("Benutzer")]
 	public class UserController : BaseController
 	{
-		public const string DomainName = "IGCV";
+		public static readonly string DomainName = ConfigurationManager.AppSettings["ADName"];
+
 		// Benutzer dieser Gruppen werden automatisch hinzugefügt
-		private readonly string[] _authorizeGroups = { "V-AL", "Protokoll-Developer" };
-		private readonly string[] _authorizeUsers = { "Schilpjo", "Reinhart" };
-		private static readonly string _rootGroup = ConfigurationManager.AppSettings["rootGroup"];
+		public static readonly string[] AuthorizeGroups =
+			ConfigurationManager.AppSettings["AuthorizeGroups"].Split(',').Select(s => s.Trim()).ToArray();
+		// Diese Benutzer werden zusätzlich automatisch hinzugefügt
+		public static readonly string[] AuthorizeUsers =
+			ConfigurationManager.AppSettings["AuthorizeUsers"].Split(',').Select(s => s.Trim()).ToArray();
+
+		// Wurzelelement für den Rechtebaum
+		private static readonly string _rootGroup = ConfigurationManager.AppSettings["RootGroup"];
 
 		/// <summary>
 		///    Wird aufgerufen, bevor die Aktionsmethode aufgerufen wird.
@@ -116,7 +122,7 @@ namespace IGCV_Protokoll.Areas.Administration.Controllers
 
 		private IEnumerable<UserPrincipal> EnumerateAuthorizedUsers(PrincipalContext context)
 		{
-			foreach (var userName in _authorizeUsers)
+			foreach (var userName in AuthorizeUsers)
 			{
 				using (UserPrincipal userPrincipal = UserPrincipal.FindByIdentity(context, IdentityType.SamAccountName, userName))
 				{
@@ -126,7 +132,7 @@ namespace IGCV_Protokoll.Areas.Administration.Controllers
 					yield return userPrincipal;
 				}
 			}
-			foreach (var group in _authorizeGroups)
+			foreach (var group in AuthorizeGroups)
 			{
 				using (GroupPrincipal groupPrincipal = GroupPrincipal.FindByIdentity(context, IdentityType.SamAccountName, @group))
 				{
