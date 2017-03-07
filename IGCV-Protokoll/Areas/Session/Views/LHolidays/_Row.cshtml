@@ -2,7 +2,6 @@
 @{
 	string trclass = Model.LastChanged > ViewBag.LastSession ? "newlistitem" : null;
 }
-
 <tr class="@trclass" id="Holiday_@Model.ID">
 	<td>
 		@Html.DisplayFor(model => model.Person.LongName)
@@ -24,15 +23,24 @@
 	{
 		<td class="actions">
 			<a data-ajax="true"
-			   data-ajax-method="POST"
-			   data-ajax-success="ReplaceRow('Holiday', @Model.ID, data);"
-			   href="@Url.Action("_BeginEdit", "LHolidays", new {Area = "Session", id = Model.ID})"><span class="glyphicon glyphicon-edit" title="Urlaubseintrag bearbeiten"></span></a>
+				data-ajax-method="POST"
+				data-ajax-success="ReplaceRow('Holiday', @Model.ID, data);"
+				href="@Url.Action("_BeginEdit", "LHolidays", new {Area = "Session", id = Model.ID})"><span class="glyphicon glyphicon-edit" title="Urlaubseintrag bearbeiten"></span></a>
 
 			<a data-ajax="true"
-			   data-ajax-method="POST"
-			   data-ajax-confirm="Urlaubseintrag wirklich löschen?"
-			   data-ajax-success="RemoveRow('Holiday', @Model.ID);"
-			   href="@Url.Action("_Delete", "LHolidays", new {Area = "Session", id = Model.ID})"><span class="glyphicon glyphicon-remove" title="Urlaubseintrag löschen"></span></a>
+				data-ajax-method="POST"
+				data-ajax-confirm="Urlaubseintrag wirklich löschen?"
+				data-ajax-success="RemoveRow('Holiday', @Model.ID);"
+				href="@Url.Action("_Delete", "LHolidays", new {Area = "Session", id = Model.ID})"><span class="glyphicon glyphicon-remove" title="Urlaubseintrag löschen"></span></a>
+
+			@if (Model.AclID.HasValue)
+			{
+				<a href="@Url.Action("Edit", "Acl", new {Area = "", id = Model.AclID.Value})" onclick="displayAclModal(@Model.AclID.Value);return false;"><span class="glyphicon glyphicon-tree-deciduous" title="ACL Baum bearbeiten"></span></a>
+			}
+			else
+			{
+				<a href="@Url.Action("CreateAcl", "LHolidays", new {Area = "Session", id = Model.ID})" onclick="createAndDisplayAcl(this, @Model.ID);return false;"><span class="glyphicon glyphicon-tree-deciduous" title="ACL Baum bearbeiten"></span></a>
+			}
 		</td>
 	}
 </tr>

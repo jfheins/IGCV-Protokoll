@@ -2,7 +2,6 @@
 @{
 	string trclass = Model.LastChanged > ViewBag.LastSession ? "newlistitem" : null;
 }
-
 <tr class="@trclass" id="opening_@Model.ID">
 	<td>
 		@Html.DisplayFor(model => model.Project)
@@ -32,6 +31,15 @@
 			   data-ajax-confirm="Vakante Stelle wirklich löschen?"
 			   data-ajax-success="RemoveRow('opening', @Model.ID);"
 			   href="@Url.Action("_Delete", "LOpenings", new {Area = "Session", id = Model.ID})"><span class="glyphicon glyphicon-remove" title="Vakante Stelle löschen"></span></a>
+
+			@if (Model.AclID.HasValue)
+			{
+				<a href="@Url.Action("Edit", "Acl", new {Area = "", id = Model.AclID.Value})" onclick="displayAclModal(@Model.AclID.Value);return false;"><span class="glyphicon glyphicon-tree-deciduous" title="ACL Baum bearbeiten"></span></a>
+			}
+			else
+			{
+				<a href="@Url.Action("CreateAcl", "LOpenings", new {Area = "Session", id = Model.ID})" onclick="createAndDisplayAcl(this, @Model.ID);return false;"><span class="glyphicon glyphicon-tree-deciduous" title="ACL Baum bearbeiten"></span></a>
+			}
 		</td>
 	}
 </tr>

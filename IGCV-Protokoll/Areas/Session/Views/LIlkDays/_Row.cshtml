@@ -2,7 +2,6 @@
 @{
 	string trclass = Model.LastChanged > ViewBag.LastSession ? "newlistitem" : null;
 }
-
 <tr class="@trclass" id="ilkDay_@Model.ID">
 	@if (Model.Start.Date == Model.End.Date)
 	{
@@ -39,15 +38,24 @@
 			<a href="@Url.Action("Download", "LIlkDays", new {Area = "Session", id = Model.ID})"><span class="glyphicon glyphicon-download" title="Termin herunterladen"></span></a>
 
 			<a data-ajax="true"
-			   data-ajax-method="POST"
-			   data-ajax-success="ReplaceRow('ilkDay', @Model.ID, data);"
-			   href="@Url.Action("_BeginEdit", "LIlkDays", new {Area = "Session", id = Model.ID})"><span class="glyphicon glyphicon-edit" title="Klausur-Tag bearbeiten"></span></a>
+				data-ajax-method="POST"
+				data-ajax-success="ReplaceRow('ilkDay', @Model.ID, data);"
+				href="@Url.Action("_BeginEdit", "LIlkDays", new {Area = "Session", id = Model.ID})"><span class="glyphicon glyphicon-edit" title="Klausur-Tag bearbeiten"></span></a>
 
 			<a data-ajax="true"
 			   data-ajax-method="POST"
 			   data-ajax-confirm="Klausur-Tag wirklich löschen?"
 			   data-ajax-success="RemoveRow('ilkDay', @Model.ID);"
 			   href="@Url.Action("_Delete", "LIlkDays", new {Area = "Session", id = Model.ID})"><span class="glyphicon glyphicon-remove" title="Klausur-Tag löschen"></span></a>
+
+			@if (Model.AclID.HasValue)
+			{
+				<a href="@Url.Action("Edit", "Acl", new {Area = "", id = Model.AclID.Value})" onclick="displayAclModal(@Model.AclID.Value);return false;"><span class="glyphicon glyphicon-tree-deciduous" title="ACL Baum bearbeiten"></span></a>
+			}
+			else
+			{
+				<a href="@Url.Action("CreateAcl", "LIlkDays", new {Area = "Session", id = Model.ID})" onclick="createAndDisplayAcl(this, @Model.ID);return false;"><span class="glyphicon glyphicon-tree-deciduous" title="ACL Baum bearbeiten"></span></a>
+			}
 		</td>
 	}
 </tr>
