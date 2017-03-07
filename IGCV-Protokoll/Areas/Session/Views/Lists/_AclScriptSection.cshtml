@@ -18,6 +18,9 @@
 				},
 				success: function (responseData) {
 					var aclId = parseInt(responseData);
+					$(sender).removeAttr('onclick');
+					$(sender).attr("href", '@Url.Action("Edit", "Acl", new { Area = "", })?id=' + aclId);
+					$(sender).click(function () { displayAclModal(aclId); return false; });
 					displayAclModal(aclId);
 				},
 				error: function (xhr, errorType) {
