@@ -208,12 +208,7 @@ namespace IGCV_Protokoll.Areas.Session.Controllers.Lists
 			if (ev.AclID != null)
 				return HTTPStatus(HttpStatusCode.BadRequest, "ACL existiert bereits!");
 
-			var adroot = db.AdEntities.First(ade => ade.ParentID == null);
-			ev.Acl = new ACL();
-			ev.Acl.Items.Add(new ACLItem { AdEntity = adroot });
-			if (ev is IFileContainer)
-				((IFileContainer)ev).Documents.Acl = ev.Acl;
-			db.SaveChanges();
+			CreateDefaultACL(ev);
 			return HTTPStatus(HttpStatusCode.Created, ev.Acl.ID.ToString());
 		}
 

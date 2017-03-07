@@ -237,6 +237,20 @@ namespace IGCV_Protokoll.Controllers
 			return null;
 		}
 
+		protected void CreateDefaultACL(IAccessible obj)
+		{
+			if (obj.AclID != null)
+				throw new InvalidOperationException("ACL existiert bereits!");
+
+			var adroot = db.AdEntities.First(ade => ade.ParentID == null);
+			var acl = new ACL();
+			obj.Acl.Items.Add(new ACLItem { AdEntity = adroot });
+			if (obj is IFileContainer)
+				((IFileContainer)obj).Documents.Acl = obj.Acl;
+
+			db.SaveChanges();
+		}
+
 		/// <summary>
 		/// Ändert die ACL des übergeben Objekts.
 		/// </summary>
