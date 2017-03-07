@@ -41,16 +41,42 @@
 			   href="@Url.Action("_Delete", "LConferences", new {Area = "Session", id = Model.ID})"><span class="glyphicon glyphicon-remove" title="Konferenz löschen"></span></a>
 				@if (Model.AclID.HasValue)
 				{
-					<a onclick="displayAclModel(@Model.AclID.Value);"><span class="glyphicon glyphicon-tree-deciduous" title="ACL Baum bearbeiten"></span></a>
+					<a href="@Url.Action("Edit", "Acl", new {Area = "", id = Model.AclID.Value})" onclick="displayAclModal(@Model.AclID.Value);return false;"><span class="glyphicon glyphicon-tree-deciduous" title="ACL Baum bearbeiten"></span></a>
+				}
+				else
+				{
+					<a href="@Url.Action("CreateAcl", "LConferences", new {Area = "Session", id = Model.ID})" onclick="createAndDisplayAcl(this, @Model.ID);return false;"><span class="glyphicon glyphicon-tree-deciduous" title="ACL Baum bearbeiten"></span></a>
 				}
 
 			@using (Html.Delayed(null, "Listentry-AclTree"))
 			{
 				<script type="text/javascript">
-					function displayAclModel(aclid) {
-						$("#aclModal .modal-body").load('@Url.Action("_StandaloneEditorFor", "Acl", new { Area = "" }) + "?aclid=" + aclid');
+					function displayAclModal(aclid) {
+						$("#aclModal .modal-body").load('@Url.Action("_StandaloneEditorFor", "Acl", new { Area = "" })?aclid=' + aclid);
 						$('#aclModal').modal();
 					}
+
+					function createAndDisplayAcl(sender, entityid) {
+						var ajaxUrl = $(sender).attr("href");
+						$.ajax({
+							url: ajaxUrl,
+							type: 'GET',
+							data: {
+								"X-Requested-With": "XMLHttpRequest"
+							},
+							success: function (responseData) {
+								var aclId = parseInt(responseData);
+								displayAclModal(aclId);
+							},
+							error: function(xhr, errorType) {
+								alert(xhr.responseText);
+							},
+							complete:  function(xhr, statusText) {
+							}
+						}); //end ajax
+					}
+
+
 				</script>
 				<!-- Modal -->
 				<div class="modal fade" id="aclModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">

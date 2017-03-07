@@ -82,13 +82,16 @@ namespace IGCV_Protokoll.Controllers
 
 		public ActionResult _StandaloneEditorFor(int aclID)
 		{
+			if (!IsAuthorizedFor(aclID))
+				return HTTPStatus(HttpStatusCode.Forbidden, "Sie sind für diesen Vorgang nicht berechtigt!");
+
 			var editor = new AccessControlEditorViewModel
 			{
 				IsNewAcl = false,
 				AuthorizedEntities = (from adEntity in db.AdEntities
 									  from aclitem in adEntity.Acl.Where(aclitem => aclitem.ParentId == aclID).DefaultIfEmpty()
 									  select new { Entity = adEntity, hasAccess = aclitem != null }).ToDictionary(x => x.Entity, x => x.hasAccess),
-				HtmlName = "Standalone_" + aclID
+				HtmlName = "standaloneTree_" + aclID
 			};
 
 			var display = new AccessControlDisplayViewModel
@@ -98,6 +101,7 @@ namespace IGCV_Protokoll.Controllers
 
 			return PartialView("_StandaloneEditor", new AccessControlEditorDisplayViewModel
 			{
+				ID = aclID,
 				Editor = editor,
 				Display =  display
 			});

@@ -22,6 +22,9 @@
 
 	var returnURL = "@(Request.Url != null ? Request.Url.AbsolutePath : "")";
 </script>
+@* jsTree ist erforderlich für die ACL Bäume der Listenzeilen *@
+<script src="~/Scripts/jstree.js"></script>
+
 	
 @Html.Action("_List", "LEvents", new { Area = "Session" })
 

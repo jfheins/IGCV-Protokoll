@@ -26,6 +26,7 @@ namespace IGCV_Protokoll.ViewModels
 
 	public class AccessControlEditorDisplayViewModel
 	{
+		public int ID { get; set; }
 		public AccessControlEditorViewModel Editor { get; set; }
 		public AccessControlDisplayViewModel Display { get; set; }
 	}

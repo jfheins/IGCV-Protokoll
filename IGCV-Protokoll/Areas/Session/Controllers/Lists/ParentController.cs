@@ -10,6 +10,8 @@ using IGCV_Protokoll.Controllers;
 using Ical.Net;
 using Ical.Net.DataTypes;
 using Ical.Net.Serialization.iCalendar.Serializers;
+using IGCV_Protokoll.Models;
+using IGCV_Protokoll.util;
 
 namespace IGCV_Protokoll.Areas.Session.Controllers.Lists
 {
@@ -61,9 +63,9 @@ namespace IGCV_Protokoll.Areas.Session.Controllers.Lists
 
 			var cutoff = DateTime.Now - _editDuration;
 			// Locks entfernen, die zu alt sind
-			_dbSet.Where(e => e.LockTime < cutoff).Update(e => new TModel {LockSessionID = null});
+			_dbSet.Where(e => e.LockTime < cutoff).Update(e => new TModel { LockSessionID = null });
 			// Und die eigenen Locks entfernen
-			_dbSet.Where(e => e.LockSessionID == thisSession.ID).Update(e => new TModel {LockSessionID = null});
+			_dbSet.Where(e => e.LockSessionID == thisSession.ID).Update(e => new TModel { LockSessionID = null });
 		}
 
 		public virtual PartialViewResult _CreateForm()
@@ -96,7 +98,7 @@ namespace IGCV_Protokoll.Areas.Session.Controllers.Lists
 			}
 
 			var row = _dbSet.Create();
-			TryUpdateModel(row, "", null, new[] {"LastChanged"});
+			TryUpdateModel(row, "", null, new[] { "LastChanged" });
 			_dbSet.Add(row);
 
 			try
@@ -152,7 +154,7 @@ namespace IGCV_Protokoll.Areas.Session.Controllers.Lists
 			if (row.LockSessionID != null && (session == null || row.LockSessionID != session.ID))
 				return HTTPStatus(HttpStatusCode.Conflict, "Der Datensatz ist momentan gesperrt."); // HTTP 409 Conflict
 
-			TryUpdateModel(row, "", null, new[] {"LastChanged"});
+			TryUpdateModel(row, "", null, new[] { "LastChanged" });
 			row.LockSessionID = null;
 			row.LastChanged = DateTime.Now;
 
@@ -199,6 +201,22 @@ namespace IGCV_Protokoll.Areas.Session.Controllers.Lists
 			throw new NotImplementedException();
 		}
 
+		public virtual ActionResult CreateAcl(int id)
+		{
+			TModel ev = Entities.First(m => m.ID == id);
+
+			if (ev.AclID != null)
+				return HTTPStatus(HttpStatusCode.BadRequest, "ACL existiert bereits!");
+
+			var adroot = db.AdEntities.First(ade => ade.ParentID == null);
+			ev.Acl = new ACL();
+			ev.Acl.Items.Add(new ACLItem { AdEntity = adroot });
+			if (ev is IFileContainer)
+				((IFileContainer)ev).Documents.Acl = ev.Acl;
+			db.SaveChanges();
+			return HTTPStatus(HttpStatusCode.Created, ev.Acl.ID.ToString());
+		}
+
 		protected static string CreateCalendarEvent(
 			string title, string description, DateTime startDate, DateTime endDate,
 			string location, string eventId, bool allDayEvent)
@@ -212,7 +230,7 @@ namespace IGCV_Protokoll.Areas.Session.Controllers.Lists
 				Version = "2.0"
 			};
 
-            iCal.AddTimeZone(VTimeZone.FromLocalTimeZone());
+			iCal.AddTimeZone(VTimeZone.FromLocalTimeZone());
 
 			var evt = iCal.Create<Ical.Net.Event>();
 			evt.Summary = title;
@@ -222,7 +240,7 @@ namespace IGCV_Protokoll.Areas.Session.Controllers.Lists
 			evt.Location = location;
 			evt.IsAllDay = allDayEvent;
 			evt.Uid = eventId;
-			evt.Organizer = new Organizer {CommonName = "IGCV-Protokoll", Value = new Uri("mailto:no-reply@iwb.tum.de")};
+			evt.Organizer = new Organizer { CommonName = "IGCV-Protokoll", Value = new Uri("mailto:no-reply@iwb.tum.de") };
 			evt.Alarms.Add(new Alarm
 			{
 				Duration = new TimeSpan(0, 15, 0),
