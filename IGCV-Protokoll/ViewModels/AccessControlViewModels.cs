@@ -24,6 +24,12 @@ namespace IGCV_Protokoll.ViewModels
 		public Dictionary<AdEntity, bool> AuthorizedEntities { get; set; }
 	}
 
+	public class AccessControlEditorDisplayViewModel
+	{
+		public AccessControlEditorViewModel Editor { get; set; }
+		public AccessControlDisplayViewModel Display { get; set; }
+	}
+
 	public class SelectedAdEntity
 	{
 		/// <summary>

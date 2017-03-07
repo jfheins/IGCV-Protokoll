@@ -1,72 +1,71 @@
 ﻿@using IGCV_Protokoll.util
-@model int
+@model IGCV_Protokoll.ViewModels.AccessControlEditorDisplayViewModel
 
 @{
 	var aclElementId = $"standaloneAcl_{Model}";
 }
 
+
 <div id="standaloneEditor_@Model">
 	<div class="row">
-		<div class="col-sm-2">Aktuell berechtigt:</div>
-		<div class="col-sm-10">
-			@Html.Action("_DisplayAuthorized", "Acl", new { obj = Model })
+		<div class="col-sm-6">
+			<h4>Bearbeiten:</h4>
+				@{ Html.RenderPartial("_AclEditorFor", Model.Editor); }
+			<div style="text-align: right">
+				<button class="btn btn-primary" onclick="submitEditedAcl();">Speichern</button>
+			</div>
+			<div id="responseMessage"></div>
 		</div>
-	</div>
-	<div class="row">
-		<div class="col-sm-2">
-			Bearbeiten:
-			<button class="btn btn-primary" onclick="submitEditedAcl();">Speichern</button>
-			@using (Html.Delayed(null, "Standalone-ACL-Editor"))
-			{
-				<script type="text/javascript">
-					function submitEditedAcl() {
-						$('#accessControl_@Model').fadeTo(200, 0.3, function () {
-							var data = $('#@aclElementId').jstree(true).get_json('#', { flat: true });
-							var aclJson = JSON.stringify(data, AclPropertyFilter);
-
-							$.ajax({
-								url: '@Url.Action("_SaveExistingAcl", "Acl")',
-								type: 'POST',
-								data: {
-									aclID: @Model,
-									aclTree: aclJson,
-									"X-Requested-With": "XMLHttpRequest"
-								},
-								success: function(responseData) {
-									$('#accessControl_@Model').html(responseData);
-								},
-								error: function(xhr, errorType) {
-									$('#responseMessage_@Model').html(xhr.responseText);
-								},
-								complete:  function(xhr, statusText) {
-									$('#accessControl_@Model').fadeTo(200, 1);
-								}
-							}); //end ajax
-						});
-					}
-
-					function AclPropertyFilter(key, value) {
-						// Filtering out properties
-						if (key === '') { // Wurzelelement
-							return value;
-						}
-						else if (!isNaN(key)) { // Oberste Ebene
-							value["selected"] = value["state"]["selected"];
-							return value;
-						}
-						else if (key === 'id' || key === 'selected') {
-							return value;
-						}
-						else
-							return undefined;
-					}
-				</script>
-			}
+		<div class="col-sm-6">
+			<h4>Aktuell berechtigt:</h4>
+			@{ Html.RenderPartial("_DisplayAuthorized", Model.Display); }
 		</div>
-		<div class="col-sm-10">
-			@Html.Action("_AclEditorFor", "Acl", new { obj = Model, htmlId = @aclElementId })
-		</div>
-	</div>
-	<div id="responseMessage_@Model">
 	</div>
 </div>
+
+@using (Html.Delayed(null, "Standalone-ACL-Editor"))
+{
+	<script type="text/javascript">
+		function submitEditedAcl() {
+			$('#accessControl_@Model').fadeTo(200, 0.3, function () {
+				var data = $('#@aclElementId').jstree(true).get_json('#', { flat: true });
+				var aclJson = JSON.stringify(data, AclPropertyFilter);
+
+				$.ajax({
+					url: '@Url.Action("_SaveExistingAcl", "Acl")',
+					type: 'POST',
+					data: {
+						aclID: @Model,
+						aclTree: aclJson,
+						"X-Requested-With": "XMLHttpRequest"
+					},
+					success: function(responseData) {
+						$('#accessControl_@Model').html(responseData);
+					},
+					error: function(xhr, errorType) {
+						$('#responseMessage_@Model').html(xhr.responseText);
+					},
+					complete:  function(xhr, statusText) {
+						$('#accessControl_@Model').fadeTo(200, 1);
+					}
+				}); //end ajax
+			});
+		}
+
+		function AclPropertyFilter(key, value) {
+			// Filtering out properties
+			if (key === '') { // Wurzelelement
+				return value;
+			}
+			else if (!isNaN(key)) { // Oberste Ebene
+				value["selected"] = value["state"]["selected"];
+				return value;
+			}
+			else if (key === 'id' || key === 'selected') {
+				return value;
+			}
+			else
+				return undefined;
+		}
+	</script>
+}

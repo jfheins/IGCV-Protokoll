@@ -920,6 +920,7 @@
     <Content Include="Views\Topics\_AclDisplay.cshtml" />
     <Content Include="Views\Attachments\ContainerDetails.cshtml" />
     <Content Include="Views\Acl\_StandaloneEditor.cshtml" />
+    <Content Include="Views\Acl\Edit.cshtml" />
     <None Include="Web.Integration.config" />
     <None Include="Web.Production.config" />
     <None Include="Web.Testing.config" />

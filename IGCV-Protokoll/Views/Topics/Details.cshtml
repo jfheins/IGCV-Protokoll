@@ -231,6 +231,11 @@ else
 
 <div class="panel panel-primary">
 	<div class="panel-heading">
+		<div class="panel-title-right">
+			<p>
+				<a href="@Url.Action("Edit", "Acl", new {id = Model.AclID})"><i class="glyphicon glyphicon-new-window"></i> Einzelseite</a>
+			</p>
+		</div>
 		<h3 class="panel-title">@Html.DisplayNameFor(model => model.AclID)</h3>
 	</div>
 	<div class="panel-body" id="accessControl_@Model.ID">

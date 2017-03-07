@@ -1,0 +1,8 @@
+﻿@model int
+
+@{
+	ViewBag.Title = "ACL Bearbeiten";
+}
+<h2>@ViewBag.Title</h2>
+
+@Html.Action("_StandaloneEditorFor", new {aclID = Model })
