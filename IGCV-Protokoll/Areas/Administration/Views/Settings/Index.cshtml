@@ -1,4 +1,5 @@
-﻿@using IGCV_Protokoll.util
+﻿@using IGCV_Protokoll.Models
+@using IGCV_Protokoll.util
 @model IGCV_Protokoll.Models.UserSettings
 
 @{
@@ -14,13 +15,16 @@
 	@Html.AntiForgeryToken()
 
 	<div class="form-horizontal">
-		<div class="form-group">
-			@Html.LabelFor(model => model.ColorScheme, new {@class = "control-label col-md-2"})
-			<div class="col-md-2">
-				@Html.EnumDropDownListFor(model => model.ColorScheme, new {@class = "form-control"})
-				@Html.ValidationMessageFor(model => model.ColorScheme, "", new {@class = "text-danger"})
+		@if (Enum.GetValues(typeof(ColorScheme)).Length > 1)
+		{
+			<div class="form-group">
+				@Html.LabelFor(model => model.ColorScheme, new {@class = "control-label col-md-2"})
+				<div class="col-md-2">
+					@Html.EnumDropDownListFor(model => model.ColorScheme, new {@class = "form-control"})
+					@Html.ValidationMessageFor(model => model.ColorScheme, "", new {@class = "text-danger"})
+				</div>
 			</div>
-		</div>
+		}
 
 		<div class="form-group">
 			@Html.LabelFor(model => model.ReportOccasions, new {@class = "control-label col-md-2"})

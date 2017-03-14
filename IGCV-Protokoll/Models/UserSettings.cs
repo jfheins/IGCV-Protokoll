@@ -20,8 +20,7 @@ namespace IGCV_Protokoll.Models
 
 	public enum ColorScheme
 	{
-		[Display(Name = "iwb Blau")] iwb,
-		[Display(Name = "RMV Grün")] RMV
+		[Display(Name = "RMV Grün")] RMV = 1
 	}
 
 	public enum SessionReportOccasions
