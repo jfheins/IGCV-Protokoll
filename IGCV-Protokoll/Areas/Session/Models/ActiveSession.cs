@@ -63,6 +63,6 @@ namespace IGCV_Protokoll.Areas.Session.Models
 
         public virtual ICollection<TopicLock> LockedTopics { get; set; }
 
-        public virtual ICollection<ActiveAgendaItem> ActiveAgendaItems { get; set; }
+        public virtual List<ActiveAgendaItem> ActiveAgendaItems { get; set; }
     }
 }

@@ -12,7 +12,20 @@ namespace IGCV_Protokoll.Areas.Session.Models
 {
     public class ActiveAgendaItem
     {
-        public int ID { get; set; }
+	    private sealed class PositionRelationalComparer : Comparer<ActiveAgendaItem>
+	    {
+		    public override int Compare(ActiveAgendaItem x, ActiveAgendaItem y)
+		    {
+			    if (ReferenceEquals(x, y)) return 0;
+			    if (ReferenceEquals(null, y)) return 1;
+			    if (ReferenceEquals(null, x)) return -1;
+			    return x.Position.CompareTo(y.Position);
+		    }
+	    }
+
+	    public static Comparer<ActiveAgendaItem> PositionComparer { get; } = new PositionRelationalComparer();
+
+	    public int ID { get; set; }
 
         public ActiveSession Parent { get; set; }
 

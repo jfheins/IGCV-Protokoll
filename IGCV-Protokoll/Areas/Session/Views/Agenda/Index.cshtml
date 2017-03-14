@@ -17,14 +17,21 @@
 }
 else
 {
-    using (Html.BeginForm("Edit", "Agenda", new { Area = "Session" }, FormMethod.Post))
-    {
+	if (!string.IsNullOrEmpty(ViewBag.ErrorMessage))
+	{
+		<p class="alert alert-danger alert-dismissible" role="alert">
+			<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			@ViewBag.ErrorMessage
+		</p>
+	}
+	using (Html.BeginForm("Edit", "Agenda", new { Area = "Session" }, FormMethod.Post))
+	{
         <div class="index-action">
             @Html.ActionLink("Zurück", "Index", "Lists", new { Area = "Session" }, new { @class = "btn btn-default" })
             <button class="btn btn-primary" type="submit">Speichern & Weiter</button>
         </div>
 
-        <h2>@ViewBag.Title</h2>
+	    <h2>@ViewBag.Title</h2>
         <p>Die Unterpunkte der Agenda können für zukünftige Sitzungen in der Verwaltung angepasst werden.</p>
 
         @Html.AntiForgeryToken()
@@ -32,19 +39,16 @@ else
         <div class="form-horizontal">
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-            @{
-                var agendaItems = Model.ActiveAgendaItems.OrderBy(ai => ai.Position).ToList();
-            }
-            @for (int i = 0; i < agendaItems.Count; i++)
+            @for (int i = 0; i < Model.ActiveAgendaItems.Count; i++)
             {
                 <div class="form-group">
                     <div class="col-sm-4 col-md-offset-1 col-md-3 col-lg-offset-2 col-lg-2">
-                        <h4 style="font-weight: bold;">@Html.DisplayFor(model => agendaItems[i].Title)</h4>
-                        <p style="white-space: pre-line; margin-left: 20px;">@Html.DisplayFor(model => agendaItems[i].Description)</p>
+                        <h4 style="font-weight: bold;">@Html.DisplayFor(model => model.ActiveAgendaItems[i].Title)</h4>
+                        <p style="white-space: pre-line; margin-left: 20px;">@Html.DisplayFor(model => model.ActiveAgendaItems[i].Description)</p>
                     </div>
-                    @Html.HiddenFor(model => agendaItems[i].Position)
+                    @Html.HiddenFor(model => model.ActiveAgendaItems[i].Position)
                     <div class="col-sm-8 col-md-6 col-lg-5">
-                        @Html.EditorFor(model => agendaItems[i].Comment, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.EditorFor(model => model.ActiveAgendaItems[i].Comment, new { htmlAttributes = new { @class = "form-control" } })
                     </div>
                 </div>
             }

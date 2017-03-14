@@ -22,14 +22,22 @@ namespace IGCV_Protokoll.Areas.Session.Controllers
             if (session == null)
                 return RedirectToAction("Index", "Master");
             
-            return View(session);
+			session.ActiveAgendaItems.Sort(ActiveAgendaItem.PositionComparer);
+
+            return View("Index", session);
         }
 
-        public ActionResult Edit([Bind(Include = "Position,Comment")] IEnumerable<ActiveAgendaItem> agendaItems)
+        public ActionResult Edit([Bind(Include = "Position,Comment", Prefix = "ActiveAgendaItems")] IEnumerable<ActiveAgendaItem> agendaItems)
         {
             var session = GetSession();
             if (session == null)
                 return RedirectToAction("Index", "Master");
+
+	        if (agendaItems == null)
+	        {
+		        ViewBag.ErrorMessage = "Der Server konnte keine Daten verarbeiten.";
+		        return Index();
+	        }
 
             foreach (var editedItem in agendaItems)
             {
