@@ -59,9 +59,144 @@
 			var mailSubject = Uri.EscapeDataString(Model.Title.Shorten(70));
 			var mailBody = Uri.EscapeDataString(ViewBag.Host + Url.Action("Details", "Topics", new { id = Model.ID, Area = "" }));
 		}
-		<a href="mailto:?subject=@mailSubject&body=@mailBody" class="btn btn-primary"><i class="glyphicon glyphicon-envelope"></i>&nbsp;&nbsp;Weiterleiten</a>
+		<a href="mailto:?subject=@mailSubject&body=@mailBody" class="btn btn-primary"><i class="glyphicon glyphicon-envelope"></i>&nbsp;&nbsp;Link Weiterleiten</a>
 	</div>
 </div>
+
+
+@{
+	bool hasDecision = Model.Decision != null;
+	string descClass = hasDecision ? "col-md-12" : "col-md-6";
+}
+
+<div class="row">
+	<div class="@descClass">
+		@{ Html.RenderPartial("_Description", Model); }
+	</div>
+	@if (!hasDecision)
+	{
+		<div class="col-md-6">
+			@{ Html.RenderPartial("_Proposal", Model); }
+		</div>
+				}
+</div>
+
+@if (hasDecision)
+{
+	string classname = "panel-primary";
+	if (Model.Decision.Type == DecisionType.Closed)
+	{
+		classname = "panel-warning";
+	}
+	else if (Model.Decision.Type == DecisionType.Resolution)
+	{
+		classname = "panel-success";
+	}
+
+	<div class="panel @classname">
+		<div class="panel-heading">
+			<h3 class="panel-title">@Model.Decision.Type.DisplayName()</h3>
+		</div>
+		<div class="panel-body">
+			@Html.DisplayFor(model => model.Decision.Text, "String_Multiline")
+		</div>
+		<div class="panel-footer">
+			@Html.ActionLink("Sitzungsprotokoll vom " + Model.Decision.Report.End.ToString("d"),
+				"Details",
+				"SessionReports",
+				new { id = Model.Decision.Report.ID },
+				new { target = "pdfreport" })
+		</div>
+	</div>
+}
+
+
+<div class="panel panel-primary comment-panel">
+	<div class="panel-heading">
+		<h3 class="panel-title">@Html.DisplayNameFor(model => model.Comments)</h3>
+	</div>
+	<div id="comments_@Model.ID">
+		@if ((!Model.IsReadOnly && !Model.IsLocked) || Model.Comments.Any())
+		{
+			@Html.Action("_List", "Comments", Model)
+		}
+		else
+		{
+			<div class="panel-body">
+				Es sind keine Kommentare vorhanden.
+			</div>
+		}
+	</div>
+</div>
+
+
+<div class="panel panel-primary" style="background-color: #DDD">
+	<div class="panel-heading">
+		<h3 class="panel-title">@Html.DisplayNameFor(model => model.Votes)</h3>
+	</div>
+	<div class="panel-body" id="auditorlist_@Model.ID">
+		@Html.Action("_List", "Votes", new { topic = Model, linkLevel = VoteLinkLevel.Everyone })
+	</div>
+</div>
+
+
+<div class="panel panel-primary">
+	<div class="panel-heading">
+		<h3 class="panel-title">Aufgaben</h3>
+	</div>
+	@if (Model.Assignments.Any())
+	{
+		Html.RenderPartial("~/Views/Assignments/_DetailedTable.cshtml", Model.Assignments.OrderBy(a => a.Type).ThenByDescending(a => a.DueDate));
+	}
+	else
+	{
+		<div class="panel-body">
+			Diese Diskussion enthält keine Aufgaben.
+		</div>
+	}
+	@if (!Model.IsReadOnly)
+	{
+		<div class="panel-footer">
+			@if (Model.IsLocked)
+			{
+				@:Da das Thema gesperrt ist, können Sie zur Zeit keine Aufgaben erstellen.
+			}
+			else
+			{
+				@Html.ActionLink("Neue Aufgabe erstellen", "Create", "Assignments", new { topicID = Model.ID }, null)
+			}
+		</div>
+	}
+</div>
+
+
+<div class="row">
+	<div class="col-md-12">
+		<div class="panel panel-primary">
+			<div class="panel-heading">
+				<div class="panel-title-right">
+					<p>
+						<a href="@Url.Action("ContainerDetails", "Attachments", new {id = Model.Documents.ID})"><i class="glyphicon glyphicon-new-window"></i> Einzelseite</a>
+					</p>
+				</div>
+				<h3 class="panel-title">@Html.DisplayNameFor(model => model.Documents)</h3>
+			</div>
+			@if (Model.Documents.VisibleDocuments.Any())
+			{
+				@Html.Action("_List", "Attachments", new { id = Model.Documents.ID, showActions = !Model.IsReadOnly })
+			}
+			else
+			{
+				<div class="panel-body" id="attachments_@(Model.Documents.ID)">Keine Dokumente vorhanden.</div>
+			}
+			@if (!Model.IsReadOnly)
+			{
+				@Html.Action("_UploadForm", "Attachments", new { id = Model.Documents.ID })
+			}
+		</div>
+	</div>
+</div>
+
 
 <div class="row">
 	<div class="col-md-12">
@@ -149,175 +284,48 @@
 	</div>
 </div>
 
-@{
-	bool hasDecision = Model.Decision != null;
-	string descClass = hasDecision ? "col-md-12" : "col-md-6";
-}
-
 <div class="row">
-	<div class="@descClass">
-		@{ Html.RenderPartial("_Description", Model); }
-	</div>
-	@if (!hasDecision)
-	{
-		<div class="col-md-6">
-			@{ Html.RenderPartial("_Proposal", Model); }
-		</div>
-	}
-</div>
-
-@if (hasDecision)
-{
-	string classname = "panel-primary";
-	if (Model.Decision.Type == DecisionType.Closed)
-	{
-		classname = "panel-warning";
-	}
-	else if (Model.Decision.Type == DecisionType.Resolution)
-	{
-		classname = "panel-success";
-	}
-
-	<div class="panel @classname">
-		<div class="panel-heading">
-			<h3 class="panel-title">@Model.Decision.Type.DisplayName()</h3>
-		</div>
-		<div class="panel-body">
-			@Html.DisplayFor(model => model.Decision.Text, "String_Multiline")
-		</div>
-		<div class="panel-footer">
-			@Html.ActionLink("Sitzungsprotokoll vom " + Model.Decision.Report.End.ToString("d"),
-				"Details",
-				"SessionReports",
-				new { id = Model.Decision.Report.ID },
-				new { target = "pdfreport" })
-		</div>
-	</div>
-}
-
-
-<div class="panel panel-primary" style="background-color: #DDD">
-	<div class="panel-heading">
-		<h3 class="panel-title">@Html.DisplayNameFor(model => model.Votes)</h3>
-	</div>
-	<div class="panel-body" id="auditorlist_@Model.ID">
-		@Html.Action("_List", "Votes", new { topic = Model, linkLevel = VoteLinkLevel.Everyone })
-	</div>
-</div>
-
-
-@if (Model.IsReadOnly)
-{
-	<div class="panel panel-primary">
-		<div class="panel-heading">
-			<h3 class="panel-title">Gelesene Push-Benachrichtigungen</h3>
-		</div>
-		<div class="panel-body" id="pushlist_@Model.ID">
-			@Html.Action("_DisplayListTopic", "Push", new { topic = Model })
-		</div>
-	</div>
-}
-else
-{
-	<div class="panel panel-primary">
-		<div class="panel-heading">
-			<h3 class="panel-title">@Html.DisplayNameFor(model => model.PushTargets)</h3>
-		</div>
-		<div class="panel-body" id="pushlist_@Model.ID">
-			@Html.Action("_EditListTopic", "Push", new { topic = Model })
-		</div>
-	</div>
-}
-
-<div class="panel panel-primary">
-	<div class="panel-heading">
-		@if(Model.AclID.HasValue)
-		{
-			<div class="panel-title-right">
-				<p>
-					<a href="@Url.Action("Edit", "Acl", new {id = Model.AclID})"><i class="glyphicon glyphicon-new-window"></i> Einzelseite</a>
-				</p>
+	<div class="col-sm-6">
+		<div class="panel panel-primary">
+			<div class="panel-heading">
+				@if (Model.AclID.HasValue)
+				{
+					<div class="panel-title-right">
+						<p>
+							<a href="@Url.Action("Edit", "Acl", new {id = Model.AclID})"><i class="glyphicon glyphicon-new-window"></i> Einzelseite</a>
+						</p>
+					</div>
+				}
+				<h3 class="panel-title">@Html.DisplayNameFor(model => model.AclID)</h3>
 			</div>
-		}
-		<h3 class="panel-title">@Html.DisplayNameFor(model => model.AclID)</h3>
+			<div class="panel-body" id="accessControl_@Model.ID">
+				@{ Html.RenderPartial("_AclDisplay", Model); }
+			</div>
+		</div>
 	</div>
-	<div class="panel-body" id="accessControl_@Model.ID">
-		@{ Html.RenderPartial("_AclDisplay", Model); }
-	</div>
-</div>
-
-<div class="panel panel-primary comment-panel">
-	<div class="panel-heading">
-		<h3 class="panel-title">@Html.DisplayNameFor(model => model.Comments)</h3>
-	</div>
-	<div id="comments_@Model.ID">
-		@if ((!Model.IsReadOnly && !Model.IsLocked) || Model.Comments.Any())
+	<div class="col-sm-6">
+		@if (Model.IsReadOnly)
 		{
-			@Html.Action("_List", "Comments", Model)
+			<div class="panel panel-primary">
+				<div class="panel-heading">
+					<h3 class="panel-title">Gelesene Push-Benachrichtigungen</h3>
+				</div>
+				<div class="panel-body push-list" id="pushlist_@Model.ID">
+					@Html.Action("_DisplayListTopic", "Push", new { topic = Model })
+				</div>
+			</div>
 		}
 		else
 		{
-			<div class="panel-body">
-				Es sind keine Kommentare vorhanden.
+			<div class="panel panel-primary">
+				<div class="panel-heading">
+					<h3 class="panel-title">@Html.DisplayNameFor(model => model.PushTargets)</h3>
+				</div>
+				<div class="panel-body push-list" id="pushlist_@Model.ID">
+					@Html.Action("_EditListTopic", "Push", new { topic = Model })
+				</div>
 			</div>
 		}
 	</div>
 </div>
 
-
-<div class="panel panel-primary">
-	<div class="panel-heading">
-		<h3 class="panel-title">Aufgaben</h3>
-	</div>
-	@if (Model.Assignments.Any())
-	{
-		Html.RenderPartial("~/Views/Assignments/_DetailedTable.cshtml", Model.Assignments.OrderBy(a => a.Type).ThenByDescending(a => a.DueDate));
-	}
-	else
-	{
-		<div class="panel-body">
-			Diese Diskussion enthält keine Aufgaben.
-		</div>
-	}
-	@if (!Model.IsReadOnly)
-	{
-		<div class="panel-footer">
-			@if (Model.IsLocked)
-			{
-				@:Da das Thema gesperrt ist, können Sie zur Zeit keine Aufgaben erstellen.
-			}
-			else
-			{
-				@Html.ActionLink("Neue Aufgabe erstellen", "Create", "Assignments", new { topicID = Model.ID }, null)
-			}
-		</div>
-	}
-</div>
-
-
-<div class="row">
-	<div class="col-md-12">
-		<div class="panel panel-primary">
-			<div class="panel-heading">
-				<div class="panel-title-right">
-					<p>
-						<a href="@Url.Action("ContainerDetails", "Attachments", new {id = Model.Documents.ID})"><i class="glyphicon glyphicon-new-window"></i> Einzelseite</a>
-					</p>
-				</div>
-				<h3 class="panel-title">@Html.DisplayNameFor(model => model.Documents)</h3>
-			</div>
-			@if (Model.Documents.VisibleDocuments.Any())
-			{
-				@Html.Action("_List", "Attachments", new {id = Model.Documents.ID, showActions = !Model.IsReadOnly})
-			}
-			else
-			{
-				<div class="panel-body" id="attachments_@(Model.Documents.ID)">Keine Dokumente vorhanden.</div>
-			}
-			@if (!Model.IsReadOnly)
-			{
-				@Html.Action("_UploadForm", "Attachments", new { id = Model.Documents.ID })
-			}
-		</div>
-	</div>
-</div>
