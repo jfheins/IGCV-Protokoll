@@ -18,11 +18,12 @@ namespace IGCV_Protokoll.Areas.Session.Models
         [Required]
         public string Title { get; set; }
 
-        [DisplayName("Beschreibung")]
+        [DisplayName("Anmerkung")]
         [DataType(DataType.MultilineText)]
         [Required]
         public virtual string Description { get; set; }
-        [DisplayName("Standardtext")]
+
+        [DisplayName("Beschreibung")]
         [DataType(DataType.MultilineText)]
         public virtual string Placeholder { get; set; }
 
