@@ -99,8 +99,11 @@ namespace IGCV_Protokoll.Areas.Session.Controllers.Lists
 
 			var row = _dbSet.Create();
 			TryUpdateModel(row, "", null, new[] { "LastChanged" });
-			_dbSet.Add(row);
 
+			if (row is IFileContainer)
+				((IFileContainer)row).Documents = new DocumentContainer();
+
+			_dbSet.Add(row);
 			try
 			{
 				db.SaveChanges();

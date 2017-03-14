@@ -55,7 +55,7 @@ else
 					<td>
 						@Ajax.ActionLink("Löschen", "_PermanentDelete", "DocumentContainer",
 							new {area = "", containerID = item.ID},
-							new AjaxOptions {Confirm = "Container endgültig löschen?", HttpMethod = "POST", OnSuccess = $"removeContainerRow('{elementId}');" },
+							new AjaxOptions {Confirm = "Container endgültig löschen?", HttpMethod = "POST", OnSuccess = $"removeContainerRow('#{elementId}');" },
 							new {@class = "text-danger"})
 					</td>
 				</tr>
