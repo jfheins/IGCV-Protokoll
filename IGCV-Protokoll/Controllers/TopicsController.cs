@@ -247,6 +247,7 @@ namespace IGCV_Protokoll.Controllers
 					SessionTypeID = input.SessionTypeID
 				};
 				t.IncorporateUpdates(input);
+				t.DocumentContainer.Add(new DocumentContainer());
 
 				foreach (User user in db.SessionTypes
 					.Include(st => st.Attendees)
