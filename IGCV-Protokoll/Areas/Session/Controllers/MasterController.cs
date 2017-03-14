@@ -200,6 +200,7 @@ namespace IGCV_Protokoll.Areas.Session.Controllers
 
 			foreach (var tlock in session.LockedTopics)
 			{
+				AuthorizeCurrentUserFor(tlock.Topic);
 				MarkAsUnread(tlock.Topic, skipCurrentUser: false);
 			}
 			db.SaveChanges();
