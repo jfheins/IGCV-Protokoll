@@ -15,14 +15,8 @@
 		<link href="~/Content/themes/default/style.css" rel="stylesheet" />
 		<title>@ViewBag.Title &#8211; IGCV-Protokoll</title>
 
-		@if (ViewBag.CurrentColorScheme == ColorScheme.RMV)
-		{
-			<link href="~/Content/rmvTheme.css" rel="stylesheet" />
-		}
-		else
-		{
-			<link href="~/Content/iwbTheme.css" rel="stylesheet" />
-		}
+		<link href="~/Content/rmvTheme.css" rel="stylesheet" />
+
 		@Styles.Render("~/Content/css")
 		@Scripts.Render("~/bundles/modernizr")
 		@Scripts.Render("~/bundles/jquery")
