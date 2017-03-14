@@ -137,6 +137,10 @@ namespace IGCV_Protokoll.Models
 		[Required]
 		public DateTime ValidFrom { get; set; }
 
+		/// <summary>
+		/// Dieses Flag wird während der PDF-Generierung gesetzt im Sitzungsmodus. Die Ausgabe von Diskussionsteilen
+		/// sollte dann so erfolgen, dass keine direkte Bearbeitung möglich ist, am Bestern Links komplett weglassen.
+		/// </summary>
 		[Display(Name = "Schreibschutz")]
 		public bool IsReadOnly { get; set; }
 

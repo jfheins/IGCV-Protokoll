@@ -124,6 +124,9 @@ namespace IGCV_Protokoll.Areas.Session.Controllers
 				return HTTPStatus(422, "Die Sitzungs-ID stimmt nicht überein!");
 
 			session.PresentUsers.Clear();
+			foreach (var topic in session.LockedTopics.Select(tl => tl.Topic))
+				topic.IsReadOnly = false;
+
 			db.ActiveSessions.Remove(session);
 			try
 			{
