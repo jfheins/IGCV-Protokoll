@@ -57,8 +57,9 @@ namespace IGCV_Protokoll.Areas.Session.Controllers
 			var st = db.SessionTypes.Find(SessionTypeID);
 			if (st == null)
 				return HttpNotFound("Sitzungstyp nicht gefunden.");
-			//if (st.Attendees.All(u => u.ID != uid))
-			//	return HTTPStatus(HttpStatusCode.Forbidden, "Sie sind kein Stammteilnehmer. Nur Stammteilnehmer können die Sitzung eröffnen.");
+
+			if (st.Attendees.All(u => u.ID != uid))
+				return HTTPStatus(HttpStatusCode.Forbidden, "Sie sind kein Stammteilnehmer. Nur Stammteilnehmer können die Sitzung eröffnen.");
 
 			return View(CreateNewSession(st));
 		}
