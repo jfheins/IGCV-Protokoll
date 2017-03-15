@@ -1,4 +1,5 @@
-﻿@model IEnumerable<IGCV_Protokoll.Areas.Session.Models.ActiveSession>
+﻿@model IEnumerable<Tuple<IGCV_Protokoll.Areas.Session.Models.ActiveSession, bool>>
+
 @{
     ViewBag.Title = "Laufende Sitzungen";
 }
@@ -21,16 +22,16 @@ else
         <thead>
             <tr>
                 <th>
-                    @Html.DisplayNameFor(model => model.Start)
+                    @Html.DisplayNameFor(model => model.Item1.Start)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.SessionType.Name)
+                    @Html.DisplayNameFor(model => model.Item1.SessionType.Name)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Manager)
+                    @Html.DisplayNameFor(model => model.Item1.Manager)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.PresentUsers)
+                    @Html.DisplayNameFor(model => model.Item1.PresentUsers)
                 </th>
                 <th>Aktionen</th>
             </tr>
@@ -40,18 +41,23 @@ else
             {
                 <tr>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Start)
+                        @Html.DisplayFor(modelItem => item.Item1.Start)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.SessionType.Name)
+                        @Html.DisplayFor(modelItem => item.Item1.SessionType.Name)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Manager.LongName)
+                        @Html.DisplayFor(modelItem => item.Item1.Manager.LongName)
                     </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.PresentUsers, "IEnumerable_User")
-                    </td>
-                    <td>@Html.ActionLink("Übernehmen", "Resume", "Master", new { Area = "Session", SessionID = item.ID }, null)</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.Item1.PresentUsers, "IEnumerable_User")
+					</td>
+					<td>
+						@if (item.Item2)
+						{
+							@Html.ActionLink("Übernehmen", "Resume", "Master", new {Area = "Session", SessionID = item.Item1.ID}, null)
+						}
+					</td>
                 </tr>}
         </tbody>
     </table>

@@ -30,8 +30,8 @@ namespace IGCV_Protokoll.Areas.Session.Controllers
 			var thisUserID = GetCurrentUserID();
 			var availableSessions = GetActiveSessionTypes().ToList();
 
-			var runningSessions = db.ActiveSessions.Include(s => s.Manager)
-				.Where(s => s.SessionType.Attendees.Any(a => a.ID == thisUserID)).ToList();
+			var runningSessions = db.ActiveSessions.Include(s => s.Manager).AsEnumerable()
+				.Select(s => Tuple.Create(s, s.SessionType.Attendees.Any(a => a.ID == thisUserID))).ToList();
 
 			ViewBag.ErrorMessage = TempData["ErrorMessage"];
 			ViewBag.SessionTypes = new SelectList(availableSessions, "ID", "Name");
