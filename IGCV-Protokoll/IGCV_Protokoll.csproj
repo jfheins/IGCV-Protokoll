@@ -286,6 +286,10 @@
     <Compile Include="Migrations\201703071619271_added_dc_title.Designer.cs">
       <DependentUpon>201703071619271_added_dc_title.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201703152031329_made_agenda_Description_optional.cs" />
+    <Compile Include="Migrations\201703152031329_made_agenda_Description_optional.Designer.cs">
+      <DependentUpon>201703152031329_made_agenda_Description_optional.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\ACL.cs" />
     <Compile Include="Models\AclItem.cs" />
     <Compile Include="Models\AdEntity.cs" />
@@ -1104,6 +1108,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201703071619271_added_dc_title.resx">
       <DependentUpon>201703071619271_added_dc_title.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703152031329_made_agenda_Description_optional.resx">
+      <DependentUpon>201703152031329_made_agenda_Description_optional.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

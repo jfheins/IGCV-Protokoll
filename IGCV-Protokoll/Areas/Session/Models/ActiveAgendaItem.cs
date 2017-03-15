@@ -38,7 +38,6 @@ namespace IGCV_Protokoll.Areas.Session.Models
 
         [DisplayName("Beschreibung")]
         [DataType(DataType.MultilineText)]
-        [Required]
         public virtual string Description { get; set; }
         [DisplayName("Kommentar")]
         [DataType(DataType.MultilineText)]

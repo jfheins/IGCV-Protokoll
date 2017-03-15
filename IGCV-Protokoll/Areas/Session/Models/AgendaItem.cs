@@ -20,8 +20,7 @@ namespace IGCV_Protokoll.Areas.Session.Models
 
         [DisplayName("Anmerkung")]
         [DataType(DataType.MultilineText)]
-        [Required]
-        public virtual string Description { get; set; }
+		public virtual string Description { get; set; }
 
         [DisplayName("Beschreibung")]
         [DataType(DataType.MultilineText)]

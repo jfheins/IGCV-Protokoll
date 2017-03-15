@@ -14,8 +14,7 @@
     <div class="panel-body">
         <div class="col-xs-6">
             @Html.LabelFor(model => model.Description)<br />
-            <textarea class="form-control text-box multi-line" style="resize: vertical;" name="AgendaItems[@Model.Position].Description" data-val="true" data-val-required="Das Feld &quot;@Html.GetDisplayName(m => m.Description)&quot; ist erforderlich.">@Model.Description</textarea>
-            <span class="field-validation-valid text-danger" data-valmsg-for="AgendaItems[@Model.Position].Description" data-valmsg-replace="true"></span>
+            <textarea class="form-control text-box multi-line" style="resize: vertical;" name="AgendaItems[@Model.Position].Description">@Model.Description</textarea>
         </div>
         <div class="col-xs-6">
             @Html.LabelFor(model => model.Placeholder)<br />
