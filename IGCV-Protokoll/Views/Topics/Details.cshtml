@@ -5,7 +5,7 @@
 @model IGCV_Protokoll.Models.Topic
 
 @{
-	ViewBag.Title = "Details (" + Model.Title + ")";
+	ViewBag.Title = Model.Title;
 	IDictionary<Tag, bool> tagDict = ViewBag.TagDict;
 	var selectList = tagDict.Select(kvp =>
 		new SelectListItem
@@ -23,6 +23,7 @@
 		@Html.DisplayFor(model => tagDict, "Dictionary_Tag_bool")
 	</span>
 </h2>
+<h4>Sitzung: @Model.SessionType.Name</h4>
 @Html.ActionLink("Zurück zum Index", "Index")
 <hr />
 
@@ -197,6 +198,51 @@
 	</div>
 </div>
 
+<div class="row">
+	<div class="col-sm-6">
+		<div class="panel panel-primary">
+			<div class="panel-heading">
+				@if (Model.AclID.HasValue)
+				{
+					<div class="panel-title-right">
+						<p>
+							<a href="@Url.Action("Edit", "Acl", new {id = Model.AclID})"><i class="glyphicon glyphicon-new-window"></i> Einzelseite</a>
+						</p>
+					</div>
+				}
+				<h3 class="panel-title">@Html.DisplayNameFor(model => model.AclID)</h3>
+			</div>
+			<div class="panel-body" id="accessControl_@Model.ID">
+				@{ Html.RenderPartial("_AclDisplay", Model); }
+			</div>
+		</div>
+	</div>
+	<div class="col-sm-6">
+		@if (Model.IsReadOnly)
+		{
+			<div class="panel panel-primary">
+				<div class="panel-heading">
+					<h3 class="panel-title">Gelesene Push-Benachrichtigungen</h3>
+				</div>
+				<div class="panel-body push-list" id="pushlist_@Model.ID">
+					@Html.Action("_DisplayListTopic", "Push", new { topic = Model })
+				</div>
+			</div>
+		}
+		else
+		{
+			<div class="panel panel-primary">
+				<div class="panel-heading">
+					<h3 class="panel-title">@Html.DisplayNameFor(model => model.PushTargets)</h3>
+				</div>
+				<div class="panel-body push-list" id="pushlist_@Model.ID">
+					@Html.Action("_EditListTopic", "Push", new { topic = Model })
+				</div>
+			</div>
+		}
+	</div>
+</div>
+
 
 <div class="row">
 	<div class="col-md-12">
@@ -283,49 +329,3 @@
 		</div>
 	</div>
 </div>
-
-<div class="row">
-	<div class="col-sm-6">
-		<div class="panel panel-primary">
-			<div class="panel-heading">
-				@if (Model.AclID.HasValue)
-				{
-					<div class="panel-title-right">
-						<p>
-							<a href="@Url.Action("Edit", "Acl", new {id = Model.AclID})"><i class="glyphicon glyphicon-new-window"></i> Einzelseite</a>
-						</p>
-					</div>
-				}
-				<h3 class="panel-title">@Html.DisplayNameFor(model => model.AclID)</h3>
-			</div>
-			<div class="panel-body" id="accessControl_@Model.ID">
-				@{ Html.RenderPartial("_AclDisplay", Model); }
-			</div>
-		</div>
-	</div>
-	<div class="col-sm-6">
-		@if (Model.IsReadOnly)
-		{
-			<div class="panel panel-primary">
-				<div class="panel-heading">
-					<h3 class="panel-title">Gelesene Push-Benachrichtigungen</h3>
-				</div>
-				<div class="panel-body push-list" id="pushlist_@Model.ID">
-					@Html.Action("_DisplayListTopic", "Push", new { topic = Model })
-				</div>
-			</div>
-		}
-		else
-		{
-			<div class="panel panel-primary">
-				<div class="panel-heading">
-					<h3 class="panel-title">@Html.DisplayNameFor(model => model.PushTargets)</h3>
-				</div>
-				<div class="panel-body push-list" id="pushlist_@Model.ID">
-					@Html.Action("_EditListTopic", "Push", new { topic = Model })
-				</div>
-			</div>
-		}
-	</div>
-</div>
-
