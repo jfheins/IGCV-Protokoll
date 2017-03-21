@@ -215,7 +215,7 @@ namespace IGCV_Protokoll.Models
 		[Display(Name = "Rechteverwaltung")]
 		public int? AclID { get; set; }
 
-		public ACL Acl { get; set; }
+		public virtual ACL Acl { get; set; }
 	}
 
 	internal class TopicByIdComparer : IEqualityComparer<Topic>
