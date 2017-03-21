@@ -15,6 +15,7 @@ namespace IGCV_Protokoll
 			bundles.Add(new Bundle("~/bundles/other").Include( // No minification
 				"~/Scripts/jquery.timeago.js",
 				"~/Scripts/spin.js",
+				"~/Scripts/autosize.js",
 				"~/Scripts/jquery.highlight.js",
 				"~/Scripts/jquery.tablesorter.js",
 				"~/Scripts/jquery.json.js",

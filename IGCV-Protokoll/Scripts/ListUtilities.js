@@ -2,6 +2,7 @@
 	$('#' + list + '_' + rowId).replaceWith(data);
 	RefreshTables(list);
 	enableDatePicker();
+	autosize($('#' + list + '_' + rowId + ' textarea'));
 }
 
 function RemoveRow(list, rowId) {
@@ -24,3 +25,5 @@ function RefreshTables(list) {
 	$(selector).trigger('update');
 	$("table.table-sortable time[rel=timeago]").timeago();
 }
+
+autosize($('textarea'));

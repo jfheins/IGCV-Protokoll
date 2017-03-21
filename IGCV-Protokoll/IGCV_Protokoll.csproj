@@ -820,6 +820,7 @@
     <None Include="Content\variables_rmv.less" />
     <None Include="Content\variables.less" />
     <None Include="Properties\PublishProfiles\Lokal.pubxml" />
+    <Content Include="Scripts\autosize.js" />
     <Content Include="Scripts\bootstrap-multiselect.js" />
     <Content Include="Scripts\bootstrap-validation.js" />
     <Content Include="Scripts\bootstrap.js" />

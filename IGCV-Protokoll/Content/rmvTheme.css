@@ -6757,6 +6757,18 @@ body {
 textarea.form-control {
   min-height: 120px;
 }
+.tableform textarea.form-control {
+  min-height: 0;
+}
+textarea.noresize {
+  resize: none;
+}
+textarea.vresize {
+  resize: vertical;
+}
+textarea.hresize {
+  resize: horizontal;
+}
 input.check-box {
   width: 34px;
 }
