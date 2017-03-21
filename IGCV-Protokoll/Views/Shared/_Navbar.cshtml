@@ -1,4 +1,5 @@
-﻿<div class="navbar navbar-inverse navbar-static-top" id="main-navbar">
+﻿@using IGCV_Protokoll.Models
+<div class="navbar navbar-inverse navbar-static-top" id="main-navbar">
 	<div class="container">
 		<div class="navbar-header">
 			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#primaryNavbarContent">
@@ -11,11 +12,7 @@
 		<div class="navbar-collapse collapse" id="primaryNavbarContent">
 			<p class="navbar-right navbar-text">
 				@{
-					var shortname = User.Identity.Name.Split('\\').Last();
-					if (shortname.Length > 3)
-					{
-						shortname = shortname.Substring(shortname.Length - 3);
-					}
+					var shortname = (ViewBag.CurrentUser as User)?.ShortName ?? User.Identity.Name.Split('\\').Last();
 				}
 				<span class="hidden-xs usertile">@shortname</span>
 			</p>
