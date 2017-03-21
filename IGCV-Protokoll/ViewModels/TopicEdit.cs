@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Web.Mvc;
@@ -65,6 +66,9 @@ namespace IGCV_Protokoll.ViewModels
 		[Display(Name = "Priorität")]
 		[Required]
 		public Priority Priority { get; set; }
+
+		public List<AclPreset> AvailableAclPresets { get; set; }
+		public int? SelectedAclPreset { get; set; }
 
 		public static TopicEdit FromTopic(Topic t)
 		{

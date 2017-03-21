@@ -163,7 +163,7 @@ namespace IGCV_Protokoll.Controllers
 
 			if (topic == null)
 				return HttpNotFound();
-			
+
 			if (!IsAuthorizedFor(topic))
 				return HTTPStatus(HttpStatusCode.Forbidden, "Sie sind für dieses Thema nicht berechtigt!");
 
@@ -221,11 +221,19 @@ namespace IGCV_Protokoll.Controllers
 		/// </summary>
 		public ActionResult Create()
 		{
+			var presets = new List<AclPreset>
+			{
+				new AclPreset { ID = 0, Name = "Jeder" },
+				new AclPreset { ID = 11, Name = "V-AL" },
+				new AclPreset { ID = 22, Name = "G-AL" },
+			};
+
 			var viewmodel = new TopicEdit
 			{
 				SessionTypeList = new SelectList(GetActiveSessionTypes(), "ID", "Name"),
 				TargetSessionTypeList = new SelectList(GetActiveSessionTypes(), "ID", "Name"),
-				UserList = CreateUserSelectList()
+				UserList = CreateUserSelectList(),
+				AvailableAclPresets = presets
 			};
 			return View(viewmodel);
 		}
@@ -334,7 +342,7 @@ namespace IGCV_Protokoll.Controllers
 			Topic topic = db.Topics.Include(t => t.Creator).Single(t => t.ID == input.ID);
 			if (!IsAuthorizedFor(topic))
 				return HTTPStatus(HttpStatusCode.Forbidden, "Sie sind für diesen Vorgang nicht berechtigt!");
-			
+
 			if (ModelState.IsValid)
 			{
 				var auth = topic.IsEditableBy(GetCurrentUser(), GetSession());
@@ -597,7 +605,7 @@ namespace IGCV_Protokoll.Controllers
 				return HttpNotFound("Das Thema konnte nicht gefunden werden.");
 			if (!IsAuthorizedFor(topic))
 				return HTTPStatus(HttpStatusCode.Forbidden, "Sie sind für diesen Vorgang nicht berechtigt!");
-			
+
 			var history = db.TopicHistory.Where(th => th.TopicID == topic.ID).OrderBy(th => th.ValidFrom).ToList();
 
 			if (history.Count == 0)

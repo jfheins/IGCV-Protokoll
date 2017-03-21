@@ -1,4 +1,5 @@
-﻿@model IGCV_Protokoll.ViewModels.TopicEdit
+﻿@using IGCV_Protokoll.util
+@model IGCV_Protokoll.ViewModels.TopicEdit
 @{
 	ViewBag.Title = "Diskussion erstellen";
 }
@@ -8,62 +9,88 @@
 	@Html.AntiForgeryToken()
 
 	<hr />
-
-	<div class="form-horizontal panel panel-primary">
-		<div class="panel-heading">
-			<h3 class="panel-title">Stammdaten</h3>
+	<div class="row">
+		<div class="col-md-8">
+			<div class="form-horizontal panel panel-primary">
+				<div class="panel-heading">
+					<h3 class="panel-title">Stammdaten</h3>
+				</div>
+				<div class="panel-body">
+					<div class="form-group">
+						@Html.LabelFor(model => model.SessionTypeID, new { @class = "control-label col-md-2" })
+						<div class="col-md-3">
+							@Html.DropDownListFor(m => m.SessionTypeID, Model.SessionTypeList, "(bitte auswählen)", new { @class = "form-control" })
+							@Html.ValidationMessageFor(model => model.SessionTypeID, "", new { @class = "text-danger" })
+						</div>
+					</div>
+					<div class="form-group">
+						@Html.LabelFor(model => model.Title, new { @class = "control-label col-md-2" })
+						<div class="col-md-5">
+							@Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control" } })
+							@Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
+						</div>
+					</div>
+					<div class="form-group">
+						@Html.LabelFor(model => model.ResubmissionDate, new { @class = "control-label col-md-2" })
+						<div class="col-md-5">
+							@Html.EditorFor(model => model.ResubmissionDate, new { htmlAttributes = new { @class = "form-control" } })
+							@Html.ValidationMessageFor(model => model.ResubmissionDate, "", new { @class = "text-danger" })
+						</div>
+					</div>
+					<div class="form-group">
+						@Html.LabelFor(model => model.Time, new { @class = "control-label col-md-2" })
+						<div class="col-md-5">
+							@Html.EditorFor(model => model.Time, new { htmlAttributes = new { @class = "form-control", type = "time" } })
+							@Html.ValidationMessageFor(model => model.Time, "", new { @class = "text-danger" })
+						</div>
+					</div>
+					<div class="form-group">
+						@Html.LabelFor(model => model.OwnerID, new { @class = "control-label col-md-2" })
+						<div class="col-md-2">
+							@Html.DropDownListFor(m => m.OwnerID, Model.UserList, "(bitte auswählen)", new { @class = "form-control" })
+							@Html.ValidationMessageFor(model => model.OwnerID, "", new { @class = "text-danger" })
+						</div>
+					</div>
+					<div class="form-group">
+						@Html.LabelFor(model => model.Priority, new { @class = "control-label col-md-2" })
+						<div class="col-md-2">
+							@Html.EnumDropDownListFor(model => model.Priority, new { @class = "form-control" })
+							@Html.ValidationMessageFor(model => model.Priority, "", new { @class = "text-danger" })
+						</div>
+					</div>
+				</div>
+			</div>
 		</div>
-		<div class="panel-body">
-			<div class="form-group">
-				@Html.LabelFor(model => model.SessionTypeID, new { @class = "control-label col-md-2" })
-				<div class="col-md-3">
-					@Html.DropDownListFor(m => m.SessionTypeID, Model.SessionTypeList, "(bitte auswählen)", new { @class = "form-control" })
-					@Html.ValidationMessageFor(model => model.SessionTypeID, "", new { @class = "text-danger" })
+		@if(Model.AvailableAclPresets != null)
+		{
+			<div class="col-md-4">
+				<div class="panel panel-primary">
+					<div class="panel-heading">
+						<h3 class="panel-title">Zugriffsrechte</h3>
+					</div>
+					<div class="panel-body">
+						<ul style="list-style: none; padding: 0;">
+							@for(int i = 0; i < Model.AvailableAclPresets.Count; i++)
+							{
+								<li>
+									@Html.RadioButtonFor(m => m.SelectedAclPreset, Model.AvailableAclPresets[i].ID, new { id = "preset_" + i })
+									<label for="preset_@(i)">@Model.AvailableAclPresets[i].Name</label>
+								</li>
+							}
+						</ul>
+					</div>
 				</div>
 			</div>
-			<div class="form-group">
-				@Html.LabelFor(model => model.Title, new { @class = "control-label col-md-2" })
-				<div class="col-md-5">
-					@Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control" } })
-					@Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
-				</div>
-			</div>
-			<div class="form-group">
-				@Html.LabelFor(model => model.ResubmissionDate, new { @class = "control-label col-md-2" })
-				<div class="col-md-5">
-					@Html.EditorFor(model => model.ResubmissionDate, new { htmlAttributes = new { @class = "form-control" } })
-					@Html.ValidationMessageFor(model => model.ResubmissionDate, "", new { @class = "text-danger" })
-				</div>
-			</div>
-			<div class="form-group">
-				@Html.LabelFor(model => model.Time, new { @class = "control-label col-md-2" })
-				<div class="col-md-5">
-					@Html.EditorFor(model => model.Time, new { htmlAttributes = new { @class = "form-control", type = "time" } })
-					@Html.ValidationMessageFor(model => model.Time, "", new { @class = "text-danger" })
-				</div>
-			</div>
-			<div class="form-group">
-				@Html.LabelFor(model => model.OwnerID, new { @class = "control-label col-md-2" })
-				<div class="col-md-2">
-					@Html.DropDownListFor(m => m.OwnerID, Model.UserList, "(bitte auswählen)", new { @class = "form-control" })
-					@Html.ValidationMessageFor(model => model.OwnerID, "", new { @class = "text-danger" })
-				</div>
-			</div>
-			<div class="form-group">
-				@Html.LabelFor(model => model.Priority, new { @class = "control-label col-md-2" })
-				<div class="col-md-2">
-					@Html.EnumDropDownListFor(model => model.Priority, new { @class = "form-control" })
-					@Html.ValidationMessageFor(model => model.Priority, "", new { @class = "text-danger" })
-				</div>
-			</div>
-		</div>
+		}
 	</div>
+
+
 
 	<div class="row">
 		<div class="col-md-6 form-group">
 			<div class="panel panel-primary">
 				<div class="panel-heading">
-					<h3 class="panel-title">@Html.LabelFor(model => model.Description)</h3>
+					<h3 class="panel-title">@Html.GetDisplayName(model => model.Description)</h3>
 				</div>
 				<div class="panel-body">
 					@Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control vresize" } })
@@ -74,7 +101,7 @@
 		<div class="col-md-6 form-group">
 			<div class="panel panel-primary">
 				<div class="panel-heading">
-					<h3 class="panel-title">@Html.LabelFor(model => model.Proposal)</h3>
+					<h3 class="panel-title">@Html.GetDisplayName(model => model.Proposal)</h3>
 				</div>
 				<div class="panel-body">
 					@Html.EditorFor(model => model.Proposal, new { htmlAttributes = new { @class = "form-control vresize" } })
@@ -83,19 +110,22 @@
 			</div>
 		</div>
 	</div>
-
-
-
 	<div class="form-horizontal">
 		@Html.ValidationSummary(true, "", new { @class = "text-danger" })
 	</div>
-	<div class="container text-center">
-		<input type="submit" value="Erstellen" class="btn btn-lg btn-primary" />
+
+	<div class="text-center">
+		<input type="submit" value="Diskussion erstellen" class="btn btn-lg btn-primary" />
 	</div>
 }
 <div>
 	@Html.ActionLink("Verwerfen", "Index")
 </div>
+
 @section Scripts {
 	@Scripts.Render("~/bundles/jqueryval")
+
+	<script type="text/javascript">
+		autosize($('textarea'));
+	</script>
 }
