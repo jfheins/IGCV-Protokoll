@@ -294,10 +294,15 @@
     <Compile Include="Migrations\201703212250469_added_dashboard_override.Designer.cs">
       <DependentUpon>201703212250469_added_dashboard_override.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201703221117487_added_topic_links.cs" />
+    <Compile Include="Migrations\201703221117487_added_topic_links.Designer.cs">
+      <DependentUpon>201703221117487_added_topic_links.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\ACL.cs" />
     <Compile Include="Models\AclItem.cs" />
     <Compile Include="Models\AdEntity.cs" />
     <Compile Include="Models\DocumentContainer.cs" />
+    <Compile Include="Models\TopicLink.cs" />
     <Compile Include="Models\TopicVisibilityOverride.cs" />
     <Compile Include="util\IAccessible.cs" />
     <Compile Include="util\IFileContainer.cs" />
@@ -1124,6 +1129,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201703212250469_added_dashboard_override.resx">
       <DependentUpon>201703212250469_added_dashboard_override.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703221117487_added_topic_links.resx">
+      <DependentUpon>201703221117487_added_topic_links.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

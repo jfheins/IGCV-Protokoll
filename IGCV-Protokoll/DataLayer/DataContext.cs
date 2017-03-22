@@ -5,6 +5,7 @@ using System.Data.Entity.ModelConfiguration.Conventions;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web.Mvc;
+using EntityFramework.Extensions;
 using IGCV_Protokoll.Areas.Administration.Models;
 using IGCV_Protokoll.Areas.Session.Models;
 using IGCV_Protokoll.Areas.Session.Models.Lists;
@@ -53,6 +54,8 @@ namespace IGCV_Protokoll.DataLayer
 		public DbSet<TagTopic> TagTopics { get; set; }
 		public DbSet<Topic> Topics { get; set; }
 		public DbSet<TopicHistory> TopicHistory { get; set; }
+		public DbSet<TopicLink> TopicLinks { get; set; }
+		public DbSet<TopicLinkTemplate> TopicLinkTemplates { get; set; }
 		public DbSet<TopicLock> TopicLocks { get; set; }
 		public DbSet<TopicVisibilityOverride> TopicVisibilityOverrides { get; set; }
 		public DbSet<UnreadState> UnreadState { get; set; }
@@ -131,6 +134,7 @@ namespace IGCV_Protokoll.DataLayer
 			topic.Documents.Title = $"Diskussion: {topic.Title}";
 			SaveChanges();
 
+			TopicLinks.Where(link => link.LeftTopicID == topicID || link.RightTopicID == topicID).Delete();
 			Votes.RemoveRange(Votes.Where(v => v.Topic.ID == topicID));
 			Topics.Remove(topic);
 			SaveChanges();
