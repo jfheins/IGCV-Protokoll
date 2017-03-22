@@ -225,6 +225,7 @@
     <Compile Include="Controllers\DocumentContainerController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\PushController.cs" />
+    <Compile Include="Controllers\TopicLinkController.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Migrations\201412031510536_added_Lock_User.cs" />
     <Compile Include="Migrations\201412031510536_added_Lock_User.Designer.cs">
@@ -526,6 +527,7 @@
     <Compile Include="ViewModels\SearchResult.cs" />
     <Compile Include="ViewModels\TopicEdit.cs" />
     <Compile Include="ViewModels\TopicHistoryViewModel.cs" />
+    <Compile Include="ViewModels\TopicLinkViewModels.cs" />
     <Compile Include="ViewModels\VoteListViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -942,6 +944,8 @@
     <Content Include="Views\Attachments\ContainerDetails.cshtml" />
     <Content Include="Views\Acl\_StandaloneEditor.cshtml" />
     <Content Include="Views\Acl\Edit.cshtml" />
+    <Content Include="Views\TopicLink\_List.cshtml" />
+    <Content Include="Views\TopicLink\_Create.cshtml" />
     <None Include="Web.Integration.config" />
     <None Include="Web.Production.config" />
     <None Include="Web.Testing.config" />

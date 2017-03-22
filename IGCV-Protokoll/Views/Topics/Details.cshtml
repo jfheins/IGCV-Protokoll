@@ -225,6 +225,70 @@
 	</div>
 </div>
 
+
+<div class="row">
+	<div class="col-md-12">
+		<div class="panel panel-primary">
+			<div class="panel-heading">
+				<div class="panel-title-right">
+					<p>
+						<a href="@Url.Action("_Create", "TopicLink", new {Area = "", topicID = Model.ID})" onclick="displayTopicLinkModal(@Model.ID); return false;"><i class="glyphicon glyphicon-link"></i> Verknüpfung hinzufügen</a>
+					</p>
+				</div>
+				<h3 class="panel-title">Verknüpfungen</h3>
+			</div>
+			<div class="panel-body" id="topicLinkList">
+				@Html.Action("_List", "TopicLink", new { topicID = Model.ID })
+			</div>
+		</div>
+	</div>
+</div>
+@using (Html.Delayed(null, "TopicLinkModal"))
+{
+	<script type="text/javascript">
+		function displayTopicLinkModal(topicid) {
+			$("#topicLinkModal .modal-body").load('@Url.Action("_Create", "TopicLink", new { Area = "" })?topicID=' + topicid, function() {
+				var form = $("#topicLinkModal .modal-body form");
+				if (form.length) {
+					$("#topicLinkModal .modal-footer button").off('click').on('click', function () {
+
+						$.ajax({
+							type: "POST",
+							url: form.attr('action'),
+							data: form.serialize(), // serializes the form's elements.
+							success: function (responseData) {
+								$('#topicLinkList').html(responseData)
+								$('#topicLinkModal').modal('hide');
+							}
+						});
+					});
+					$('#topicLinkModal').modal();
+				}
+			});
+		}
+	</script>
+
+	<!-- Modal -->
+	<div class="modal fade" id="topicLinkModal" tabindex="-1" role="dialog" aria-labelledby="topicLinkModalLabel">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title" id="topicLinkModal">Neue Verknüpfung</h4>
+				</div>
+				<div class="modal-body">
+
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-primary">Speichern</button>
+				</div>
+			</div>
+		</div>
+	</div>
+}
+
+
+
 <div class="row">
 	<div class="col-sm-6">
 		<div class="panel panel-primary">

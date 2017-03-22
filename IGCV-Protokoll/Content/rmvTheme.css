@@ -7399,6 +7399,35 @@ fieldset[disabled] .btn-hover-danger.active {
   width: 300px;
   max-width: 300px;
 }
+.ui-autocomplete {
+  z-index: 2000 !important;
+  max-height: 300px;
+  overflow-y: auto;
+  /* prevent horizontal scrollbar */
+  overflow-x: hidden;
+}
+.ui-autocomplete li {
+  width: 350px;
+}
+.link-list dd:hover {
+  background-color: #DDD;
+}
+.link-list dd,
+.link-list dt {
+  height: 30px;
+  padding-top: 5px;
+}
+.link-list dd {
+  max-width: 600px;
+}
+.link-list div.link-content {
+  display: inline-block;
+}
+.link-list div.delete-link {
+  display: inline-block;
+  float: right;
+  margin-right: 10px;
+}
 /*IE-Hack*/
 @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
   /* IE10+ specific styles */

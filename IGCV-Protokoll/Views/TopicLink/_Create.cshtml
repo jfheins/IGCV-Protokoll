@@ -1,0 +1,66 @@
+﻿@using Newtonsoft.Json
+@model IGCV_Protokoll.ViewModels.TopicLinkCreateFormViewModel
+
+
+@using (Html.BeginForm("Create", "TopicLink", FormMethod.Post))
+{
+	@Html.AntiForgeryToken()
+
+	<div class="form-horizontal">
+		<div class="form-group">
+			@Html.LabelFor(model => model.Left, htmlAttributes: new {@class = "control-label col-md-4"})
+			<div class="col-sm-8 static-text">
+				@Html.DisplayFor(m => m.Left.Title)
+			</div>
+		</div>
+
+		<div class="form-group">
+			@Html.LabelFor(model => model.LinkTypeID, htmlAttributes: new {@class = "control-label col-md-4"})
+			<div class="col-sm-8">
+				@Html.DropDownListFor(m => m.LinkTypeID, Model.AvailableLinkTypes, "(bitte auswählen)", new {@class = "form-control"})
+			</div>
+		</div>
+
+		<div class="form-group ui-front">
+			@Html.LabelFor(model => model.RightTopicID, htmlAttributes: new { @class = "control-label col-md-4" })
+			<div class="col-sm-8">
+				<input class="form-control text-box single-line" id="RightTopic" name="RightTopic" type="text" value="" />
+				<input id="RightTopicID" name="RightTopicID" type="hidden" value="0" />
+				<input id="LeftTopicID" name="LeftTopicID" type="hidden" value="@Model.Left.ID" />
+			</div>
+		</div>
+	</div>
+}
+
+<script type="text/javascript">
+	@{
+		var renamed = Model.AvailableTopics.Select(x => new { x.ID, label = x.ID + " " + x.Title, value = x.Title });
+		var json = JsonConvert.SerializeObject(renamed, Formatting.None);
+		// {"ID":0, "label": "0 Diskussionstitel", "value":"Diskussionstitel"}
+		// Das label wird durchsucht, ID und value werden in den callbacks benötigt
+	}
+
+	$(function() {
+
+		var topics = @Html.Raw(json);
+
+		$('#RightTopic').autocomplete({
+				minLength: 1,
+				source: topics,
+				focus: function(event, ui) {
+					$('#RightTopic').val(ui.item.value);
+					return false;
+				},
+				select: function(event, ui) {
+					$("#RightTopic").val(ui.item.value);
+					$("#RightTopicID").val(ui.item.ID);
+					return false;
+				}
+			})
+			.autocomplete("instance")._renderItem = function(ul, item) {
+				return $("<li>")
+					.append("<div><i>" + item.ID + "</i>&#8195;" + item.value + "</div>")
+					.appendTo(ul);
+			};
+	});
+</script>
