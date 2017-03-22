@@ -1,5 +1,10 @@
-﻿@using IGCV_Protokoll.util
+﻿@using IGCV_Protokoll.Models
+@using IGCV_Protokoll.util
 @model IGCV_Protokoll.Models.Comment
+	
+@{
+	var userName = (ViewBag.CurrentUser as User)?.ShortName ?? User.Identity.Name.Split('\\').Last();
+}
 
 @using (Ajax.BeginForm("_Submit", "Comments", new {Area = ""}, new AjaxOptions
 {
@@ -13,7 +18,7 @@
 	@Html.HiddenFor(model => model.TopicID)
 
 	<div class="input-group">
-		<span class="input-group-addon">@User.Identity.Name.Split('\\').Last()</span>
+		<span class="input-group-addon">@userName</span>
 		<input type="text" name="Content" class="form-control" placeholder="Kommentar hinzufügen" id="comment_input_@Model.TopicID">
 		<span class="input-group-btn">
 			<button class="btn btn-default inputexpander" type="button"><span class="glyphicon glyphicon-align-justify"></span><span class="sr-only">Mehrzeilig</span></button>
