@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Web.Mvc;
+using IGCV_Protokoll.DataLayer;
 using IGCV_Protokoll.Models;
 using IGCV_Protokoll.ViewModels;
 using Microsoft.Ajax.Utilities;
@@ -69,10 +70,15 @@ namespace IGCV_Protokoll.Controllers
 					.Include(t => t.Tags)
 					.Include(t => t.TargetSessionType)
 					.Include(t => t.UnreadBy)
+					.Include(t => t.VisibilityOverrides)
 					.Include(t => t.Votes)
 					.Where(t => !t.IsReadOnly)
 					.Where(t => t.ResubmissionDate == null || t.ResubmissionDate < cutoff)
-					.Where(t => t.OwnerID == userID || t.Votes.Any(v => v.Voter.ID == userID))
+					.Where(t => t.OwnerID == userID || (
+						t.VisibilityOverrides.Any(x => x.UserID == userID) ? 
+							t.VisibilityOverrides.FirstOrDefault(x => x.UserID == userID).Visibility == VisibilityOverride.Show :
+							t.Votes.Any(v => v.Voter.ID == userID)
+					))
 					.OrderByDescending(t => t.Priority)
 					.ThenByDescending(t => t.ValidFrom).ToList();
 			}
@@ -94,6 +100,17 @@ namespace IGCV_Protokoll.Controllers
 
 			return PartialView("~/Views/Home/_Topics.cshtml", viewModel);
 		}
+
+		public static bool IsTopicOnDashboard(DataContext db, int cuid, Topic t)
+		{
+			var cutoff = DateTime.Now.AddDays(3);
+			var normalLogic = !t.IsReadOnly && (t.ResubmissionDate == null || t.ResubmissionDate < cutoff) &&
+							(t.OwnerID == cuid || t.Votes.Any(v => v.Voter.ID == cuid));
+
+			var overrideLogic = db.TopicVisibilityOverrides.FirstOrDefault(o => o.TopicID == t.ID && o.UserID == cuid)?.toBool();
+			return overrideLogic ?? normalLogic;
+		}
+		
 
 		/// <summary>
 		///    Diese Methode rendert eine einzige Diskussion und gibt diese zurück.

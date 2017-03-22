@@ -24,7 +24,34 @@
 	</span>
 </h2>
 <h4>Sitzung: @Model.SessionType.Name</h4>
-@Html.ActionLink("Zurück zum Index", "Index")
+<div>
+	@Html.ActionLink("Zurück zum Index", "Index")
+	
+	@{
+		var hideStyle = ViewBag.IsTopicOnDashboard ? "" : "display: none;";
+		var showstyle = ViewBag.IsTopicOnDashboard ? "display: none;" : "";
+	}
+
+	<span id="DashboardVisibilityLinks" style="float: right">
+		@Ajax.ActionLink("Von meinem Dashboard entfernen", "HideFromDashboard",
+			new { area = "", id = Model.ID },
+			new AjaxOptions { HttpMethod = "POST", OnSuccess = "toggleDashboardVisibilityLinks" },
+			new { style = hideStyle })
+
+		@Ajax.ActionLink("Auf meinem Dashboard anzeigen", "DisplayOnDashboard",
+			new { area = "", id = Model.ID },
+			new AjaxOptions { HttpMethod = "POST", OnSuccess = "toggleDashboardVisibilityLinks" },
+			new { style = showstyle })
+	</span>
+	@using (Html.Delayed(null, "DashboardVisibilityLinks"))
+	{
+		<script type="text/javascript">
+			function toggleDashboardVisibilityLinks(ajaxContext) {
+				$("#DashboardVisibilityLinks").children().toggle();
+			}
+		</script>
+	}
+</div>
 <hr />
 
 <div style="margin-bottom: 20px;" class="row">

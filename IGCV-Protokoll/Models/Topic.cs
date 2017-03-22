@@ -151,6 +151,8 @@ namespace IGCV_Protokoll.Models
 
 		public virtual ICollection<UnreadState> UnreadBy { get; set; }
 
+		public virtual ICollection<TopicVisibilityOverride> VisibilityOverrides { get; set; }
+
 		public bool IsUnreadBy(int userID)
 		{
 			return UnreadBy.Any(x => x.UserID == userID);

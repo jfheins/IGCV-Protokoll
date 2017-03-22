@@ -290,10 +290,15 @@
     <Compile Include="Migrations\201703152031329_made_agenda_Description_optional.Designer.cs">
       <DependentUpon>201703152031329_made_agenda_Description_optional.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201703212250469_added_dashboard_override.cs" />
+    <Compile Include="Migrations\201703212250469_added_dashboard_override.Designer.cs">
+      <DependentUpon>201703212250469_added_dashboard_override.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\ACL.cs" />
     <Compile Include="Models\AclItem.cs" />
     <Compile Include="Models\AdEntity.cs" />
     <Compile Include="Models\DocumentContainer.cs" />
+    <Compile Include="Models\TopicVisibilityOverride.cs" />
     <Compile Include="util\IAccessible.cs" />
     <Compile Include="util\IFileContainer.cs" />
     <Compile Include="util\PermissiveAuthorizationAttribute.cs" />
@@ -1116,6 +1121,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201703152031329_made_agenda_Description_optional.resx">
       <DependentUpon>201703152031329_made_agenda_Description_optional.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703212250469_added_dashboard_override.resx">
+      <DependentUpon>201703212250469_added_dashboard_override.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

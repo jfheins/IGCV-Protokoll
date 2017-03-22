@@ -54,6 +54,7 @@ namespace IGCV_Protokoll.DataLayer
 		public DbSet<Topic> Topics { get; set; }
 		public DbSet<TopicHistory> TopicHistory { get; set; }
 		public DbSet<TopicLock> TopicLocks { get; set; }
+		public DbSet<TopicVisibilityOverride> TopicVisibilityOverrides { get; set; }
 		public DbSet<UnreadState> UnreadState { get; set; }
 		public DbSet<User> Users { get; set; }
 		public DbSet<Vote> Votes { get; set; }

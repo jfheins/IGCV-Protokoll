@@ -175,6 +175,7 @@ namespace IGCV_Protokoll.Controllers
 			ViewBag.IsEditable = topic.IsEditableBy(GetCurrentUser(), GetSession()).IsAuthorized;
 			ViewBag.TagDict = CreateTagDictionary(topic.Tags);
 			ViewBag.Host = FQDN;
+			ViewBag.IsTopicOnDashboard = HomeController.IsTopicOnDashboard(db, GetCurrentUserID(), topic);
 
 			topic.IsLocked = IsTopicLocked(id.Value);
 			return View(topic);
@@ -706,6 +707,24 @@ namespace IGCV_Protokoll.Controllers
 			var result = SaveAclFor(topic, aclTree);
 
 			return result ?? PartialView("_AclDisplay", topic);
+		}
+
+		[HttpPost]
+		public ActionResult DisplayOnDashboard(int id)
+		{
+			var displayOverride = new TopicVisibilityOverride { TopicID = id, UserID = GetCurrentUserID(), Visibility = VisibilityOverride.Show};
+			db.TopicVisibilityOverrides.AddOrUpdate(x => new { x.TopicID, x.UserID }, displayOverride);
+			db.SaveChanges();
+			return new HttpStatusCodeResult(HttpStatusCode.NoContent);
+		}
+
+		[HttpPost]
+		public ActionResult HideFromDashboard(int id)
+		{
+			var displayOverride = new TopicVisibilityOverride { TopicID = id, UserID = GetCurrentUserID(), Visibility = VisibilityOverride.Hide };
+			db.TopicVisibilityOverrides.AddOrUpdate(x => new {x.TopicID, x.UserID}, displayOverride);
+			db.SaveChanges();
+			return new HttpStatusCodeResult(HttpStatusCode.NoContent);
 		}
 	}
 }
