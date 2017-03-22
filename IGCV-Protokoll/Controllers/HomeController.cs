@@ -74,11 +74,10 @@ namespace IGCV_Protokoll.Controllers
 					.Include(t => t.Votes)
 					.Where(t => !t.IsReadOnly)
 					.Where(t => t.ResubmissionDate == null || t.ResubmissionDate < cutoff)
-					.Where(t => t.OwnerID == userID || (
-						t.VisibilityOverrides.Any(x => x.UserID == userID) ? 
+					.Where(t => t.VisibilityOverrides.Any(x => x.UserID == userID) ? 
 							t.VisibilityOverrides.FirstOrDefault(x => x.UserID == userID).Visibility == VisibilityOverride.Show :
-							t.Votes.Any(v => v.Voter.ID == userID)
-					))
+							(t.OwnerID == userID || t.Votes.Any(v => v.Voter.ID == userID))
+					)
 					.OrderByDescending(t => t.Priority)
 					.ThenByDescending(t => t.ValidFrom).ToList();
 			}
