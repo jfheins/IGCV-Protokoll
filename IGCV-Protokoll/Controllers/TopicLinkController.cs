@@ -16,11 +16,16 @@ namespace IGCV_Protokoll.Controllers
 	{
 		public ActionResult _List(int topicID)
 		{
+			if(!IsAuthorizedForTopic(topicID))
+				return HTTPStatus(HttpStatusCode.Forbidden, "Keine Berechtigung!");
+
 			var links = db.TopicLinks.Where(l => l.LeftTopicID == topicID)
 				.Select(l => new TopicLinkViewModel { Text = l.LinkTemplate.LeftText, Other = l.RightTopic, LinkID = l.ID })
 				.Concat(db.TopicLinks.Where(l => l.RightTopicID == topicID)
-				.Select(l => new TopicLinkViewModel { Text = l.LinkTemplate.RightText, Other = l.LeftTopic, LinkID = l.ID })).ToList();
-			
+				.Select(l => new TopicLinkViewModel { Text = l.LinkTemplate.RightText, Other = l.LeftTopic, LinkID = l.ID })).AsEnumerable();
+
+			links = links.Where(vm => IsAuthorizedFor(vm.Other));
+
 			return PartialView("_List", links.ToLookup(x => x.Text));
 		}
 
