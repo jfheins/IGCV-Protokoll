@@ -81,6 +81,30 @@
 					}
 				});
 
+				// Es gibt gepaarte start/end Felder. Falls es ein passendes _display Feld gibt, mss beim Startfeld ein change-handler eingehängt werden.
+				var endDispId = '#' + $(this).attr('id');
+				var startDispId = '#' + $(this).attr('id');
+				var other = [];
+
+				if (endDispId.indexOf('end') !== -1) {
+					startDispId = endDispId.replace('end', 'start');
+					other = $(startDispId);
+				}
+				else if (startDispId.indexOf('start') !== -1) {
+					endDispId = startDispId.replace('start', 'end');
+					other = $(endDispId);
+				}
+				var endId = endDispId.replace('_display', '');
+				var startId = startDispId.replace('_display', '');
+
+				if (other.length > 0) { // Es gibt ein Paar
+					$(startDispId).change(function () {
+						$(endId).val($(startId).val());
+						$(endDispId).val($(startDispId).val());
+					});
+				}
+
+
 				/* Finally, parse the value and change it to the display format */
 				if ($(this).attr('value')) {
 					var date = $.datepicker.parseDate("yy-mm-dd", $(this).attr('value'));
