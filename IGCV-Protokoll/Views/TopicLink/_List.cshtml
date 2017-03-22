@@ -1,4 +1,5 @@
-﻿@model ILookup<string, IGCV_Protokoll.ViewModels.TopicLinkViewModel> 
+﻿@using IGCV_Protokoll.util
+@model ILookup<string, IGCV_Protokoll.ViewModels.TopicLinkViewModel> 
 
 <dl class="dl-horizontal link-list">
 	@foreach (var linkGroup in Model)
@@ -7,14 +8,25 @@
 		foreach (var link in linkGroup)
 		{
 			<dd id="topicLink_@link.LinkID">
-				<div class="link-content">@Html.ActionLink(link.Other.Title, "Details", "Topics", new { id = link.Other.ID }, null)</div>
 				<div class="delete-link">
-					<a data-ajax="true" data-ajax-method="POST" data-ajax-success="$('#topicLink_@link.LinkID').remove();" href="@Url.Action("Delete", "TopicLink")" style="" title="Verknüpfung löschen">
+					<a data-ajax="true" data-ajax-confirm="Verknüpfung wirklich löschen?" data-ajax-method="POST" data-ajax-success="RemoveLinkEntry('#topicLink_@link.LinkID');" href="@Url.Action("Delete", "TopicLink", new { id = link.LinkID })" style="" title="Verknüpfung löschen">
 						<i class="glyphicon glyphicon-trash"></i>
 					</a>
 				</div>
-
+				<div class="link-content">@Html.ActionLink(link.Other.Title, "Details", "Topics", new { id = link.Other.ID }, null)</div>
 			</dd>
 		}
 	}
 </dl>
+@using (Html.Delayed(null, "TopicListScripts"))
+{
+	<script type="text/javascript">
+		function RemoveLinkEntry(entry) {
+			var prevItem = $(entry).prev();
+			if (prevItem[0].nodeName === "DT") { /* Last element in group */
+				prevItem.remove();
+			}
+			$(entry).remove();
+		}
+	</script>
+}

@@ -7414,19 +7414,18 @@ fieldset[disabled] .btn-hover-danger.active {
 }
 .link-list dd,
 .link-list dt {
-  height: 30px;
   padding-top: 5px;
-}
-.link-list dd {
-  max-width: 600px;
+  padding-bottom: 2px;
 }
 .link-list div.link-content {
-  display: inline-block;
+  display: inline;
+  margin-left: 4px;
 }
 .link-list div.delete-link {
   display: inline-block;
   float: right;
   margin-right: 10px;
+  font-size: 16px;
 }
 /*IE-Hack*/
 @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {

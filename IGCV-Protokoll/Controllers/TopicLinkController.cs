@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity.Validation;
 using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using EntityFramework.Extensions;
 using IGCV_Protokoll.Models;
 using IGCV_Protokoll.ViewModels;
+using Microsoft.Ajax.Utilities;
 
 namespace IGCV_Protokoll.Controllers
 {
@@ -34,7 +37,7 @@ namespace IGCV_Protokoll.Controllers
 		{
 			var linkTypes = db.TopicLinkTemplates.Select(t => new {t.ID, Text = t.LeftText}).Union(
 				db.TopicLinkTemplates.Select(t => new {ID = -t.ID, Text = t.RightText}))
-				.AsEnumerable().OrderBy(x => Math.Abs(x.ID - 0.1)).ToArray();
+				.AsEnumerable().DistinctBy(x => x.Text).OrderBy(x => Math.Abs(x.ID - 0.1)).ToArray();
 
 			var roles = GetRolesForCurrentUser();
 			var topics = db.FilteredTopics(roles).Select(t => new MinimalTopicInfoViewModel {ID = t.ID, Title = t.Title});
@@ -55,15 +58,13 @@ namespace IGCV_Protokoll.Controllers
 			if (LinkTypeID == 0 || RightTopicID == 0)
 				return HTTPStatus(HttpStatusCode.BadRequest, "Parameter dürfen nicht 0 sein!");
 
-			if (LinkTypeID < 0) // Der Benutzer hat die umgekehrte Verknüfungsrichtung gewählt
-			{
-				LinkTypeID = -LinkTypeID;
-				var temp = LeftTopicID;
-				LeftTopicID = RightTopicID;
-				RightTopicID = temp;
-			}
+			TopicLink link;
+			if (LinkTypeID > 0) 
+				link = new TopicLink {LeftTopicID = LeftTopicID, RightTopicID = RightTopicID, LinkTemplateID = LinkTypeID};
+			else // Der Benutzer hat die umgekehrte Verknüfungsrichtung gewählt
+				link = new TopicLink { LeftTopicID = RightTopicID, RightTopicID = LeftTopicID, LinkTemplateID = -LinkTypeID };
 
-			db.TopicLinks.Add(new TopicLink {LeftTopicID = LeftTopicID, RightTopicID = RightTopicID, LinkTemplateID = LinkTypeID});
+			db.TopicLinks.Add(link);
 			db.SaveChanges();
 			return _List(LeftTopicID);
 		}
@@ -74,13 +75,13 @@ namespace IGCV_Protokoll.Controllers
 		{
 			try
 			{
-				// TODO: Add delete logic here
-
-				return RedirectToAction("Index");
+				db.TopicLinks.Where(l => l.ID == id).Delete();
+				db.SaveChanges();
+				return new HttpStatusCodeResult(HttpStatusCode.NoContent);
 			}
-			catch
+			catch (DbEntityValidationException ex)
 			{
-				return View();
+				return HTTPStatus(HttpStatusCode.InternalServerError, ErrorMessageFromException(ex));
 			}
 		}
 	}
