@@ -1,4 +1,5 @@
 ﻿@using System.Diagnostics.Eventing.Reader
+@using IGCV_Protokoll.Models
 @using IGCV_Protokoll.util
 @using Newtonsoft.Json
 @model IGCV_Protokoll.ViewModels.AccessControlEditorViewModel
@@ -10,7 +11,11 @@
 		id = kvp.Key.ID.ToString(),
 		parent = kvp.Key.ParentID?.ToString() ?? "#",
 		text = kvp.Key.Name,
-		state = new { opened = kvp.Key.ParentID == null || kvp.Key.Children.Count < 3, selected = kvp.Value },
+		state = new {
+			opened = kvp.Key.ParentID == null || kvp.Key.Children.Count < 3,
+			selected = kvp.Value,
+			disabled = kvp.Key.Guid == (ViewBag.CurrentUser as User)?.Guid
+		},
 	});
 
 	var jsonTree = JsonConvert.SerializeObject(guiTree, Formatting.Indented);

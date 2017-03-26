@@ -47,7 +47,7 @@ namespace IGCV_Protokoll.Controllers
 			return View(id);
 		}
 
-		// POST: Assignments/Edit/5
+		// POST: Acl/Edit/5
 		[HttpPost]
 		[ValidateAntiForgeryToken]
 		public ActionResult Edit(int id, string aclTree)
