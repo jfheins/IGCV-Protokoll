@@ -45,7 +45,7 @@ namespace IGCV_Protokoll.Controllers
 				.AsEnumerable().DistinctBy(x => x.Text).OrderBy(x => Math.Abs(x.ID - 0.1)).ToArray();
 
 			var roles = GetRolesForCurrentUser();
-			var topics = db.FilteredTopics(roles).Select(t => new MinimalTopicInfoViewModel {ID = t.ID, Title = t.Title});
+			var topics = db.FilteredTopics(roles).Where(t => t.ID != topicID).Select(t => new MinimalTopicInfoViewModel {ID = t.ID, Title = t.Title});
 
 			return new TopicLinkCreateFormViewModel
 			{
