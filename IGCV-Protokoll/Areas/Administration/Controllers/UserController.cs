@@ -297,7 +297,6 @@ namespace IGCV_Protokoll.Areas.Administration.Controllers
 					if (root?.Guid == null)
 						throw new InvalidConfigurationException($"Zu dem Wurzelelement {_rootGroup} wurde keine GUID gefunden!");
 
-					touchedEntities.Add(root.Guid.Value);
 					SyncEntity(root, null, existingEntities, touchedEntities);
 				}
 			}
