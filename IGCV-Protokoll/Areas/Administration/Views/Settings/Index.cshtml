@@ -10,7 +10,7 @@
 
 <p>Diese Einstellungen sind benutzerspezifisch, betreffen also nur Sie allein.</p>
 
-@using (Html.BeginForm("Save", "Settings", FormMethod.Post))
+@using (Html.BeginForm("Save", "Settings", FormMethod.Post, new { id = "settings_form" }))
 {
 	@Html.AntiForgeryToken()
 
@@ -36,6 +36,28 @@
 				Bestimmt die Bedingungen, zu denen das Sitzungsprotokoll im Nachgang per E-Mail verschickt wird.
 			</div>
 		</div>
+		
+		<div class="form-group">
+			@Html.LabelFor(model => model.AclTreePreset, new { @class = "control-label col-md-2" })
+			<div class="col-md-2">
+				@{ Html.RenderPartial("~/Views/Acl/_AclEditorFor.cshtml", Model.AclTreeVM); }
+				@Html.Hidden("aclPresetTree")
+			</div>
+			<div class="col-md-3">
+				Hier kann eine benutzerdefinierte Vorbelegung für den Rechtebaum gesetzt werden. Beim Erstellen einer neuen Diskussion kann dann auf Knopfdruck diese Belegung gesetzt werden.
+			</div>
+		</div>
+		
+		@using (Html.Delayed(null, "Settings-ACLpreset-Editor"))
+		{
+			<script type="text/javascript">
+				$('#settings_form').submit(function() {
+					var data = $('#@Model.AclTreeVM.HtmlName').jstree(true).get_json('#', { flat: true });
+					var aclJson = JSON.stringify(data, AclPropertyFilter);
+					$('#aclPresetTree').val(aclJson);
+				});
+			</script>
+		}
 
 		<div class="form-group">
 			<div class="col-md-offset-2 col-md-5">

@@ -1,5 +1,9 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
+using IGCV_Protokoll.ViewModels;
 
 namespace IGCV_Protokoll.Models
 {
@@ -16,6 +20,23 @@ namespace IGCV_Protokoll.Models
 
 		[DisplayName("E-Mail Protokolle")]
 		public SessionReportOccasions ReportOccasions { get; set; }
+
+		[DisplayName("Voreinstellung Rechteverwaltung")]
+		public string AclTreePreset { get; set; }
+		[NotMapped]
+		public int[] AclTreePresetUsers
+		{
+			get
+			{
+				return AclTreePreset == null ? null : Array.ConvertAll(AclTreePreset.Split(';'), int.Parse);
+			}
+			set
+			{
+				AclTreePreset = string.Join(";", value.Select(p => p.ToString()));
+			}
+		}
+		[NotMapped]
+		public AccessControlEditorViewModel AclTreeVM { get; set; }
 	}
 
 	public enum ColorScheme

@@ -6,6 +6,6 @@ namespace IGCV_Protokoll.ViewModels
 	{
 		public int ID { get; set; }
 		public string Name { get; set; }
-		public IEnumerable<string> IncludedUsers { get; set; }
+		public string EntityList { get; set; }
 	}
 }

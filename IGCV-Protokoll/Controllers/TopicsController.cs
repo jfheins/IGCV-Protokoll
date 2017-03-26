@@ -224,9 +224,7 @@ namespace IGCV_Protokoll.Controllers
 		{
 			var presets = new List<AclPreset>
 			{
-				new AclPreset { ID = 0, Name = "Jeder" },
-				new AclPreset { ID = 11, Name = "V-AL" },
-				new AclPreset { ID = 22, Name = "G-AL" },
+				new AclPreset { ID = 0, Name = "Standard", EntityList = GetCurrentUser().Settings.AclTreePreset },
 			};
 
 			var viewmodel = new TopicEdit

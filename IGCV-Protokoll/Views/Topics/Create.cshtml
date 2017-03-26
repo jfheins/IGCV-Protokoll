@@ -1,4 +1,5 @@
-﻿@using IGCV_Protokoll.util
+﻿@using IGCV_Protokoll.Models
+@using IGCV_Protokoll.util
 @model IGCV_Protokoll.ViewModels.TopicEdit
 @{
 	ViewBag.Title = "Diskussion erstellen";
@@ -61,27 +62,33 @@
 				</div>
 			</div>
 		</div>
-		@if(Model.AvailableAclPresets != null)
-		{
-			<div class="col-md-4">
-				<div class="panel panel-primary">
-					<div class="panel-heading">
-						<h3 class="panel-title">Zugriffsrechte</h3>
-					</div>
-					<div class="panel-body">
-						<ul style="list-style: none; padding: 0;">
-							@for(int i = 0; i < Model.AvailableAclPresets.Count; i++)
-							{
-								<li>
-									@Html.RadioButtonFor(m => m.SelectedAclPreset, Model.AvailableAclPresets[i].ID, new { id = "preset_" + i })
-									<label for="preset_@(i)">@Model.AvailableAclPresets[i].Name</label>
-								</li>
-							}
-						</ul>
-					</div>
+		<div class="col-md-4">
+			<div class="panel panel-primary">
+				<div class="panel-heading">
+					<h3 class="panel-title">Zugriffsrechte</h3>
+				</div>
+				<div class="panel-body">
+					@{
+						var treeHtmlId = "initialAcl";
+						if (Model.AvailableAclPresets.Any())
+						{
+							<button type="button" id="aclPresetSelectionBtn" class="btn btn-default" data-preset="@Model.AvailableAclPresets[0].EntityList">Standard</button>
+							<script>
+								$('#aclPresetSelectionBtn').click(function() {
+									var list = $(this).attr('data-preset').split(';');
+									var tree = $('#@treeHtmlId').jstree(true);
+									tree.deselect_all();
+									list.forEach(function(item) {
+										tree.select_node(item);
+									});
+								});
+							</script>
+						}
+					}
+					@Html.Action("_AclEditorForNewList", "Acl", new {htmlId = treeHtmlId })
 				</div>
 			</div>
-		}
+		</div>
 	</div>
 
 

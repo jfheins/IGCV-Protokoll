@@ -299,6 +299,10 @@
     <Compile Include="Migrations\201703221117487_added_topic_links.Designer.cs">
       <DependentUpon>201703221117487_added_topic_links.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201703262017401_added_acl_preset.cs" />
+    <Compile Include="Migrations\201703262017401_added_acl_preset.Designer.cs">
+      <DependentUpon>201703262017401_added_acl_preset.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\ACL.cs" />
     <Compile Include="Models\AclItem.cs" />
     <Compile Include="Models\AdEntity.cs" />
@@ -1136,6 +1140,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201703221117487_added_topic_links.resx">
       <DependentUpon>201703221117487_added_topic_links.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703262017401_added_acl_preset.resx">
+      <DependentUpon>201703262017401_added_acl_preset.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
