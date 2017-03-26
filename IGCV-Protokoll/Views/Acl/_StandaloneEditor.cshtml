@@ -51,20 +51,4 @@
 			}); //end ajax
 		});
 	}
-
-	function AclPropertyFilter(key, value) {
-		// Filtering out properties
-		if (key === '') { // Wurzelelement
-			return value;
-		}
-		else if (!isNaN(key)) { // Oberste Ebene
-			value["selected"] = value["state"]["selected"];
-			return value;
-		}
-		else if (key === 'id' || key === 'selected') {
-			return value;
-		}
-		else
-			return undefined;
-	}
 </script>

@@ -62,22 +62,29 @@ namespace IGCV_Protokoll.Controllers
 			if (obj == null)
 				return new HttpNotFoundResult("Zu editierendes Objekt darf nicht null sein!");
 
-			var result = new AccessControlEditorViewModel();
 			if (obj.Acl == null)
-			{
-				result.IsNewAcl = true;
-				result.AuthorizedEntities = db.AdEntities.ToDictionary(x => x, x => true);
-			}
-			else
-			{
-				result.IsNewAcl = false;
-				result.AuthorizedEntities = (from adEntity in db.AdEntities
-											 from aclitem in adEntity.Acl.Where(aclitem => aclitem.ParentId == obj.AclID.Value).DefaultIfEmpty()
-											 select new { Entity = adEntity, hasAccess = aclitem != null }).ToDictionary(x => x.Entity, x => x.hasAccess);
-			}
+				return _AclEditorForNewList(htmlId ?? obj.GetType().Name + "_acl");
 
-			result.HtmlName = htmlId ?? obj.GetType().Name + "_acl";
+			var result = new AccessControlEditorViewModel
+			{
+				IsNewAcl = false,
+				AuthorizedEntities = (from adEntity in db.AdEntities
+					from aclitem in adEntity.Acl.Where(aclitem => aclitem.ParentId == obj.AclID.Value).DefaultIfEmpty()
+					select new {Entity = adEntity, hasAccess = aclitem != null}).ToDictionary(x => x.Entity, x => x.hasAccess),
+				HtmlName = htmlId ?? obj.GetType().Name + "_acl"
+			};
 			return PartialView(result);
+		}
+
+		public PartialViewResult _AclEditorForNewList(string htmlId)
+		{
+			var result = new AccessControlEditorViewModel
+			{
+				IsNewAcl = true,
+				AuthorizedEntities = db.AdEntities.ToDictionary(x => x, x => true),
+				HtmlName = htmlId
+			};
+			return PartialView("_AclEditorFor", result);
 		}
 
 		public ActionResult _StandaloneEditorFor(int aclID)
