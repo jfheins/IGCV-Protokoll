@@ -75,6 +75,11 @@ namespace IGCV_Protokoll.Controllers
 			}
 		}
 
+		protected T CreateOtherController<T>() where T : BaseController, new()
+		{
+			return new T { ControllerContext = this.ControllerContext };
+		}
+
 		/// <summary>
 		///    Gibt den aktuell eingeloggten Benutzer zurück, oder ein Nullobjekt, falls keine Autorisierung erfolgt ist.
 		/// </summary>
@@ -122,7 +127,7 @@ namespace IGCV_Protokoll.Controllers
 			if (_currentUserRoles != null)
 				return _currentUserRoles;
 
-			var roles = Session["CurrentUserRoles"] as int[];
+			var roles = Session?["CurrentUserRoles"] as int[];
 			_currentUserRoles = roles ?? db.GetRolesForUser(GetCurrentUserID());
 
 			Session["CurrentUserRoles"] = _currentUserRoles;

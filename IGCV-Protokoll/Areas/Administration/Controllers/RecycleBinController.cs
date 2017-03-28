@@ -44,7 +44,7 @@ namespace IGCV_Protokoll.Areas.Administration.Controllers
 			var roles = GetRolesForCurrentUser();
 			var items = db.FilteredDocumentContainers(roles).Where(dc => dc.Orphaned != null);
 
-			var dcController = new DocumentContainerController();
+			var dcController = CreateOtherController<DocumentContainerController>();
 			foreach (var dc in items)
 			{
 				dcController._PermanentDelete(dc.ID);
