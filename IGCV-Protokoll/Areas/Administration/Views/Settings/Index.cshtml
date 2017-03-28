@@ -37,6 +37,48 @@
 			</div>
 		</div>
 		
+		
+		<!-- Listensichtbarkeit -->
+		<div class="form-group check-box-lg">
+			@Html.LabelFor(model => model.ShowEvents, new { @class = "control-label col-md-2" })
+			<div class="col-md-2">
+				@Html.EditorFor(m => m.ShowEvents, new { htmlAttributes = new { @class = "form-control" } })
+			</div>
+			<div class="col-md-3" style="height:0; overflow:visible;">
+				Diese Optionen dienen dem Ausblenden von Listen. In der Listenansicht werden nur noch die Listen angezeigt, die hier angehakt sind.
+			</div>
+		</div>
+
+		<div class="form-group check-box-lg">
+			@Html.LabelFor(model => model.ShowResearchProposals, new { @class = "control-label col-md-2" })
+			<div class="col-md-2">
+				@Html.EditorFor(m => m.ShowResearchProposals, new { htmlAttributes = new { @class = "form-control" } })
+			</div>
+		</div>
+
+		<div class="form-group check-box-lg">
+			@Html.LabelFor(model => model.ShowIndustryProjects, new { @class = "control-label col-md-2" })
+			<div class="col-md-2">
+				@Html.EditorFor(m => m.ShowIndustryProjects, new { htmlAttributes = new { @class = "form-control" } })
+			</div>
+		</div>
+
+		<div class="form-group check-box-lg">
+			@Html.LabelFor(model => model.ShowOpenings, new { @class = "control-label col-md-2" })
+			<div class="col-md-2">
+				@Html.EditorFor(m => m.ShowOpenings, new { htmlAttributes = new { @class = "form-control" } })
+			</div>
+		</div>
+
+		<div class="form-group check-box-lg">
+			@Html.LabelFor(model => model.ShowHolidays, new { @class = "control-label col-md-2" })
+			<div class="col-md-2">
+				@Html.EditorFor(m => m.ShowHolidays, new { htmlAttributes = new { @class = "form-control" } })
+			</div>
+		</div>
+		
+		
+		<!-- ACL Preset -->
 		<div class="form-group">
 			@Html.LabelFor(model => model.AclTreePreset, new { @class = "control-label col-md-2" })
 			<div class="col-md-2">

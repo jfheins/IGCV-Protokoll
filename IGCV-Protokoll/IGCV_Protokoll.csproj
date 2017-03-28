@@ -303,6 +303,10 @@
     <Compile Include="Migrations\201703262017401_added_acl_preset.Designer.cs">
       <DependentUpon>201703262017401_added_acl_preset.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201703281222206_added_userpref_listvisibility.cs" />
+    <Compile Include="Migrations\201703281222206_added_userpref_listvisibility.Designer.cs">
+      <DependentUpon>201703281222206_added_userpref_listvisibility.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\ACL.cs" />
     <Compile Include="Models\AclItem.cs" />
     <Compile Include="Models\AdEntity.cs" />
@@ -1143,6 +1147,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201703262017401_added_acl_preset.resx">
       <DependentUpon>201703262017401_added_acl_preset.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703281222206_added_userpref_listvisibility.resx">
+      <DependentUpon>201703281222206_added_userpref_listvisibility.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

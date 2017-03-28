@@ -76,7 +76,13 @@ textarea.hresize {
 }
 
 input.check-box {
-	width: @input-height-base;
+    width: @input-height-base;
+}
+.check-box-lg input[type="checkbox"] {
+	width: 14px;
+	height: 14px;
+	transform: scale(2);
+    margin-top: 10px;
 }
 
 .form-horizontal .static-text {
@@ -674,6 +680,10 @@ dl {
 	float: right;
 	margin-right: 10px;
 	font-size: 16px;
+}
+
+div.jstree {
+	margin-top: 15px;
 }
 
 /*IE-Hack*/

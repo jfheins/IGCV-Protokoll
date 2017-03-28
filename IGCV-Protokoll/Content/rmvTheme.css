@@ -6784,6 +6784,12 @@ textarea.hresize {
 input.check-box {
   width: 34px;
 }
+.check-box-lg input[type="checkbox"] {
+  width: 14px;
+  height: 14px;
+  transform: scale(2);
+  margin-top: 10px;
+}
 .form-horizontal .static-text {
   margin-top: 0;
   margin-bottom: 0;
@@ -7438,6 +7444,9 @@ fieldset[disabled] .btn-hover-danger.active {
   float: right;
   margin-right: 10px;
   font-size: 16px;
+}
+div.jstree {
+  margin-top: 15px;
 }
 /*IE-Hack*/
 @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {

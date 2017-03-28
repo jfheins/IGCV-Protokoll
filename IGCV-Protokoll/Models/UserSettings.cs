@@ -37,6 +37,17 @@ namespace IGCV_Protokoll.Models
 		}
 		[NotMapped]
 		public AccessControlEditorViewModel AclTreeVM { get; set; }
+
+		[Display(Name = "Termine anzeigen")]
+		public bool ShowEvents { get; set; }
+		[Display(Name = "Forschungsanträge anzeigen")]
+		public bool ShowResearchProposals { get; set; }
+		[Display(Name = "Industrieprojekte anzeigen")]
+		public bool ShowIndustryProjects { get; set; }
+		[Display(Name = "Vakante Stellen anzeigen")]
+		public bool ShowOpenings { get; set; }
+		[Display(Name = "Urlaub anzeigen")]
+		public bool ShowHolidays { get; set; }
 	}
 
 	public enum ColorScheme
