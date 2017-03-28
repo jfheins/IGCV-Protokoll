@@ -48,11 +48,14 @@
 			<tbody id="industryProject_tbody">
 				@foreach (var item in Model)
 				{
-				Html.RenderPartial("_Row", item);
+					Html.RenderPartial("_Row", item);
 				}
 			</tbody>
 			<tfoot>
-				@Html.Action("_CreateForm", "LIndustryProjects")
+				@if (!ViewBag.Reporting)
+				{
+					@Html.Action("_CreateForm", "LIndustryProjects")
+				}
 			</tfoot>
 		</table>
 	</div>

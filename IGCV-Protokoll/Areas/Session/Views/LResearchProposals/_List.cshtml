@@ -51,9 +51,12 @@
                     Html.RenderPartial("_Row", item);
                 }
             </tbody>
-            <tfoot>
-                @Html.Action("_CreateForm", "LResearchProposals")
-            </tfoot>
+			<tfoot>
+				@if (!ViewBag.Reporting)
+				{
+					@Html.Action("_CreateForm", "LResearchProposals")
+				}
+			</tfoot>
         </table>
     </div>
 </div>
