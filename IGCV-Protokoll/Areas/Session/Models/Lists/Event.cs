@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.RegularExpressions;
 
 namespace IGCV_Protokoll.Areas.Session.Models.Lists
 {
@@ -11,6 +12,8 @@ namespace IGCV_Protokoll.Areas.Session.Models.Lists
 	[Table("L_Event")]
 	public class Event : BaseItem
 	{
+		private string _organizationUnit;
+
 		public Event()
 		{
 			StartDate = DateTime.Today;
@@ -40,9 +43,13 @@ namespace IGCV_Protokoll.Areas.Session.Models.Lists
 		[Required]
 		[DisplayName("Verant.")]
 		public string Organizer { get; set; }
-		
+
 		[DisplayName("OE")]
-		public string OrganizationUnit { get; set; }
+		public string OrganizationUnit
+		{
+			get { return _organizationUnit; }
+			set { _organizationUnit = value.Replace(" ", ""); }
+		}
 
 		[Required]
 		[DisplayName("Besucher / Thema")]
