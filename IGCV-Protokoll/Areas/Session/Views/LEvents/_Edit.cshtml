@@ -2,7 +2,7 @@
 @model IGCV_Protokoll.Areas.Session.Models.Lists.Event
 
 <tr id="event_@Model.ID">
-	<td colspan="7">
+	<td colspan="8">
 		@using (Ajax.BeginForm("_Edit", "LEvents", new {Area = "Session"}, new AjaxOptions
 		{
 			OnSuccess = "ReplaceRow('event', " + Model.ID + ", data);",
@@ -29,11 +29,14 @@
 						</div>
 					</div>
 				</div>
-				<div class="col-sm-4">
+				<div class="col-sm-3">
 					@Html.EditorFor(model => model.Description, new {htmlAttributes = new {@class = "form-control", id = "evt_" + Model.ID + "desc"}})
 				</div>
 				<div class="col-sm-1">
 					@Html.TextEditorFor(model => model.Organizer, "evt_" + Model.ID + "orga")
+				</div>
+				<div class="col-sm-1">
+					@Html.TextEditorFor(model => model.OrganizationUnit, "evt_" + Model.ID + "orgaUnit")
 				</div>
 				<div class="col-sm-1 actions">
 					@Html.HiddenFor(model => model.ID)

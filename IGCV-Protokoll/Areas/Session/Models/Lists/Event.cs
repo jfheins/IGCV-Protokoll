@@ -40,6 +40,9 @@ namespace IGCV_Protokoll.Areas.Session.Models.Lists
 		[Required]
 		[DisplayName("Verant.")]
 		public string Organizer { get; set; }
+		
+		[DisplayName("OE")]
+		public string OrganizationUnit { get; set; }
 
 		[Required]
 		[DisplayName("Besucher / Thema")]

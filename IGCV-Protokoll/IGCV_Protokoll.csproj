@@ -307,6 +307,10 @@
     <Compile Include="Migrations\201703281222206_added_userpref_listvisibility.Designer.cs">
       <DependentUpon>201703281222206_added_userpref_listvisibility.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201703281931555_added_event_oe_column.cs" />
+    <Compile Include="Migrations\201703281931555_added_event_oe_column.Designer.cs">
+      <DependentUpon>201703281931555_added_event_oe_column.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\ACL.cs" />
     <Compile Include="Models\AclItem.cs" />
     <Compile Include="Models\AdEntity.cs" />
@@ -1151,6 +1155,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201703281222206_added_userpref_listvisibility.resx">
       <DependentUpon>201703281222206_added_userpref_listvisibility.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703281931555_added_event_oe_column.resx">
+      <DependentUpon>201703281931555_added_event_oe_column.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

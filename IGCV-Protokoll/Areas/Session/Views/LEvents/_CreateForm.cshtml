@@ -2,7 +2,7 @@
 @model IGCV_Protokoll.Areas.Session.Models.Lists.Event
 
 <tr id="event_createform">
-	<td colspan="7">
+	<td colspan="8">
 		@using (Ajax.BeginForm("_Create", "LEvents", new {Area = "Session"}, new AjaxOptions
 		{
 			HttpMethod = "POST",
@@ -28,7 +28,7 @@
 						</div>
 					</div>
 				</div>
-				<div class="col-sm-4">
+				<div class="col-sm-3">
 					@Html.EditorFor(model => model.Description, new
 					{
 						htmlAttributes = new
@@ -42,6 +42,9 @@
 				</div>
 				<div class="col-sm-1">
 					@Html.TextEditorFor(model => model.Organizer, "evt_create_orga")
+				</div>
+				<div class="col-sm-1">
+					@Html.TextEditorFor(model => model.OrganizationUnit, "evt_create_orgaUnit")
 				</div>
 				<div class="col-sm-1">
 					<button type="submit" class="btn btn-primary">
