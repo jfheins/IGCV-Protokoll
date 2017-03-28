@@ -261,7 +261,8 @@ namespace IGCV_Protokoll.Controllers
 		/// </summary>
 		/// <param name="obj">Das Objekct, dess ACL geändert werden soll</param>
 		/// <param name="newAcl">Die neue ACL</param>
-		protected void ApplyNewACLFor([NotNull] IAccessible obj, IEnumerable<int> newAcl)
+		/// <param name="saveChanges">Bestimmt, ob db.SaveChanges() aufgerufen wird.</param>
+		protected void ApplyNewACLFor([NotNull] IAccessible obj, IEnumerable<int> newAcl, bool saveChanges = true)
 		{
 			if (!IsAuthorizedFor(obj))
 				throw new NotAuthorizedException("Sie sind für dieses Thema nicht berechtigt!");
@@ -293,7 +294,8 @@ namespace IGCV_Protokoll.Controllers
 			foreach (var newID in newIDs)
 				obj.Acl.Items.Add(new ACLItem { AdEntityID = newID });
 
-			db.SaveChanges();
+			if (saveChanges)
+				db.SaveChanges();
 		}
 
 		private HashSet<int> PrepareAclList(IEnumerable<int> newAcl)

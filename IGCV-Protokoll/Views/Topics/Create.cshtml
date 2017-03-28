@@ -5,7 +5,7 @@
 	ViewBag.Title = "Diskussion erstellen";
 }
 <h2>@ViewBag.Title</h2>
-@using (Html.BeginForm())
+@using (Html.BeginForm("Create", "Topics", FormMethod.Post, new { id = "topicCreateForm" }))
 {
 	@Html.AntiForgeryToken()
 
@@ -72,7 +72,10 @@
 						var treeHtmlId = "initialAcl";
 						if (Model.AvailableAclPresets.Any())
 						{
-							<button type="button" id="aclPresetSelectionBtn" class="btn btn-default" data-preset="@Model.AvailableAclPresets[0].EntityList">Standard</button>
+							<div class="btn-group" role="group">
+								<button type="button" class="btn btn-default" id="aclPresetSelectionBtn" data-preset="@Model.AvailableAclPresets[0].EntityList">Benutzerdefiniert</button>
+								<button type="button" class="btn btn-default" id="aclPresetEveryoneBtn" data-preset="@Model.AvailableAclPresets[0].EntityList">Jeder</button>
+							</div>
 							<script>
 								$('#aclPresetSelectionBtn').click(function() {
 									var list = $(this).attr('data-preset').split(';');
@@ -82,10 +85,22 @@
 										tree.select_node(item);
 									});
 								});
+								$('#aclPresetEveryoneBtn').click(function () {
+									$('#@treeHtmlId').jstree(true).select_all();
+									$('#aclTreeJson').val('[]');
+								});
+								$(document).ready(function () {
+									$('#topicCreateForm').submit(function() {
+										var data = $('#@treeHtmlId').jstree(true).get_json('#', { flat: true });
+										var aclJson = JSON.stringify(data, AclPropertyFilter);
+										$('#aclTreeJson').val(aclJson);
+									});
+								});
 							</script>
 						}
 					}
-					@Html.Action("_AclEditorForNewList", "Acl", new {htmlId = treeHtmlId })
+					@Html.Action("_AclEditorForNewList", "Acl", new {htmlId = treeHtmlId})
+					<input type="hidden" id="aclTreeJson" name="aclTreeJson" value="[]" />
 				</div>
 			</div>
 		</div>

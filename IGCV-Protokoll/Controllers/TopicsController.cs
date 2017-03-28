@@ -244,7 +244,7 @@ namespace IGCV_Protokoll.Controllers
 		/// <param name="input">Der Inhalt des neuen Themas.</param>
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public ActionResult Create([Bind(Exclude = "TargetSessionTypeID")] TopicEdit input)
+		public ActionResult Create([Bind(Exclude = "TargetSessionTypeID")] TopicEdit input, string aclTreeJson)
 		{
 			if (ModelState.IsValid)
 			{
@@ -255,6 +255,12 @@ namespace IGCV_Protokoll.Controllers
 				};
 				t.IncorporateUpdates(input);
 				t.DocumentContainer.Add(new DocumentContainer());
+
+				// ACL
+				var selectedAclTree = JsonConvert.DeserializeObject<List<SelectedAdEntity>>(aclTreeJson);
+				// Wenn alles selektiert ist, kann auf eine ACL verzichtet werden. Standardrechte sind ja "Jeder".
+				if (!selectedAclTree.All(x => x.selected))
+					ApplyNewACLFor(t, selectedAclTree.Where(x => x.selected).Select(x => x.id), false);
 
 				foreach (User user in db.SessionTypes
 					.Include(st => st.Attendees)
@@ -289,7 +295,7 @@ namespace IGCV_Protokoll.Controllers
 					return HTTPStatus(HttpStatusCode.InternalServerError, message);
 				}
 
-				return RedirectToAction("Index");
+				return RedirectToAction("Details", new { id = t.ID });
 			}
 
 			input.SessionTypeList = new SelectList(GetActiveSessionTypes(), "ID", "Name", input.SessionTypeID);
