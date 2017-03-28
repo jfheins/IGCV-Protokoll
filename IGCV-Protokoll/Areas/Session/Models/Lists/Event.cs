@@ -48,7 +48,7 @@ namespace IGCV_Protokoll.Areas.Session.Models.Lists
 		public string OrganizationUnit
 		{
 			get { return _organizationUnit; }
-			set { _organizationUnit = value.Replace(" ", ""); }
+			set { _organizationUnit = value?.Replace(" ", "") ?? string.Empty; }
 		}
 
 		[Required]
