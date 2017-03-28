@@ -1,0 +1,96 @@
+﻿@using IGCV_Protokoll.util
+<div class="panel panel-primary">
+	<div class="panel-heading">
+		<h4 class="panel-title">Filter</h4>
+	</div>
+	<div class="panel-body">
+		<div class="form-inline row">
+			<div class="form-group col-sm-3">
+				<label for="oeUnitFilter">OE Filter: </label>
+				<input type="text" class="form-control" id="oeUnitFilter" name="oeUnitFilter" />
+			</div>
+
+			<div class="form-group col-sm-3">
+				<label for="globalFilter">Globaler Filter: </label>
+				<input type="text" class="form-control" id="globalFilter" name="globalFilter" />
+			</div>
+
+			<div class="form-group col-sm-3">
+				<button type="button" class="btn btn-primary" id="listFiltersClearBtn">Filter löschen</button>
+			</div>
+		</div>
+		<div class="row" style="margin-top: 10px;">
+			<div class="col-md-8">Mit den Filtern können die angezeigten Listenzeilen reduziert werden. Beim OE Filter werden nur OE Spalten durchsucht. Sofern eine exakte Übereinstimmung nicht nötig ist, können Sternchen (*) als Platzhalter verwendet werden. Beim globalen Filter werden alle Felder mit impliziten Platzhaltern geprüft.<br />Es wird immer nur der zuletzt geänderte Filter angewendet.</div>
+		</div>
+	</div>
+</div>
+
+@using (Html.Delayed(null, "Listen-Filter"))
+{
+	<script type="text/javascript">
+		function isEmptyOrSpaces(str){
+			return str === null || str.match(/^\s*$/) !== null;
+		}
+
+		$('#oeUnitFilter').on("keyup change", function () {
+			var pattern = $(this).val();
+			if (isEmptyOrSpaces(pattern)) {
+				showAllListRows();
+			} else {
+				filterListRows('OE', pattern);
+			}
+		});
+
+
+		$('#globalFilter').on("keyup change", function () {
+			var pattern = $(this).val();
+			if (isEmptyOrSpaces(pattern)) {
+				showAllListRows();
+			} else {
+				filterListRows(null, '*' + $(this).val() + '*');
+			}
+		});
+
+		$('#listFiltersClearBtn').on("click", function () {
+			$('#oeUnitFilter').val('');
+			$('#globalFilter').val('');
+			showAllListRows();
+		});
+
+
+		function showAllListRows() {
+			$('div.listcontainer tbody tr').show();
+		};
+
+		function filterListRows(colFilter, cellFilter) {
+
+			var regex = new RegExp("^" + cellFilter.split("*").join(".*") + "$", 'i');
+
+			$('div.listcontainer').each(function () {
+				var columnSet = [];
+				var columns = $(this).find('thead th');
+				$.each(columns, function (index, val) {
+					if (colFilter == null || val.innerText.indexOf(colFilter) > -1) {
+						columnSet.push(index);
+					}
+				});
+				
+				var rows = $(this).find('tbody tr');
+				$.each(rows, function (rowIndex, row) {
+					var showRow = false;
+					$.each(row.children, function (cellIndex, cell) {
+						if (($.inArray(cellIndex, columnSet) > -1) && regex.test(cell.innerText.trim())) {
+							showRow = true;
+						}
+					});
+					if (showRow) {
+						$(row).show();
+					} else {
+						$(row).hide();
+					}
+				});
+			});
+		}
+
+	</script>
+}

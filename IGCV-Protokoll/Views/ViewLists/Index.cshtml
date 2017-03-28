@@ -26,6 +26,8 @@
 	var returnURL = "@(Request.Url != null ? Request.Url.AbsolutePath : "")";
 </script>
 
+@{ Html.RenderPartial("~/Areas/Session/Views/Lists/_ListFilterPanel.cshtml"); }
+
 @if (userSettings.ShowEvents)
 {
 	@Html.Action("_List", "LEvents", new { Area = "Session" })
