@@ -67,9 +67,6 @@ namespace IGCV_Protokoll.ViewModels
 		[Required]
 		public Priority Priority { get; set; }
 
-		public List<AclPreset> AvailableAclPresets { get; set; }
-		public int? SelectedAclPreset { get; set; }
-
 		public static TopicEdit FromTopic(Topic t)
 		{
 			return new TopicEdit

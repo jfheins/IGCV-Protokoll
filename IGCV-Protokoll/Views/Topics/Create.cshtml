@@ -1,8 +1,10 @@
 ﻿@using IGCV_Protokoll.Models
 @using IGCV_Protokoll.util
-@model IGCV_Protokoll.ViewModels.TopicEdit
+@using Newtonsoft.Json
+@model IGCV_Protokoll.ViewModels.TopicCreateVM
 @{
 	ViewBag.Title = "Diskussion erstellen";
+	var treeHtmlId = "initialAcl";
 }
 <h2>@ViewBag.Title</h2>
 @using (Html.BeginForm("Create", "Topics", FormMethod.Post, new { id = "topicCreateForm" }))
@@ -23,6 +25,28 @@
 							@Html.DropDownListFor(m => m.SessionTypeID, Model.SessionTypeList, "(bitte auswählen)", new { @class = "form-control" })
 							@Html.ValidationMessageFor(model => model.SessionTypeID, "", new { @class = "text-danger" })
 						</div>
+
+						@using (Html.Delayed(null, "ACL-Baum-Belegung"))
+						{
+							var jsonMap = JsonConvert.SerializeObject(Model.MapSTtoAdEntities, Formatting.Indented);
+
+							<script type="text/javascript">
+								$('#SessionTypeID').change(function () {
+									var id = $(this).val();
+									var list = getNodeListForSessionType(id);
+									var tree = $('#@treeHtmlId').jstree(true);
+									tree.deselect_all();
+									list.forEach(function(item) {
+										tree.select_node(item);
+									});
+								});
+
+								var mapSTtoAdEntities = @Html.Raw(jsonMap);
+								function getNodeListForSessionType(id) {
+									return mapSTtoAdEntities[id];
+								}
+							</script>
+						}
 					</div>
 					<div class="form-group">
 						@Html.LabelFor(model => model.Title, new { @class = "control-label col-md-2" })
@@ -69,14 +93,13 @@
 				</div>
 				<div class="panel-body">
 					@{
-						var treeHtmlId = "initialAcl";
 						if (Model.AvailableAclPresets.Any())
 						{
 							<div class="btn-group" role="group">
 								<button type="button" class="btn btn-default" id="aclPresetSelectionBtn" data-preset="@Model.AvailableAclPresets[0].EntityList">Benutzerdefiniert</button>
-								<button type="button" class="btn btn-default" id="aclPresetEveryoneBtn" data-preset="@Model.AvailableAclPresets[0].EntityList">Jeder</button>
+								<button type="button" class="btn btn-default" id="aclPresetEveryoneBtn">Jeder</button>
 							</div>
-							<script>
+							<script type="text/javascript">
 								$('#aclPresetSelectionBtn').click(function() {
 									var list = $(this).attr('data-preset').split(';');
 									var tree = $('#@treeHtmlId').jstree(true);

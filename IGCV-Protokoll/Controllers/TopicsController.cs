@@ -7,14 +7,11 @@ using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Web.Mvc;
-using System.Web.Routing;
 using EntityFramework.Extensions;
 using IGCV_Protokoll.Models;
 using IGCV_Protokoll.util;
 using IGCV_Protokoll.ViewModels;
-using JetBrains.Annotations;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace IGCV_Protokoll.Controllers
 {
@@ -226,13 +223,18 @@ namespace IGCV_Protokoll.Controllers
 			{
 				new AclPreset { ID = 0, Name = "Standard", EntityList = GetCurrentUser().Settings.AclTreePreset },
 			};
+			var sessionTypeAttendees = db.SessionTypes.Where(st => st.Active)
+				.Select(st => new {st, adIDs = st.Attendees.Select(u => u.AdGroups.FirstOrDefault(g => g.AdEntity.Type == AdEntityType.User))});
 
-			var viewmodel = new TopicEdit
+			var mapSessionTypeToEntities = sessionTypeAttendees.ToDictionary(x => x.st.ID, x => x.adIDs.WhereNotNull().Select(y => y.AdEntityID).ToArray());
+
+			var viewmodel = new TopicCreateVM
 			{
 				SessionTypeList = new SelectList(GetActiveSessionTypes(), "ID", "Name"),
 				TargetSessionTypeList = new SelectList(GetActiveSessionTypes(), "ID", "Name"),
 				UserList = CreateUserSelectList(),
-				AvailableAclPresets = presets
+				AvailableAclPresets = presets,
+				MapSTtoAdEntities = mapSessionTypeToEntities
 			};
 			return View(viewmodel);
 		}
@@ -244,8 +246,9 @@ namespace IGCV_Protokoll.Controllers
 		/// <param name="input">Der Inhalt des neuen Themas.</param>
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public ActionResult Create([Bind(Exclude = "TargetSessionTypeID")] TopicEdit input, string aclTreeJson)
+		public ActionResult Create([Bind(Exclude = "TargetSessionTypeID")] TopicCreateVM input, string aclTreeJson)
 		{
+			return null;
 			if (ModelState.IsValid)
 			{
 				var t = new Topic
