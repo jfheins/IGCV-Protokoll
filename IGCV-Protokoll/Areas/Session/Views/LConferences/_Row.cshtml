@@ -43,11 +43,11 @@
 
 			@if (Model.AclID.HasValue)
 			{
-				<a href="@Url.Action("Edit", "Acl", new {Area = "", id = Model.AclID.Value})" onclick="displayAclModal(@Model.AclID.Value);return false;"><span class="glyphicon glyphicon-tree-deciduous" title="ACL Baum bearbeiten"></span></a>
+				<a href="@Url.Action("Edit", "Acl", new {Area = "", id = Model.AclID.Value})" onclick="displayAclModal(@Model.AclID.Value);return false;"><span class="glyphicon glyphicon-tree-deciduous" title="Rechtebaum bearbeiten"></span></a>
 			}
 			else
 			{
-				<a href="@Url.Action("CreateAcl", "LConferences", new {Area = "Session", id = Model.ID})" onclick="createAndDisplayAcl(this, @Model.ID);return false;"><span class="glyphicon glyphicon-tree-deciduous" title="ACL Baum bearbeiten"></span></a>
+				<a href="@Url.Action("CreateAcl", "LConferences", new {Area = "Session", id = Model.ID})" onclick="createAndDisplayAcl(this, @Model.ID);return false;"><span class="glyphicon glyphicon-tree-deciduous" title="Rechtebaum bearbeiten"></span></a>
 			}
 		</td>
 	}
