@@ -55,7 +55,9 @@ namespace IGCV_Protokoll.Areas.Session.Models.Lists
 
 		public override string ToString()
 		{
-			return string.Format("Mitarbeiter: {0}, ILK: {1}, Prof: {2}", Employee, Ilk, Prof);
+			return $"Mitarbeiter: {Employee}, ILK: {Ilk}, Prof: {Prof}";
 		}
+
+		public string getTitle() => $"Mitarbeiterpräsentation: {Employee}";
 	}
 }

@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using IGCV_Protokoll.Models;
+using IGCV_Protokoll.util;
 
 namespace IGCV_Protokoll.Areas.Session.Models.Lists
 {
@@ -10,7 +11,7 @@ namespace IGCV_Protokoll.Areas.Session.Models.Lists
 	///    Industrieprojekt
 	/// </summary>
 	[Table("L_IndustryProject")]
-	public class IndustryProject : BaseItem
+	public class IndustryProject : BaseItem, IFileContainer
 	{
 		public IndustryProject()
 		{
@@ -51,6 +52,14 @@ namespace IGCV_Protokoll.Areas.Session.Models.Lists
 		[Required]
 		[DisplayName("Status")]
 		public IndustryProjectState Status { get; set; }
+
+		[DisplayName("Dokumente")]
+		public virtual DocumentContainer Documents { get; set; }
+
+		[ForeignKey("Documents")]
+		public int DocumentsID { get; set; }
+
+		public string getTitle() => $"Industrieprojekt: {Name} ({Partner})";
 	}
 
     public enum IndustryProjectState

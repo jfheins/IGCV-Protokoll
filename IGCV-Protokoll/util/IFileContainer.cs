@@ -12,5 +12,10 @@ namespace IGCV_Protokoll.util
 	{
 		DocumentContainer Documents { get; set; }
 		int DocumentsID { get; set; }
+
+		/// <summary>
+		/// Liefert den Text, der nach dem Löschen des Elternelements an dieses erinnert.
+		/// </summary>
+		string getTitle();
 	}
 }

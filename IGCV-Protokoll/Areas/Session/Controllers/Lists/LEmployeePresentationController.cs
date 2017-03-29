@@ -65,32 +65,5 @@ namespace IGCV_Protokoll.Areas.Session.Controllers.Lists
 
 			return PartialView("_Row", emp);
 		}
-
-		public override ActionResult _Delete(int? id)
-		{
-			if (id == null)
-				return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-
-			EmployeePresentation ep = _dbSet.FirstOrDefault(x => x.ID == id.Value);
-			if (ep == null)
-				return HttpNotFound();
-			
-			ep.Documents.Orphaned = DateTime.Now;
-			ep.Documents.Title = $"Mitarbeiterpräsentation: {ep.Employee}";
-			try
-			{
-				db.SaveChanges();
-			}
-			catch (DbEntityValidationException e)
-			{
-				var msg = ErrorMessageFromException(e);
-				return HTTPStatus(HttpStatusCode.InternalServerError, msg);
-			}
-
-			_dbSet.Remove(ep);
-			db.SaveChanges();
-
-			return new HttpStatusCodeResult(HttpStatusCode.NoContent);
-		}
 	}
 }

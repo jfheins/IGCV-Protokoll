@@ -3,6 +3,8 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.RegularExpressions;
+using IGCV_Protokoll.Models;
+using IGCV_Protokoll.util;
 
 namespace IGCV_Protokoll.Areas.Session.Models.Lists
 {
@@ -10,7 +12,7 @@ namespace IGCV_Protokoll.Areas.Session.Models.Lists
 	///    Termine und Veranstaltungen, die das ganze Institut betreffen
 	/// </summary>
 	[Table("L_Event")]
-	public class Event : BaseItem
+	public class Event : BaseItem, IFileContainer
 	{
 		private string _organizationUnit;
 
@@ -55,5 +57,13 @@ namespace IGCV_Protokoll.Areas.Session.Models.Lists
 		[DisplayName("Besucher / Thema")]
 		[DataType(DataType.MultilineText)]
 		public string Description { get; set; }
+
+		[DisplayName("Dokumente")]
+		public virtual DocumentContainer Documents { get; set; }
+
+		[ForeignKey("Documents")]
+		public int DocumentsID { get; set; }
+
+		public string getTitle() => $"Termin: {Description}";
 	}
 }

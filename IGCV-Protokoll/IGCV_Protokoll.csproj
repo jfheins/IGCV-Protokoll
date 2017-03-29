@@ -311,6 +311,10 @@
     <Compile Include="Migrations\201703281931555_added_event_oe_column.Designer.cs">
       <DependentUpon>201703281931555_added_event_oe_column.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201703291935250_added_doc_container_lists.cs" />
+    <Compile Include="Migrations\201703291935250_added_doc_container_lists.Designer.cs">
+      <DependentUpon>201703291935250_added_doc_container_lists.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\ACL.cs" />
     <Compile Include="Models\AclItem.cs" />
     <Compile Include="Models\AdEntity.cs" />
@@ -1158,6 +1162,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201703281931555_added_event_oe_column.resx">
       <DependentUpon>201703281931555_added_event_oe_column.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703291935250_added_doc_container_lists.resx">
+      <DependentUpon>201703291935250_added_doc_container_lists.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

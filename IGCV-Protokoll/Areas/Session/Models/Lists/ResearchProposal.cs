@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using IGCV_Protokoll.Models;
+using IGCV_Protokoll.util;
 
 namespace IGCV_Protokoll.Areas.Session.Models.Lists
 {
@@ -10,8 +11,8 @@ namespace IGCV_Protokoll.Areas.Session.Models.Lists
     ///    Forschungsantrag
     /// </summary>
     [Table("L_ResearchProposal")]
-    public class ResearchProposal : BaseItem
-    {
+    public class ResearchProposal : BaseItem, IFileContainer
+	{
         public ResearchProposal()
         {
             DueDate = DateTime.Today;
@@ -49,7 +50,15 @@ namespace IGCV_Protokoll.Areas.Session.Models.Lists
         [DisplayName("Anmerkungen")]
 		[DataType(DataType.MultilineText)]
 		public string Description { get; set; }
-    }
+
+		[DisplayName("Dokumente")]
+		public virtual DocumentContainer Documents { get; set; }
+
+		[ForeignKey("Documents")]
+		public int DocumentsID { get; set; }
+
+		public string getTitle() => $"Forschungsantrag: {Employee}";
+	}
     public enum ResearchProposalState
     {
         [Display(Name = "Skizze")]

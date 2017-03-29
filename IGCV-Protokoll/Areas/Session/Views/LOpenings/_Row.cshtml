@@ -21,6 +21,8 @@
 	@if (!ViewBag.Reporting)
 	{
 		<td class="actions">
+			<a href="@Url.Action("ContainerDetails", "Attachments", new {Area = "", id = Model.DocumentsID})" target="_blank"><i class="glyphicon glyphicon-paperclip" title="Dokumente verwalten"></i></a>
+
 			<a data-ajax="true"
 			   data-ajax-method="POST"
 			   data-ajax-success="ReplaceRow('opening', @Model.ID, data);"

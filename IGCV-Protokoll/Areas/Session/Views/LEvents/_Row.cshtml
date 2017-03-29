@@ -27,6 +27,8 @@
 	@if (!ViewBag.Reporting)
 	{
 		<td class="actions">
+			<a href="@Url.Action("ContainerDetails", "Attachments", new {Area = "", id = Model.DocumentsID})" target="_blank"><i class="glyphicon glyphicon-paperclip" title="Dokumente verwalten"></i></a>
+
 			<a href="@Url.Action("Download", "LEvents", new {Area = "Session", id = Model.ID})"><span class="glyphicon glyphicon-download" title="Termin herunterladen"></span></a>
 
 			<a data-ajax="true"

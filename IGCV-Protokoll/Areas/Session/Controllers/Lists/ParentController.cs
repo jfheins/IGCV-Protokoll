@@ -179,13 +179,21 @@ namespace IGCV_Protokoll.Areas.Session.Controllers.Lists
 			if (id == null)
 				return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 
-			TModel ev = _dbSet.Find(id.Value);
+			TModel ev = _dbSet.FirstOrDefault(x => x.ID == id.Value);
+
 			if (ev == null)
 				return HttpNotFound();
 			else if (ev.LockSessionID != null)
 				return HTTPStatus(HttpStatusCode.Conflict, "Der Eintrag wird gerade bearbeitet!");
 
-			_dbSet.Remove(_dbSet.Find(id));
+			var container = (ev as IFileContainer);
+			if (container != null)
+			{
+				container.Documents.Orphaned = DateTime.Now;
+				container.Documents.Title = container.getTitle();
+			}
+
+			_dbSet.Remove(ev);
 			try
 			{
 				db.SaveChanges();

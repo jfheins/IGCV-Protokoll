@@ -2,14 +2,16 @@
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using IGCV_Protokoll.Models;
+using IGCV_Protokoll.util;
 
 namespace IGCV_Protokoll.Areas.Session.Models.Lists
 {
 	/// <summary>
-	///    Vakente Stellen
+	///    Vakante Stellen
 	/// </summary>
 	[Table("L_Opening")]
-	public class Opening : BaseItem
+	public class Opening : BaseItem, IFileContainer
 	{
 		public Opening()
 		{
@@ -36,5 +38,13 @@ namespace IGCV_Protokoll.Areas.Session.Models.Lists
 		[DisplayName("Beschreibung / Profil")]
 		[DataType(DataType.MultilineText)]
 		public string Description { get; set; }
+
+		[DisplayName("Dokumente")]
+		public virtual DocumentContainer Documents { get; set; }
+
+		[ForeignKey("Documents")]
+		public int DocumentsID { get; set; }
+
+		public string getTitle() => $"Vakante Stelle: {Description}";
 	}
 }

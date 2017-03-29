@@ -5,6 +5,10 @@
 	var aclElementId = $"standaloneAcl_{Model.ID}";
 }
 <h2>@ViewBag.Title</h2>
+@if (!string.IsNullOrEmpty(ViewBag.ReturnURL))
+{
+	<a href="@ViewBag.ReturnURL">Zurück</a>
+}
 <hr />
 <div>
 	@if (Model.Orphaned != null)
@@ -41,7 +45,7 @@
 			<h3 class="panel-title">@Html.DisplayNameFor(model => model.AclID)</h3>
 		</div>
 		<div class="panel-body" id="accessControl_@Model.ID">
-			@Html.Action("_DisplayAuthorized", "Acl", new { obj = Model, htmlId = @aclElementId })
+			@Html.Action("_DisplayAuthorizedFor", "Acl", new { obj = Model, htmlId = @aclElementId })
 		</div>
 	</div>
 </div>

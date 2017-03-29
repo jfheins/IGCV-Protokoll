@@ -111,7 +111,7 @@ namespace IGCV_Protokoll.Controllers
 			}
 		}
 
-		public ActionResult ContainerDetails(int id) // id = DocumentContainer.ID
+		public ActionResult ContainerDetails(int id, string returnURL) // id = DocumentContainer.ID
 		{
 			var container = db.DocumentContainers.Include(dc => dc.Topic).SingleOrDefault(dc => dc.ID == id);
 			if (container == null)
@@ -123,6 +123,8 @@ namespace IGCV_Protokoll.Controllers
 			var topic = container.Topic;
 			if (topic != null)
 				ViewBag.ShowUpload = !topic.IsReadOnly && !IsTopicLocked(topic.ID);
+
+			ViewBag.ReturnURL = returnURL;
 
 			return View(container);
 		}

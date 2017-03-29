@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using IGCV_Protokoll.Models;
+using IGCV_Protokoll.util;
 
 namespace IGCV_Protokoll.Areas.Session.Models.Lists
 {
@@ -10,7 +11,7 @@ namespace IGCV_Protokoll.Areas.Session.Models.Lists
 	///    ILK-Urlaub
 	/// </summary>
 	[Table("L_Holiday")]
-	public class Holiday : BaseItem
+	public class Holiday : BaseItem, IFileContainer
 	{
 		[DisplayName("Person")]
 		public virtual User Person { get; set; }
@@ -32,5 +33,13 @@ namespace IGCV_Protokoll.Areas.Session.Models.Lists
 		[DataType(DataType.Date)]
 		[DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
 		public DateTime? End { get; set; }
+
+		[DisplayName("Dokumente")]
+		public virtual DocumentContainer Documents { get; set; }
+
+		[ForeignKey("Documents")]
+		public int DocumentsID { get; set; }
+
+		public string getTitle() => $"Urlaub: {Occasion}";
 	}
 }
