@@ -704,7 +704,6 @@
     <Content Include="Areas\Session\Views\LEmployeePresentations\_Edit.cshtml" />
     <Content Include="Areas\Session\Views\LEmployeePresentations\_List.cshtml" />
     <Content Include="Areas\Session\Views\LEmployeePresentations\_Row.cshtml" />
-    <Content Include="Areas\Session\Views\LEmployeePresentations\Edit.cshtml" />
     <Content Include="Areas\Session\Views\LIlkDays\_CreateForm.cshtml" />
     <Content Include="Areas\Session\Views\LIlkDays\_Edit.cshtml" />
     <Content Include="Areas\Session\Views\LIlkDays\_List.cshtml" />

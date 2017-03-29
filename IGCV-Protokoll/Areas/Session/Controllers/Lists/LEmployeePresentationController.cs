@@ -46,50 +46,6 @@ namespace IGCV_Protokoll.Areas.Session.Controllers.Lists
 			return base._BeginEdit(id);
 		}
 
-		public ActionResult Edit(int? id, Uri returnURL = null, string statusMessage = null)
-		{
-			if (id == null)
-				return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-
-			var presentation = _dbSet.Include(ep => ep.Documents)
-				.Include(ep => ep.Documents.Documents.Select(d => d.Revisions))
-				.Single(ep => ep.ID == id);
-			if (presentation == null)
-				return HttpNotFound();
-			
-			ViewBag.UserList = CreateUserSelectList();
-			ViewBag.ReturnURL = returnURL ?? GetFallbackUri();
-			ViewBag.StatusMessage = statusMessage;
-			return View(presentation);
-		}
-
-		[HttpPost]
-		[ValidateAntiForgeryToken]
-		public virtual ActionResult Edit([Bind(Exclude = "LastChanged")] EmployeePresentation input, Uri returnURL = null)
-		{
-			ViewBag.UserList = CreateUserSelectList();
-			ViewBag.ReturnURL = returnURL ?? GetFallbackUri();
-
-			if (!ModelState.IsValid)
-				return View(input);
-
-			db.Entry(input).State = EntityState.Modified;
-			db.SaveChanges();
-			return RedirectToAction("Edit", "LEmployeePresentations", new
-			{
-				Area = "Session",
-				id = input.ID,
-				returnURL,
-				statusMessage = "Daten erfolgreich gespeichert."
-			});
-		}
-
-		private Uri GetFallbackUri()
-		{
-			var actionuri = Url.Action("Index", "ViewLists", new {Area = ""});
-			return new Uri(actionuri ?? "/");
-		}
-
 		public override PartialViewResult _FetchRow(int id)
 		{
 			var emp = Entities.Single(m => m.ID == id);
