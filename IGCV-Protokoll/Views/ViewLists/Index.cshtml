@@ -13,16 +13,6 @@
 <h2>@ViewBag.Title</h2>
 
 <script type="text/javascript">
-	function collapseListsOut() {
-		$('.panel-collapse').collapse('show');
-		$('.panel-collapse-heading a').removeClass("collapsed");
-	}
-
-	function collapseListsIn() {
-		$('.panel-collapse').collapse('hide');
-		$('.panel-collapse-heading a').addClass("collapsed");
-	}
-
 	var returnURL = "@(Request.Url != null ? Request.Url.AbsolutePath : "")";
 </script>
 

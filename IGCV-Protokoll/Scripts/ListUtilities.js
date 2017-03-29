@@ -1,4 +1,14 @@
-﻿function ReplaceRow(list, rowId, data) {
+﻿function collapseListsOut() {
+	$('.panel-collapse').collapse('show');
+	$('.panel-collapse-heading a').removeClass("collapsed");
+}
+
+function collapseListsIn() {
+	$('.panel-collapse').collapse('hide');
+	$('.panel-collapse-heading a').addClass("collapsed");
+}
+
+function ReplaceRow(list, rowId, data) {
 	$('#' + list + '_' + rowId).replaceWith(data);
 	RefreshTables(list);
 	enableDatePicker();
@@ -25,5 +35,19 @@ function RefreshTables(list) {
 	$(selector).trigger('update');
 	$("table.table-sortable time[rel=timeago]").timeago();
 }
+
+$(document).ready(function () {
+	$('div.listcontainer').each(function() {
+		var tableId = $(this).find('table').eq(0).attr('id');
+
+		var actions = $(this).find('.actions a');
+		$.each(actions, function(index, node) {
+			$(this).attr("href", $(this).attr("href") + "?returnURL=" + returnURL + "%23" + tableId);
+		});
+
+	});
+});
+
+
 
 autosize($('textarea'));
