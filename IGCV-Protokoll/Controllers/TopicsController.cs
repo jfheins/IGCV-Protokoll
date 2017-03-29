@@ -248,7 +248,6 @@ namespace IGCV_Protokoll.Controllers
 		[ValidateAntiForgeryToken]
 		public ActionResult Create([Bind(Exclude = "TargetSessionTypeID")] TopicCreateVM input, string aclTreeJson)
 		{
-			return null;
 			if (ModelState.IsValid)
 			{
 				var t = new Topic
