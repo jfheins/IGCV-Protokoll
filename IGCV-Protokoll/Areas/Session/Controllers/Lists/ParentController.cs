@@ -219,7 +219,8 @@ namespace IGCV_Protokoll.Areas.Session.Controllers.Lists
 			if (ev.AclID != null)
 				return HTTPStatus(HttpStatusCode.BadRequest, "ACL existiert bereits!");
 
-			CreateDefaultACL(ev);
+			CreatePermissiveDefaultACL(ev);
+			db.SaveChanges();
 			return HTTPStatus(HttpStatusCode.Created, ev.Acl.ID.ToString());
 		}
 

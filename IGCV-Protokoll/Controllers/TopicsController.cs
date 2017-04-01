@@ -262,7 +262,7 @@ namespace IGCV_Protokoll.Controllers
 				var selectedAclTree = JsonConvert.DeserializeObject<List<SelectedAdEntity>>(aclTreeJson);
 				// Wenn alles selektiert ist, kann auf eine ACL verzichtet werden. Standardrechte sind ja "Jeder".
 				if (!selectedAclTree.All(x => x.selected))
-					ApplyNewACLFor(t, selectedAclTree.Where(x => x.selected).Select(x => x.id), false);
+					ApplyNewACLFor(t, selectedAclTree.Where(x => x.selected).Select(x => x.id));
 
 				foreach (User user in db.SessionTypes
 					.Include(st => st.Attendees)
