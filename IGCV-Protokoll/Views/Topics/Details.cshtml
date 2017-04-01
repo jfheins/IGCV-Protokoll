@@ -231,7 +231,7 @@
 	<div class="col-sm-6">
 		<div class="panel panel-primary">
 			<div class="panel-heading">
-				@if (Model.AclID.HasValue)
+				@if (Model.AclID.HasValue && !hasDecision)
 				{
 					<div class="panel-title-right">
 						<p>
@@ -242,7 +242,15 @@
 				<h3 class="panel-title">@Html.DisplayNameFor(model => model.AclID)</h3>
 			</div>
 			<div class="panel-body" id="accessControl_@Model.ID">
-				@{ Html.RenderPartial("_AclDisplay", Model); }
+				@if (!hasDecision)
+				{
+					Html.RenderPartial("_AclDisplay", Model);
+				}
+				else
+				{
+					<h4>Aktuell berechtigt:</h4>
+					@Html.Action("_DisplayAuthorizedFor", "Acl", new {obj = Model})
+				}
 			</div>
 		</div>
 	</div>

@@ -138,8 +138,9 @@ namespace IGCV_Protokoll.Models
 		public DateTime ValidFrom { get; set; }
 
 		/// <summary>
-		/// Dieses Flag wird während der PDF-Generierung gesetzt im Sitzungsmodus. Die Ausgabe von Diskussionsteilen
-		/// sollte dann so erfolgen, dass keine direkte Bearbeitung möglich ist, am Bestern Links komplett weglassen.
+		/// Dieses Flag wird im Sitzungsmodus. vor der PDF-Generierung gesetzt Die Ausgabe von Diskussionsteilen
+		/// sollte dann so erfolgen, dass keine direkte Bearbeitung möglich ist, am Besten eventuelle Links
+		/// komplett weglassen. Bei einem Beschluss bleibt das Flag auf 'true'.
 		/// </summary>
 		[Display(Name = "Schreibschutz")]
 		public bool IsReadOnly { get; set; }
@@ -214,7 +215,7 @@ namespace IGCV_Protokoll.Models
 			ValidFrom = DateTime.Now;
 		}
 
-		[Display(Name = "Rechteverwaltung")]
+		[Display(Name = "Zugriffsrechte")]
 		public int? AclID { get; set; }
 
 		public virtual ACL Acl { get; set; }
