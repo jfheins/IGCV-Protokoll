@@ -14,7 +14,7 @@
 			<div style="text-align: right">
 				<button class="btn btn-primary" onclick="submitEditedAcl();">Speichern</button>
 			</div>
-			<div id="responseMessage"></div>
+			<div id="responseMessage" class="text-danger"></div>
 		</div>
 		<div class="col-sm-6">
 			<h4>Aktuell berechtigt:</h4>
@@ -41,6 +41,7 @@
 				},
 				success: function(responseData) {
 					$('#authorizedDisplay_@Model.ID').html(responseData);
+					$('#responseMessage').empty();
 				},
 				error: function(xhr, errorType) {
 					$('#responseMessage').html(xhr.responseText);
