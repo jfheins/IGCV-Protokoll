@@ -9,9 +9,9 @@ namespace IGCV_Protokoll.Models
 		public int ID { get; set; }
 		public Guid GUID { get; set; }
 
+		[InverseProperty("Revisions")]
 		public Document ParentDocument { get; set; }
 
-		[InverseProperty("Revisions")]
 		[ForeignKey("ParentDocument")]
 		public int ParentDocumentID { get; set; }
 
