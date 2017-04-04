@@ -205,6 +205,8 @@ namespace IGCV_Protokoll.Controllers
 				return HttpNotFound();
 			if (!IsAuthorizedFor(obj))
 				return HTTPStatus(HttpStatusCode.Forbidden, "Sie sind für diesen Vorgang nicht berechtigt!");
+			if ((obj as Topic)?.Decision != null)
+				return HTTPStatus(HttpStatusCode.Forbidden, "Die Zugriffsrechte für einen Beschluss können nicht mehr verändert werden!");
 
 			var selectedAclTree = JsonConvert.DeserializeObject<List<SelectedAdEntity>>(aclTree);
 			var newAclTree = selectedAclTree.Where(x => x.selected).Select(x => x.id);
@@ -225,6 +227,10 @@ namespace IGCV_Protokoll.Controllers
 		{
 			if (!IsAuthorizedFor(aclID))
 				return HTTPStatus(HttpStatusCode.Forbidden, "Sie sind für diesen Vorgang nicht berechtigt!");
+
+			var isDecided = db.Topics.Any(t => t.Decision != null && t.AclID == aclID);
+			if (isDecided)
+				return HTTPStatus(HttpStatusCode.Forbidden, "Die Zugriffsrechte für einen Beschluss können nicht mehr verändert werden!");
 
 			var selectedAclTree = JsonConvert.DeserializeObject<List<SelectedAdEntity>>(aclTree);
 			var newAclTree = selectedAclTree.Where(x => x.selected).Select(x => x.id);
