@@ -552,21 +552,14 @@
       <DependentUpon>bootstrap-multiselect.less</DependentUpon>
     </Content>
     <Content Include="Content\fonts\glyphicons-halflings-regular.svg" />
-    <Content Include="Content\images\animated-overlay.gif" />
-    <Content Include="Content\images\ui-bg_flat_0_aaaaaa_40x100.png" />
-    <Content Include="Content\images\ui-bg_glass_15_001A4A_1x400.png" />
-    <Content Include="Content\images\ui-bg_glass_55_FFFFD3_1x400.png" />
-    <Content Include="Content\images\ui-bg_glass_75_e6e6e6_1x400.png" />
-    <Content Include="Content\images\ui-bg_glass_95_fef1ec_1x400.png" />
-    <Content Include="Content\images\ui-bg_highlight-hard_75_B7BCD6_1x100.png" />
-    <Content Include="Content\images\ui-bg_highlight-soft_25_001A4A_1x100.png" />
-    <Content Include="Content\images\ui-bg_highlight-soft_25_DDD_1x100.png" />
-    <Content Include="Content\images\ui-icons_222222_256x240.png" />
-    <Content Include="Content\images\ui-icons_454545_256x240.png" />
-    <Content Include="Content\images\ui-icons_79BBDD_256x240.png" />
-    <Content Include="Content\images\ui-icons_888888_256x240.png" />
-    <Content Include="Content\images\ui-icons_AF0331_256x240.png" />
-    <Content Include="Content\images\ui-icons_DDD_256x240.png" />
+    <Content Include="Content\images\ui-bg_highlight-soft_50_009374_1x100.png" />
+    <Content Include="Content\images\ui-icons_444444_256x240.png" />
+    <Content Include="Content\images\ui-icons_555555_256x240.png" />
+    <Content Include="Content\images\ui-icons_777620_256x240.png" />
+    <Content Include="Content\images\ui-icons_777777_256x240.png" />
+    <Content Include="Content\images\ui-icons_cc0000_256x240.png" />
+    <Content Include="Content\images\ui-icons_eee_256x240.png" />
+    <Content Include="Content\images\ui-icons_ffffff_256x240.png" />
     <Content Include="Content\other\colpick.css" />
     <Content Include="Content\other\jquery.rtResponsiveTables.css" />
     <Content Include="Content\rmvTheme.css">
