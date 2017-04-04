@@ -319,6 +319,10 @@
     <Compile Include="Migrations\201704041526432_deleted_unused_fk_document.Designer.cs">
       <DependentUpon>201704041526432_deleted_unused_fk_document.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201704042038369_added_persistent_filename.cs" />
+    <Compile Include="Migrations\201704042038369_added_persistent_filename.Designer.cs">
+      <DependentUpon>201704042038369_added_persistent_filename.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\ACL.cs" />
     <Compile Include="Models\AclItem.cs" />
     <Compile Include="Models\AdEntity.cs" />
@@ -1165,6 +1169,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201704041526432_deleted_unused_fk_document.resx">
       <DependentUpon>201704041526432_deleted_unused_fk_document.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201704042038369_added_persistent_filename.resx">
+      <DependentUpon>201704042038369_added_persistent_filename.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

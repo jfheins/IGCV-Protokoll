@@ -48,17 +48,24 @@ namespace IGCV_Protokoll.Models
 		public string Extension { get; set; }
 
 		/// <summary>
-		/// Enthält den Namen der Datei im Dateisystem.
+		/// Enthält den Namen der Datei im Dateisystem. Falls kein Abweichender Dateiname eingetragen ist, ergibt dieser sich aus der ID und dem SafeName.
 		/// </summary>
+		[NotMapped]
 		public string FileName
 		{
 			get
 			{
+				if (DiskName != null)
+					return DiskName;
 				if (string.IsNullOrWhiteSpace(Extension))
 					return ID + "_" + SafeName;
-				else
-					return ID + "_" + SafeName + '.' + Extension;
+				return ID + "_" + SafeName + '.' + Extension;
 			}
 		}
+
+		/// <summary>
+		/// Gibt einen, vom Standard abweichenden, Dateinamen vor. Fall ungleich null, ist dieser maßgeblich.
+		/// </summary>
+		public string DiskName { get; set; }
 	}
 }

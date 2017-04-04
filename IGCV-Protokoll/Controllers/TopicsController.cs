@@ -822,7 +822,8 @@ namespace IGCV_Protokoll.Controllers
 				FileSize = oldRev.FileSize,
 				SafeName = oldRev.SafeName,
 				UploaderID = oldRev.UploaderID,
-				GUID = Guid.NewGuid()
+				GUID = Guid.NewGuid(),
+				DiskName = oldRev.FileName
 			});
 		}
 	}

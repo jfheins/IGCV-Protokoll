@@ -332,7 +332,10 @@ namespace IGCV_Protokoll.Controllers
 
 			// Ungelesen-Markierung aktualisieren
 			if (topic != null)
+			{
 				MarkAsUnread(topic);
+				db.SaveChanges();
+			}
 
 			return HTTPStatus(HttpStatusCode.Created, Url.Action("Details", "Attachments", new { Area = "", id }));
 		}

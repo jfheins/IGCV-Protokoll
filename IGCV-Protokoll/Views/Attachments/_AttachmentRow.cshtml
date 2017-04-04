@@ -142,6 +142,7 @@ else if (Model.LockUserID != null) // locked by someone else
 				success: function(data) {
 					$('#attachment_' + docid).replaceWith(data);
 					hookLinks('#attachment_' + docid + " .newRevisionLink");
+					$("time[rel=timeago]").timeago();
 				}
 			});
 		}
