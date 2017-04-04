@@ -24,6 +24,8 @@ namespace IGCV_Protokoll.Models
 			ValidFrom = DateTime.Now;
 			UnreadBy = new List<UnreadState>();
 			DocumentContainer = new List<DocumentContainer> { };
+			LeftLinks = new List<TopicLink>();
+			RightLinks = new List<TopicLink>();
 			// ReSharper restore DoNotCallOverridableMethodsInConstructor
 		}
 
@@ -219,6 +221,18 @@ namespace IGCV_Protokoll.Models
 		public int? AclID { get; set; }
 
 		public virtual ACL Acl { get; set; }
+
+		/// <summary>
+		/// Verknüpfungen, bei denen dieses Thema das "linke" Thema ist
+		/// </summary>
+		[InverseProperty("LeftTopic")]
+		public virtual ICollection<TopicLink> LeftLinks { get; set; }
+
+		/// <summary>
+		/// Verknüpfungen, bei denen dieses Thema das "rechte" Thema ist
+		/// </summary>
+		[InverseProperty("RightTopic")]
+		public virtual ICollection<TopicLink> RightLinks { get; set; }
 	}
 
 	internal class TopicByIdComparer : IEqualityComparer<Topic>

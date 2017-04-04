@@ -88,6 +88,7 @@
 			var mailBody = Uri.EscapeDataString(ViewBag.Host + Url.Action("Details", "Topics", new { id = Model.ID, Area = "" }));
 		}
 		<a href="mailto:?subject=@mailSubject&body=@mailBody" class="btn btn-primary"><i class="glyphicon glyphicon-envelope"></i>&nbsp;&nbsp;Link Weiterleiten</a>
+		<a href="@Url.Action("Clone", "Topics", new { Area = "", id = Model.ID })" class="btn btn-primary"><i class="glyphicon glyphicon-duplicate"></i>&nbsp;&nbsp;Diskussion klonen</a>
 	</div>
 </div>
 

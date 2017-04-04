@@ -4,6 +4,7 @@ using System.Data.Entity;
 using System.Data.Entity.Migrations;
 using System.Data.Entity.Validation;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Web.Mvc;
@@ -224,7 +225,7 @@ namespace IGCV_Protokoll.Controllers
 				new AclPreset { ID = 0, Name = "Standard", EntityList = GetCurrentUser().Settings.AclTreePreset },
 			};
 			var sessionTypeAttendees = db.SessionTypes.Where(st => st.Active)
-				.Select(st => new {st, adIDs = st.Attendees.Select(u => u.AdGroups.FirstOrDefault(g => g.AdEntity.Type == AdEntityType.User))});
+				.Select(st => new { st, adIDs = st.Attendees.Select(u => u.AdGroups.FirstOrDefault(g => g.AdEntity.Type == AdEntityType.User)) });
 
 			var mapSessionTypeToEntities = sessionTypeAttendees.ToDictionary(x => x.st.ID, x => x.adIDs.WhereNotNull().Select(y => y.AdEntityID).ToArray());
 
@@ -718,7 +719,7 @@ namespace IGCV_Protokoll.Controllers
 		[HttpPost]
 		public ActionResult DisplayOnDashboard(int id)
 		{
-			var displayOverride = new TopicVisibilityOverride { TopicID = id, UserID = GetCurrentUserID(), Visibility = VisibilityOverride.Show};
+			var displayOverride = new TopicVisibilityOverride { TopicID = id, UserID = GetCurrentUserID(), Visibility = VisibilityOverride.Show };
 			db.TopicVisibilityOverrides.AddOrUpdate(x => new { x.TopicID, x.UserID }, displayOverride);
 			db.SaveChanges();
 			return new HttpStatusCodeResult(HttpStatusCode.NoContent);
@@ -728,9 +729,67 @@ namespace IGCV_Protokoll.Controllers
 		public ActionResult HideFromDashboard(int id)
 		{
 			var displayOverride = new TopicVisibilityOverride { TopicID = id, UserID = GetCurrentUserID(), Visibility = VisibilityOverride.Hide };
-			db.TopicVisibilityOverrides.AddOrUpdate(x => new {x.TopicID, x.UserID}, displayOverride);
+			db.TopicVisibilityOverrides.AddOrUpdate(x => new { x.TopicID, x.UserID }, displayOverride);
 			db.SaveChanges();
 			return new HttpStatusCodeResult(HttpStatusCode.NoContent);
+		}
+
+		public ActionResult Clone(int id)
+		{
+			var old = db.Topics.Include(t => t.Comments).Include(t => t.Votes).Include(t => t.DocumentContainer).SingleOrDefault(t => t.ID == id);
+			if (old == null)
+				return HttpNotFound("Topic not found!");
+			if (!IsAuthorizedFor(old))
+				return HTTPStatus(HttpStatusCode.Forbidden, "Sie sind für diesen Vorgang nicht berechtigt!");
+
+			var newTopic = db.Topics.Add(new Topic
+			{
+				OwnerID = GetCurrentUserID(),
+				SessionTypeID = old.SessionTypeID,
+				Title = old.Title + " (Klon)",
+				Time = old.Time,
+				Description = old.Description,
+				Proposal = old.Proposal,
+				Priority = old.Priority,
+				CreatorID = GetCurrentUserID(),
+				IsReadOnly = false
+			});
+			newTopic.DocumentContainer.Add(new DocumentContainer());
+
+			newTopic.Votes = new List<Vote>(old.Votes.Select(v => new Vote { Kind = v.Kind, VoterID = v.VoterID, Topic = newTopic }));
+			newTopic.PushTargets = new List<PushNotification>(old.PushTargets.Select(p => new PushNotification { UserID = p.UserID }));
+			newTopic.Assignments = new List<Assignment>(old.Assignments.Select(a => new Assignment
+			{
+				Description = a.Description,
+				DueDate = a.DueDate,
+				IsActive = false,
+				OwnerID = a.OwnerID,
+				IsDone = a.IsDone,
+				ReminderSent = false,
+				Title = a.Title,
+				Type = a.Type
+			}));
+			newTopic.Tags = new List<TagTopic>(old.Tags.Select(tt => new TagTopic { TagID = tt.TagID, Topic = newTopic }));
+
+			newTopic.LeftLinks = new List<TopicLink>(old.LeftLinks.Select(l => new TopicLink { RightTopicID = l.RightTopicID, LinkTemplateID = l.LinkTemplateID }));
+			newTopic.RightLinks = new List<TopicLink>(old.RightLinks.Select(l => new TopicLink { LeftTopicID = l.LeftTopicID, LinkTemplateID = l.LinkTemplateID }));
+
+			// ACL kopieren
+			if (old.Acl != null)
+			{
+				newTopic.Acl = db.ACLs.Add(new ACL());
+				newTopic.Acl.Items = new List<ACLItem>(old.Acl.Items.Select(i => new ACLItem { AdEntityID = i.AdEntityID }));
+			}
+
+			// Inhalt des Dokumentencontainers kopieren
+			foreach (var document in old.Documents.VisibleDocuments)
+			{
+				
+			}
+
+			db.SaveChanges();
+
+			return RedirectToAction("Details", new { id = newTopic.ID });
 		}
 	}
 }
