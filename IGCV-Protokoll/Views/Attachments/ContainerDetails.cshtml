@@ -29,7 +29,7 @@
 		<div class="panel-heading">
 			<h3 class="panel-title">Enthaltene Dokumente:</h3>
 		</div>
-		@Html.Action("_List", "Attachments", new { id = Model.ID, showActions = ViewBag.ShowUpload })
+		@Html.Action("_List", "Attachments", new { id = Model.ID, showActions = ViewBag.ShowUpload, showDeleted = true })
 		@if (ViewBag.ShowUpload)
 		{
 			@Html.Action("_UploadForm", "Attachments", new {id = Model.ID})

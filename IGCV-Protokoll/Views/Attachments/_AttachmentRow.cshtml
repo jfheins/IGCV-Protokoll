@@ -97,6 +97,13 @@ else if (Model.LockUserID != null) // locked by someone else
 				<span class="glyphicon glyphicon-remove" title="Dokument löschen"></span>
 			</a>
 		}
+		@if (Model.Deleted != null)
+		{
+			<a data-ajax="true" data-ajax-method="POST" data-ajax-success="reloadRow(@Model.ID);"
+			   href="@Url.Action("_Restore", new {documentID = Model.ID})">
+				<span class="glyphicon glyphicon-repeat" title="Dokument wiederherstellen"></span>
+			</a>
+		}
 	</td>
 </tr>
 

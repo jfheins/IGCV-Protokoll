@@ -77,7 +77,7 @@ namespace IGCV_Protokoll.Controllers
 		}
 
 		// GET: Attachments
-		public ActionResult _List(int id, bool makeList = false, bool showActions = true) // id = DocumentContainer.ID
+		public ActionResult _List(int id, bool makeList = false, bool showActions = true, bool showDeleted = false) // id = DocumentContainer.ID
 		{
 			var container = db.DocumentContainers.Find(id);
 			if (container == null)
@@ -86,7 +86,7 @@ namespace IGCV_Protokoll.Controllers
 				return HTTPStatus(HttpStatusCode.Forbidden, "Sie sind für diese Dokumente nicht berechtigt!");
 
 			var documents = db.Documents
-				.Where(a => a.Deleted == null)
+				.Where(a => a.Deleted == null || showDeleted)
 				.Where(d => d.ParentContainerID == id)
 				.OrderBy(a => a.DisplayName)
 				.Include(a => a.Revisions)
@@ -100,6 +100,7 @@ namespace IGCV_Protokoll.Controllers
 			ViewBag.KnownExtensions = KnownExtensions;
 			ViewBag.OfficeExtensions = OfficeExtensions;
 			ViewBag.SeamlessEnabled = EnableSeamlessEditing && isInternetExplorer;
+			ViewBag.ShowDeleted = showDeleted;
 
 			if (makeList)
 				return PartialView("_AttachmentList", documents.ToList());
@@ -685,6 +686,29 @@ namespace IGCV_Protokoll.Controllers
 			var url = new UrlHelper(ControllerContext.RequestContext).Action("DownloadNewest", "Attachments",
 				new { id = document.GUID });
 			return PartialView("_NameDisplay", Tuple.Create(new MvcHtmlString(url), document.DisplayName));
+		}
+
+		[HttpPost]
+		public ActionResult _Restore(int documentID)
+		{
+			var document = db.Documents.Find(documentID);
+
+			if (document == null)
+				return HttpNotFound();
+			if (!IsAuthorizedFor(document.ParentContainer))
+				return HTTPStatus(HttpStatusCode.Forbidden, "Sie sind für diesen Container nicht berechtigt!");
+
+			document.Deleted = null;
+			try
+			{
+				db.SaveChanges();
+			}
+			catch (DbEntityValidationException e)
+			{
+				var message = ErrorMessageFromException(e);
+				return HTTPStatus(HttpStatusCode.InternalServerError, message);
+			}
+			return new HttpStatusCodeResult(HttpStatusCode.NoContent);
 		}
 	}
 }
