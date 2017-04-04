@@ -7,6 +7,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Runtime.InteropServices;
 using System.Web.Mvc;
 using EntityFramework.Extensions;
 using IGCV_Protokoll.Models;
@@ -754,7 +755,7 @@ namespace IGCV_Protokoll.Controllers
 				CreatorID = GetCurrentUserID(),
 				IsReadOnly = false
 			});
-			newTopic.DocumentContainer.Add(new DocumentContainer());
+			newTopic.DocumentContainer.Add(db.DocumentContainers.Add(new DocumentContainer()));
 
 			newTopic.Votes = new List<Vote>(old.Votes.Select(v => new Vote { Kind = v.Kind, VoterID = v.VoterID, Topic = newTopic }));
 			newTopic.PushTargets = new List<PushNotification>(old.PushTargets.Select(p => new PushNotification { UserID = p.UserID }));
@@ -781,15 +782,48 @@ namespace IGCV_Protokoll.Controllers
 				newTopic.Acl.Items = new List<ACLItem>(old.Acl.Items.Select(i => new ACLItem { AdEntityID = i.AdEntityID }));
 			}
 
+			db.SaveChanges();
+
 			// Inhalt des Dokumentencontainers kopieren
-			foreach (var document in old.Documents.VisibleDocuments)
+			foreach (var oldDoc in old.Documents.VisibleDocuments)
 			{
-				
+				newTopic.Documents.Documents.Add(CreateCopyOf(oldDoc));
 			}
 
 			db.SaveChanges();
+			foreach (var document in newTopic.Documents.Documents)
+			{
+				document.LatestRevision = document.Revisions.OrderByDescending(r => r.Created).First();
+			}
+			db.SaveChanges();
 
 			return RedirectToAction("Details", new { id = newTopic.ID });
+		}
+
+		private Document CreateCopyOf(Document oldDoc)
+		{
+			var doc = db.Documents.Add(new Document
+			{
+				Created = oldDoc.Created,
+				DisplayName = oldDoc.DisplayName,
+				Revisions = new List<Revision>(oldDoc.Revisions.Select(CreateCopyOf)),
+				GUID = Guid.NewGuid(),
+				LatestRevisionID = null
+			});
+			return doc;
+		}
+
+		private Revision CreateCopyOf(Revision oldRev)
+		{
+			return db.Revisions.Add(new Revision
+			{
+				Created = oldRev.Created,
+				Extension = oldRev.Extension,
+				FileSize = oldRev.FileSize,
+				SafeName = oldRev.SafeName,
+				UploaderID = oldRev.UploaderID,
+				GUID = Guid.NewGuid()
+			});
 		}
 	}
 }
