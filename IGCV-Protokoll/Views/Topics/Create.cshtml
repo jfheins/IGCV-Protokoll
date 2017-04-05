@@ -134,10 +134,10 @@
 	<div class="btn-toolbar spaced-toolbar">
 		<div class="btn-group" data-toggle="buttons">
 			<label class="btn btn-primary active">
-				<input type="radio" name="topType" checked="checked">Diskussion
+				@Html.RadioButtonFor(m => m.TopicType, TopicType.Discussion, new { id = "discussionBtn" })@TopicType.Discussion.DisplayName()
 			</label>
 			<label class="btn btn-primary">
-				<input type="radio" name="topType">Bericht
+				@Html.RadioButtonFor(m => m.TopicType, TopicType.Report,  new { id = "reportBtn" })@TopicType.Report.DisplayName()
 			</label>
 		</div>
 	</div>
@@ -183,5 +183,28 @@
 
 	<script type="text/javascript">
 		autosize($('textarea'));
+
+		$('#reportBtn').on('change', function () {
+			if ($(this).is(':checked')) {
+				$('#Proposal').rules('add', {
+					required: false
+				});
+				$('#Proposal').each(function () {
+					$(this).valid();
+				});
+				$('#Proposal').attr("disabled", "disabled");
+			} 
+		});
+		$('#discussionBtn').on('change', function () {
+			if ($(this).is(':checked')) {
+				$('#Proposal').rules('add', {
+					required: true
+				});
+				$('#Proposal').each(function () {
+					$(this).valid();
+				});
+				$('#Proposal').removeAttr("disabled");
+			} 
+		});
 	</script>
 }

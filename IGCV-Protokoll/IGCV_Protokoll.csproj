@@ -323,6 +323,10 @@
     <Compile Include="Migrations\201704042038369_added_persistent_filename.Designer.cs">
       <DependentUpon>201704042038369_added_persistent_filename.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201704051139270_added_topic_type.cs" />
+    <Compile Include="Migrations\201704051139270_added_topic_type.Designer.cs">
+      <DependentUpon>201704051139270_added_topic_type.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\ACL.cs" />
     <Compile Include="Models\AclItem.cs" />
     <Compile Include="Models\AdEntity.cs" />
@@ -1172,6 +1176,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201704042038369_added_persistent_filename.resx">
       <DependentUpon>201704042038369_added_persistent_filename.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201704051139270_added_topic_type.resx">
+      <DependentUpon>201704051139270_added_topic_type.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

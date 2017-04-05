@@ -5,7 +5,7 @@
 @model IGCV_Protokoll.Models.Topic
 
 @{
-	ViewBag.Title = Model.Title;
+	ViewBag.Title = Model.TopicType.DisplayName() + ": " + Model.Title;
 	IDictionary<Tag, bool> tagDict = ViewBag.TagDict;
 	var selectList = tagDict.Select(kvp =>
 		new SelectListItem

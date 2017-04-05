@@ -215,11 +215,7 @@ namespace IGCV_Protokoll.Controllers
 			return new HttpStatusCodeResult(HttpStatusCode.NoContent);
 		}
 
-		// GET: Topics/Create
-		/// <summary>
-		///    Ruft das Formular zum Erstellen eines neuen Themas ab.
-		/// </summary>
-		public ActionResult Create()
+		private void PopulateViewModelWithPresets(TopicCreateVM vm)
 		{
 			var presets = new List<AclPreset>
 			{
@@ -230,14 +226,21 @@ namespace IGCV_Protokoll.Controllers
 
 			var mapSessionTypeToEntities = sessionTypeAttendees.ToDictionary(x => x.st.ID, x => x.adIDs.WhereNotNull().Select(y => y.AdEntityID).ToArray());
 
-			var viewmodel = new TopicCreateVM
-			{
-				SessionTypeList = new SelectList(GetActiveSessionTypes(), "ID", "Name"),
-				TargetSessionTypeList = new SelectList(GetActiveSessionTypes(), "ID", "Name"),
-				UserList = CreateUserSelectList(),
-				AvailableAclPresets = presets,
-				MapSTtoAdEntities = mapSessionTypeToEntities
-			};
+			vm.SessionTypeList = new SelectList(GetActiveSessionTypes(), "ID", "Name");
+			vm.TargetSessionTypeList = new SelectList(GetActiveSessionTypes(), "ID", "Name");
+			vm.UserList = CreateUserSelectList();
+			vm.AvailableAclPresets = presets;
+			vm.MapSTtoAdEntities = mapSessionTypeToEntities;
+		}
+
+		// GET: Topics/Create
+		/// <summary>
+		///    Ruft das Formular zum Erstellen eines neuen Themas ab.
+		/// </summary>
+		public ActionResult Create()
+		{
+			var viewmodel = new TopicCreateVM();
+			PopulateViewModelWithPresets(viewmodel);
 			return View(viewmodel);
 		}
 
@@ -246,16 +249,22 @@ namespace IGCV_Protokoll.Controllers
 		///    Erstellt ein neues Thema auf Basis der angegebenen Werte. Das ViewModel <see cref="TopicEdit" /> wird verwendet.
 		/// </summary>
 		/// <param name="input">Der Inhalt des neuen Themas.</param>
+		/// <param name="aclTreeJson">ACL-Baum im JSON Format</param>
 		[HttpPost]
 		[ValidateAntiForgeryToken]
 		public ActionResult Create([Bind(Exclude = "TargetSessionTypeID")] TopicCreateVM input, string aclTreeJson)
 		{
+			if (input.TopicType == TopicType.Discussion && input.Proposal == string.Empty)
+				ModelState.AddModelError("Proposal", "Das Feld \"Beschlussvorschlag\" ist bei einer Diskussion erforderlich.");
+
 			if (ModelState.IsValid)
 			{
 				var t = new Topic
 				{
 					CreatorID = GetCurrentUserID(),
-					SessionTypeID = input.SessionTypeID
+					SessionTypeID = input.SessionTypeID,
+					TopicType = input.TopicType
+					
 				};
 				t.IncorporateUpdates(input);
 				t.DocumentContainer.Add(new DocumentContainer());
@@ -302,9 +311,11 @@ namespace IGCV_Protokoll.Controllers
 				return RedirectToAction("Details", new { id = t.ID });
 			}
 
+			PopulateViewModelWithPresets(input);
+			
 			input.SessionTypeList = new SelectList(GetActiveSessionTypes(), "ID", "Name", input.SessionTypeID);
 			input.TargetSessionTypeList = new SelectList(GetActiveSessionTypes(), "ID", "Name", input.TargetSessionTypeID);
-			input.UserList = CreateUserSelectList();
+
 			return View(input);
 		}
 

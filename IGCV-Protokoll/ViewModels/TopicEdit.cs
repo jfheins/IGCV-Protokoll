@@ -13,6 +13,8 @@ namespace IGCV_Protokoll.ViewModels
 		public TopicEdit()
 		{
 			Priority = Priority.Medium;
+			Description = "";
+			Proposal = "";
 		}
 
 		[Display(Name = "Topic-ID")]
@@ -60,7 +62,8 @@ namespace IGCV_Protokoll.ViewModels
 
 		[Display(Name = "Beschlussvorschlag")]
 		[DataType(DataType.MultilineText)]
-		[Required]
+		[Required(AllowEmptyStrings = true)]
+		[DisplayFormat(ConvertEmptyStringToNull = false)]
 		public string Proposal { get; set; }
 
 		[Display(Name = "Priorität")]

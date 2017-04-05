@@ -74,7 +74,8 @@ namespace IGCV_Protokoll.Models
 
 		[Display(Name = "Beschlussvorschlag")]
 		[DataType(DataType.MultilineText)]
-		[Required]
+		[Required(AllowEmptyStrings = true)]
+		[DisplayFormat(ConvertEmptyStringToNull = false)]
 		public string Proposal { get; set; }
 
 		[Display(Name = "Kommentare")]
@@ -233,6 +234,17 @@ namespace IGCV_Protokoll.Models
 		/// </summary>
 		[InverseProperty("RightTopic")]
 		public virtual ICollection<TopicLink> RightLinks { get; set; }
+		
+		[Display(Name = "Themenart")]
+		public TopicType TopicType { get; set; }
+	}
+
+	public enum TopicType
+	{
+		[Display(Name = "Diskussion")]
+		Discussion,
+		[Display(Name = "Bericht")]
+		Report
 	}
 
 	internal class TopicByIdComparer : IEqualityComparer<Topic>

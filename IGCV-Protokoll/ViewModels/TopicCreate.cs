@@ -14,5 +14,7 @@ namespace IGCV_Protokoll.ViewModels
 		//public int? SelectedAclPreset { get; set; }
 
 		public Dictionary<int, int[]> MapSTtoAdEntities { get; set; }
+
+		public TopicType TopicType { get; set; }
 	}
 }
