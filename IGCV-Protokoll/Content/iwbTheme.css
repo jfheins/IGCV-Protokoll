@@ -7030,7 +7030,7 @@ p.panel-title {
   font-size: 14px;
   color: inherit;
   float: right;
-  min-width: 200px;
+  min-width: 120px;
 }
 .panel-title-right a {
   color: inherit;

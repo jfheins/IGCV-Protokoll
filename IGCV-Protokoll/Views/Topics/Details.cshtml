@@ -97,17 +97,23 @@
 	bool hasDecision = Model.Decision != null;
 	bool isReport = Model.TopicType == TopicType.Report;
 
-	string descClass = (hasDecision || isReport) ? "col-md-12" : "col-md-6";
+	string descClass = hasDecision ? "col-md-12" : (isReport ? "col-md-9" : "col-md-6");
+	string propClass = isReport ? "col-md-3" : "col-md-6";
 }
 
 <div class="row">
 	<div class="@descClass">
 		@{ Html.RenderPartial("_Description", Model); }
 	</div>
-	@if (!hasDecision && !isReport)
+	@if (!hasDecision)
 	{
-		<div class="col-md-6">
-			@{ Html.RenderPartial("_Proposal", Model); }
+		<div class="@propClass">
+			@if (isReport)
+			{
+				Html.RenderPartial("_ProposalUpgrade", Model);
+			} else {
+				Html.RenderPartial("_Proposal", Model);
+			}
 		</div>
 	}
 </div>

@@ -1,0 +1,25 @@
+﻿@using IGCV_Protokoll.util
+@model IGCV_Protokoll.Models.Topic
+
+@{
+	var isEditable = !Model.IsReadOnly && !Model.IsLocked && ViewBag.IsEditable;
+}
+
+<div class="panel panel-primary" id="proposal-panel">
+	<div class="panel-heading">
+		<h3 class="panel-title">
+			In Diskussion umwandeln
+		</h3>
+	</div>
+	<div class="panel-body">
+		@if (isEditable)
+		{
+			<a data-ajax="true" data-ajax-mode="replace-with" data-ajax-update="#proposal-panel" href="@Url.Action("_EditProposal", new {id = Model.ID})"
+			   title="Bearbeiten">Beschlussvorschlag eingeben</a>
+		}
+		else
+		{
+			<p>Momentan nicht möglich.</p>
+		}
+	</div>
+</div>

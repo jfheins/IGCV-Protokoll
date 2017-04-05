@@ -1,17 +1,15 @@
-﻿@model IGCV_Protokoll.ViewModels.TopicEdit
-
+﻿@using IGCV_Protokoll.Models
+@using IGCV_Protokoll.util
+@model IGCV_Protokoll.ViewModels.TopicEdit
 @{
 	ViewBag.Title = "Stammdaten bearbeiten (" + Model.Title + ")";
 }
-
 <h2>@ViewBag.Title</h2>
-
 <div>
 	@Html.ActionLink("Zurück zum Index", "Index")<br />
-	@Html.ActionLink("Zurück zu Details", "Details", new {id = Model.ID})
+	@Html.ActionLink("Zurück zu Details", "Details", new { id = Model.ID })
 </div>
 <hr />
-
 
 @using (Html.BeginForm())
 {
@@ -19,94 +17,132 @@
 
 	<div class="form-horizontal">
 		<div class="form-group">
-			@Html.LabelFor(model => model.ID, new {@class = "control-label col-md-2"})
+			@Html.LabelFor(model => model.ID, new { @class = "control-label col-md-2" })
 			<div class="col-md-5 static-text">
 				@Html.DisplayFor(model => model.ID)
 				@Html.HiddenFor(model => model.ID)
 			</div>
 		</div>
-
 		<div class="form-group">
-			@Html.LabelFor(model => model.SessionTypeID, new {@class = "control-label col-md-2"})
+			@Html.LabelFor(model => model.SessionTypeID, new { @class = "control-label col-md-2" })
 			<div class="col-md-5 static-text">
 				@Model.SessionType.Name
 			</div>
 		</div>
-
 		<div class="form-group">
-			@Html.LabelFor(model => model.TargetSessionTypeID, new {@class = "control-label col-md-2"})
+			@Html.LabelFor(model => model.TargetSessionTypeID, new { @class = "control-label col-md-2" })
 			<div class="col-md-3">
-				@Html.DropDownListFor(m => m.TargetSessionTypeID, Model.TargetSessionTypeList, "(Nicht verschieben)", new {@class = "form-control"})
-				@Html.ValidationMessageFor(model => model.TargetSessionTypeID, "", new {@class = "text-danger"})
+				@Html.DropDownListFor(m => m.TargetSessionTypeID, Model.TargetSessionTypeList, "(Nicht verschieben)", new { @class = "form-control" })
+				@Html.ValidationMessageFor(model => model.TargetSessionTypeID, "", new { @class = "text-danger" })
 			</div>
 		</div>
-
 		<div class="form-group">
-			@Html.LabelFor(model => model.ResubmissionDate, new {@class = "control-label col-md-2"})
+			@Html.LabelFor(model => model.ResubmissionDate, new { @class = "control-label col-md-2" })
 			<div class="col-md-5">
-				@Html.EditorFor(model => model.ResubmissionDate, new {htmlAttributes = new {@class = "form-control"}})
-				@Html.ValidationMessageFor(model => model.ResubmissionDate, "", new {@class = "text-danger"})
+				@Html.EditorFor(model => model.ResubmissionDate, new { htmlAttributes = new { @class = "form-control" } })
+				@Html.ValidationMessageFor(model => model.ResubmissionDate, "", new { @class = "text-danger" })
 			</div>
 		</div>
-
 		<div class="form-group">
-			@Html.LabelFor(model => model.Time, new {@class = "control-label col-md-2"})
+			@Html.LabelFor(model => model.Time, new { @class = "control-label col-md-2" })
 			<div class="col-md-5">
-				@Html.EditorFor(model => model.Time, new {htmlAttributes = new {@class = "form-control", type = "time"}})
-				@Html.ValidationMessageFor(model => model.Time, "", new {@class = "text-danger"})
+				@Html.EditorFor(model => model.Time, new { htmlAttributes = new { @class = "form-control", type = "time" } })
+				@Html.ValidationMessageFor(model => model.Time, "", new { @class = "text-danger" })
 			</div>
 		</div>
-
 		<div class="form-group">
-			@Html.LabelFor(model => model.Title, new {@class = "control-label col-md-2"})
+			@Html.LabelFor(model => model.Title, new { @class = "control-label col-md-2" })
 			<div class="col-md-5">
-				@Html.EditorFor(model => model.Title, new {htmlAttributes = new {@class = "form-control"}})
-				@Html.ValidationMessageFor(model => model.Title, "", new {@class = "text-danger"})
+				@Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control" } })
+				@Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
 			</div>
 		</div>
-
 		<div class="form-group">
-			@Html.LabelFor(model => model.OwnerID, new {@class = "control-label col-md-2"})
+			@Html.LabelFor(model => model.OwnerID, new { @class = "control-label col-md-2" })
 			<div class="col-md-2">
-				@Html.DropDownListFor(m => m.OwnerID, Model.UserList, new {@class = "form-control"})
-				@Html.ValidationMessageFor(model => model.OwnerID, "", new {@class = "text-danger"})
+				@Html.DropDownListFor(m => m.OwnerID, Model.UserList, new { @class = "form-control" })
+				@Html.ValidationMessageFor(model => model.OwnerID, "", new { @class = "text-danger" })
 			</div>
 		</div>
-
 		<div class="form-group">
-			@Html.LabelFor(model => model.Description, new {@class = "control-label col-md-2"})
+			@Html.LabelFor(model => model.Description, new { @class = "control-label col-md-2" })
 			<div class="col-md-5">
-				@Html.EditorFor(model => model.Description, new {htmlAttributes = new {@class = "form-control"}})
-				@Html.ValidationMessageFor(model => model.Description, "", new {@class = "text-danger"})
+				@Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control" } })
+				@Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
 			</div>
 		</div>
 
 		<div class="form-group">
-			@Html.LabelFor(model => model.Proposal, new {@class = "control-label col-md-2"})
+			<div class="col-md-5 col-md-offset-2">
+				<div class="btn-toolbar spaced-toolbar">
+					<div class="btn-group" data-toggle="buttons">
+						@{
+							var discActive = Model.TopicType == TopicType.Discussion ? "active" : "";
+							var repoActive = Model.TopicType == TopicType.Report ? "active" : "";
+						}
+						<label class="btn btn-primary @discActive">
+							@Html.RadioButtonFor(m => m.TopicType, TopicType.Discussion, new { id = "discussionBtn" })@TopicType.Discussion.DisplayName()
+						</label>
+						<label class="btn btn-primary @repoActive">
+							@Html.RadioButtonFor(m => m.TopicType, TopicType.Report, new { id = "reportBtn" })@TopicType.Report.DisplayName()
+						</label>
+						@using (Html.Delayed(null, "TopicTypeButtons"))
+						{
+							<script type="text/javascript">
+								$('#reportBtn').on('change', function () {
+									if ($(this).is(':checked')) {
+										$('#Proposal').rules('add', {
+											required: false
+										});
+										$('#Proposal').each(function () {
+											$(this).valid();
+										});
+										$('#Proposal').attr("disabled", "disabled");
+									}
+								});
+								$('#discussionBtn').on('change', function () {
+									if ($(this).is(':checked')) {
+										$('#Proposal').rules('add', {
+											required: true
+										});
+										$('#Proposal').each(function () {
+											$(this).valid();
+										});
+										$('#Proposal').removeAttr("disabled");
+									}
+								});
+								$(document).ready(function () {
+									$('#reportBtn').trigger('change'); // Einmalig auslösen, falls es ein Bericht ist
+								});
+								
+							</script>
+						}
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			@Html.LabelFor(model => model.Proposal, new { @class = "control-label col-md-2" })
 			<div class="col-md-5">
-				@Html.EditorFor(model => model.Proposal, new {htmlAttributes = new {@class = "form-control"}})
-				@Html.ValidationMessageFor(model => model.Proposal, "", new {@class = "text-danger"})
+				@Html.EditorFor(model => model.Proposal, new { htmlAttributes = new { @class = "form-control" } })
+				@Html.ValidationMessageFor(model => model.Proposal, "", new { @class = "text-danger" })
 			</div>
 		</div>
-
 		<div class="form-group">
-			@Html.LabelFor(model => model.Priority, new {@class = "control-label col-md-2"})
+			@Html.LabelFor(model => model.Priority, new { @class = "control-label col-md-2" })
 			<div class="col-md-2">
-				@Html.EnumDropDownListFor(model => model.Priority, new {@class = "form-control"})
-				@Html.ValidationMessageFor(model => model.Priority, "", new {@class = "text-danger"})
+				@Html.EnumDropDownListFor(model => model.Priority, new { @class = "form-control" })
+				@Html.ValidationMessageFor(model => model.Priority, "", new { @class = "text-danger" })
 			</div>
 		</div>
-
 		<div class="form-group">
 			<div class="col-md-offset-2 col-md-5">
 				<input type="submit" value="Speichern" class="btn btn-primary" />
 			</div>
 		</div>
-
-		@Html.ValidationSummary(true, "", new {@class = "text-danger"})
+		@Html.ValidationSummary(true, "", new { @class = "text-danger" })
 	</div>
-}
-
+							}
 @section Scripts {
 	@Scripts.Render("~/bundles/jqueryval")
 }

@@ -70,6 +70,8 @@ namespace IGCV_Protokoll.ViewModels
 		[Required]
 		public Priority Priority { get; set; }
 
+		public TopicType TopicType { get; set; }
+
 		public static TopicEdit FromTopic(Topic t)
 		{
 			return new TopicEdit
@@ -87,6 +89,7 @@ namespace IGCV_Protokoll.ViewModels
 				TargetSessionTypeID = t.TargetSessionTypeID,
 				Title = t.Title,
 				Time = t.Time,
+				TopicType = t.TopicType
 			};
 		}
 	}

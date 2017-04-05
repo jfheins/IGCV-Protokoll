@@ -211,11 +211,12 @@ namespace IGCV_Protokoll.Models
 			Description = updates.Description;
 			OwnerID = updates.OwnerID;
 			Priority = updates.Priority;
-			Proposal = updates.Proposal;
+			Proposal = updates.Proposal == "" ? Proposal : updates.Proposal;
 			ResubmissionDate = updates.ResubmissionDate;
 			Title = updates.Title;
 			Time = updates.Time;
 			ValidFrom = DateTime.Now;
+			TopicType = updates.TopicType;
 		}
 
 		[Display(Name = "Zugriffsrechte")]

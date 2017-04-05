@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using IGCV_Protokoll.Models;
 using IGCV_Protokoll.util;
 
@@ -44,5 +45,13 @@ namespace IGCV_Protokoll.ViewModels
 		public ICollection<Diff> Title { get; set; }
 		public ICollection<Diff> Description { get; set; }
 		public ICollection<Diff> Proposal { get; set; }
+
+		public bool IsSignificant()
+		{
+			return SessionType != null || TargetSessionType != null || Time != null || Owner != null || Priority != null
+					|| Title.Any(d => d.operation != Operation.EQUAL)
+					|| Description.Any(d => d.operation != Operation.EQUAL)
+					|| Proposal.Any(d => d.operation != Operation.EQUAL);
+		}
 	}
 }

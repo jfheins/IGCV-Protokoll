@@ -35,13 +35,13 @@
 			</span>
 		}
 		<span class="panel-collapse-heading" style="display: inline-block; float: left; font-size: 180%; margin: 2px 16px 0 -12px;">
-			<a onclick=" toggleSection(this, '#topicContent_@Model.ID'); " style="color: inherit;"></a>
+			<a onclick=" toggleSection(this, '#topicContent_@Model.ID' ); " style="color: inherit;"></a>
 		</span>
 		<h3 class="panel-title">
 			@{
-				var htmlattr = ViewBag.CurrentSession != null ? new {target = "_blank"} : null; // Im Sitzungsmodus target=_blank
+				var htmlattr = ViewBag.CurrentSession != null ? new { target = "_blank" } : null; // Im Sitzungsmodus target=_blank
 			}
-			@Html.ActionLink(Model.Title, "Details", "Topics", new {id = Model.ID, Area = ""}, htmlattr)
+			@Html.ActionLink(Model.Title, "Details", "Topics", new { id = Model.ID, Area = "" }, htmlattr)
 			@foreach (var tag in Model.Tags)
 			{
 				@Html.DisplayFor(model => tag.Tag)
@@ -51,20 +51,24 @@
 	</div>
 	<div id="topicContent_@Model.ID" class="topic-content collapse in">
 		<div class="panel-body">
-			<div class="col-md-6">
+			@{ 	string descClass = Model.TopicType == TopicType.Discussion ? "col-md-6" : "col-md-12"; }
+			<div class="@descClass">
 				<h6>@Html.DisplayNameFor(model => model.Description):</h6>
 				@Html.DisplayWithLinksFor(model => model.Description, "String_Multiline")
 			</div>
-			<hr class="visible-xs visible-sm" />
-			<div class="col-md-6">
-				<h6>@Html.DisplayNameFor(model => model.Proposal):</h6>
-				@Html.DisplayWithLinksFor(model => model.Proposal, "String_Multiline")
-			</div>
+			@if (Model.TopicType == TopicType.Discussion)
+			{
+				<hr class="visible-xs visible-sm" />
+				<div class="col-md-6">
+					<h6>@Html.DisplayNameFor(model => model.Proposal):</h6>
+					@Html.DisplayWithLinksFor(model => model.Proposal, "String_Multiline")
+				</div>
+			}
 		</div>
-		@if(Model.TopicType == TopicType.Discussion)
-		{ 
+		@if (Model.TopicType == TopicType.Discussion)
+		{
 			<div class="panel-separator" id="auditorlist_@Model.ID">
-				@Html.Action("_List", "Votes", new {topic = Model, Area = "", linkLevel = ViewBag.CurrentSession != null ? VoteLinkLevel.Everyone : VoteLinkLevel.OnlyMine})
+				@Html.Action("_List", "Votes", new { topic = Model, Area = "", linkLevel = ViewBag.CurrentSession != null ? VoteLinkLevel.Everyone : VoteLinkLevel.OnlyMine })
 			</div>
 		}
 		@{
@@ -80,7 +84,7 @@
 		<div class="panel panel-primary comment-panel">
 			<div class="panel-heading panel-collapse-heading" style="position: relative;">
 				<h4 class="panel-title">
-					<a onclick=" toggleSection(this, '#comments_@Model.ID'); " class="@classA">
+					<a onclick=" toggleSection(this, '#comments_@Model.ID' ); " class="@classA">
 						@if (@Model.Comments.Count == 0)
 						{
 							@:Keine Kommentare
@@ -120,13 +124,13 @@
 	<script type="text/javascript">
 		function collapseTopicOut(link, content) {
 
-			content.slideDown(400, "easeOutQuad", function() { PerformMasonryLayout(); });
+			content.slideDown(400, "easeOutQuad", function () { PerformMasonryLayout(); });
 			link.removeClass("collapsed");
 		}
 
 		function collapseTopicIn(link, content) {
 
-			content.slideUp(400, "easeOutQuad", function() { PerformMasonryLayout(); });
+			content.slideUp(400, "easeOutQuad", function () { PerformMasonryLayout(); });
 			link.addClass("collapsed");
 		}
 

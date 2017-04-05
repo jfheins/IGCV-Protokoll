@@ -968,6 +968,7 @@
     <Content Include="Views\Acl\Edit.cshtml" />
     <Content Include="Views\TopicLink\_List.cshtml" />
     <Content Include="Views\TopicLink\_Create.cshtml" />
+    <Content Include="Views\Topics\_ProposalUpgrade.cshtml" />
     <None Include="Web.Integration.config" />
     <None Include="Web.Production.config" />
     <None Include="Web.Testing.config" />

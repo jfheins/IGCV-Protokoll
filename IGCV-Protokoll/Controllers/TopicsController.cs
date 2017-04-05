@@ -263,7 +263,6 @@ namespace IGCV_Protokoll.Controllers
 				{
 					CreatorID = GetCurrentUserID(),
 					SessionTypeID = input.SessionTypeID,
-					TopicType = input.TopicType
 					
 				};
 				t.IncorporateUpdates(input);
@@ -362,6 +361,9 @@ namespace IGCV_Protokoll.Controllers
 			Topic topic = db.Topics.Include(t => t.Creator).Single(t => t.ID == input.ID);
 			if (!IsAuthorizedFor(topic))
 				return HTTPStatus(HttpStatusCode.Forbidden, "Sie sind für diesen Vorgang nicht berechtigt!");
+
+			if (input.TopicType == TopicType.Discussion && input.Proposal == string.Empty)
+				ModelState.AddModelError("Proposal", "Das Feld \"Beschlussvorschlag\" ist bei einer Diskussion erforderlich.");
 
 			if (ModelState.IsValid)
 			{
@@ -559,12 +561,13 @@ namespace IGCV_Protokoll.Controllers
 			if (!auth.IsAuthorized)
 				throw new TopicLockedException(auth.Reason);
 
-			if (proposal != topic.Proposal) //Trivialedit verhindern
+			if (proposal != topic.Proposal || topic.TopicType == TopicType.Report) //Trivialedit verhindern
 			{
 				// Änderungsverfolgung
 				db.TopicHistory.Add(TopicHistory.FromTopic(topic, GetCurrentUserID()));
 				topic.Proposal = proposal;
 				topic.ValidFrom = DateTime.Now;
+				topic.TopicType = TopicType.Discussion;
 
 				// Ungelesen-Markierung aktualisieren
 				MarkAsUnread(topic);
@@ -764,7 +767,8 @@ namespace IGCV_Protokoll.Controllers
 				Proposal = old.Proposal,
 				Priority = old.Priority,
 				CreatorID = GetCurrentUserID(),
-				IsReadOnly = false
+				IsReadOnly = false,
+				TopicType = old.TopicType
 			});
 			newTopic.DocumentContainer.Add(db.DocumentContainers.Add(new DocumentContainer()));
 

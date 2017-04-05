@@ -323,7 +323,7 @@ namespace IGCV_Protokoll.Controllers
 				{
 					ID = topic.ID,
 					Score = score,
-					EntityType = topic.HasDecision() ? topic.Decision.Type.DisplayName() : "Diskussion",
+					EntityType = topic.HasDecision() ? topic.Decision.Type.DisplayName() : topic.TopicType.DisplayName(),
 					Title = topic.Title,
 					ActionURL = Url.Action("Details", "Topics", new {id = topic.ID}),
 					Timestamp = topic.ValidFrom,
