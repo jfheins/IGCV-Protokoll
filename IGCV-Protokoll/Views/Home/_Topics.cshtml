@@ -38,7 +38,7 @@
 					</span>
 				}
 				<span class="panel-collapse-heading" style="display: inline-block; float: left; font-size: 180%; margin: 2px 16px 0 -12px;">
-					<a onclick=" toggleSection(this, '#topicContent_@topic.ID' ); " style="color: inherit;"></a>
+					<a onclick="toggleSection(this, '#topicContent_@topic.ID' );" style="color: inherit;"></a>
 				</span>
 				<h3 class="panel-title">
 					@{
@@ -54,19 +54,26 @@
 			</div>
 			<div id="topicContent_@topic.ID" class="topic-content collapse in">
 				<div class="panel-body">
-					<div class="col-md-6">
+					@{ 	string descClass = topic.TopicType == TopicType.Discussion ? "col-md-6" : "col-md-12"; }
+					<div class="@descClass">
 						<h6>@Html.DisplayNameFor(model => topic.Description):</h6>
 						@Html.DisplayWithLinksFor(model => topic.Description, "String_Multiline")
 					</div>
-					<hr class="visible-xs visible-sm" />
-					<div class="col-md-6">
-						<h6>@Html.DisplayNameFor(model => topic.Proposal):</h6>
-						@Html.DisplayWithLinksFor(model => topic.Proposal, "String_Multiline")
+					@if (topic.TopicType == TopicType.Discussion)
+					{
+						<hr class="visible-xs visible-sm"/>
+						<div class="col-md-6">
+							<h6>@Html.DisplayNameFor(model => topic.Proposal):</h6>
+							@Html.DisplayWithLinksFor(model => topic.Proposal, "String_Multiline")
+						</div>
+					}
+				</div>
+				@if (topic.TopicType == TopicType.Discussion)
+				{
+					<div class="panel-separator" id="auditorlist_@topic.ID">
+						@Html.Action("_List", "Votes", new {topic, Area = "", linkLevel = ViewBag.CurrentSession != null ? VoteLinkLevel.Everyone : VoteLinkLevel.OnlyMine})
 					</div>
-				</div>
-				<div class="panel-separator" id="auditorlist_@topic.ID">
-					@Html.Action("_List", "Votes", new { topic, Area = "", linkLevel = ViewBag.CurrentSession != null ? VoteLinkLevel.Everyone : VoteLinkLevel.OnlyMine })
-				</div>
+				}
 				@{
 					string classA = "collapsed";
 					string classDiv = "panel-collapse collapse";

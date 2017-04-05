@@ -61,10 +61,12 @@
 				@Html.DisplayWithLinksFor(model => model.Proposal, "String_Multiline")
 			</div>
 		</div>
-		<div class="panel-separator" id="auditorlist_@Model.ID">
-			@Html.Action("_List", "Votes", new {topic = Model, Area = "", linkLevel = ViewBag.CurrentSession != null ? VoteLinkLevel.Everyone : VoteLinkLevel.OnlyMine})
-		</div>
-
+		@if(Model.TopicType == TopicType.Discussion)
+		{ 
+			<div class="panel-separator" id="auditorlist_@Model.ID">
+				@Html.Action("_List", "Votes", new {topic = Model, Area = "", linkLevel = ViewBag.CurrentSession != null ? VoteLinkLevel.Everyone : VoteLinkLevel.OnlyMine})
+			</div>
+		}
 		@{
 			string classA = "collapsed";
 			string classDiv = "panel-collapse collapse";

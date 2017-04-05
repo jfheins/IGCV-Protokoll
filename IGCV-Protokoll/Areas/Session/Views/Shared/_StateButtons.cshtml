@@ -35,14 +35,17 @@
 			UpdateTargetId = "state_buttons_" + Model.TopicID,
 			OnSuccess = "enableDatePicker();"
 		}, new {@class = "btn btn-hover-primary" + classes[0]})
-
-		@Ajax.ActionLink("Beschluss", "_ChangeState", "Discussion", new {id = Model.TopicID, state = TopicAction.Decide, view = "Panels"},
-		new AjaxOptions
+		
+		@if(Model.Topic.TopicType == TopicType.Discussion)
 		{
-			HttpMethod = "POST",
-			InsertionMode = InsertionMode.Replace,
-			UpdateTargetId = "state_buttons_" + Model.TopicID
-		}, new {@class = "btn btn-hover-success" + classes[1]})
+			@Ajax.ActionLink("Beschluss", "_ChangeState", "Discussion", new {id = Model.TopicID, state = TopicAction.Decide, view = "Panels"},
+			new AjaxOptions
+			{
+				HttpMethod = "POST",
+				InsertionMode = InsertionMode.Replace,
+				UpdateTargetId = "state_buttons_" + Model.TopicID
+			}, new {@class = "btn btn-hover-success" + classes[1]})
+		}
 
 		@Ajax.ActionLink("Kein Beschluss", "_ChangeState", "Discussion", new {id = Model.TopicID, state = TopicAction.Close, view = "Panels"},
 		new AjaxOptions{

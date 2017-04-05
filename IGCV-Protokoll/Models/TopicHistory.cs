@@ -23,7 +23,7 @@ namespace IGCV_Protokoll.Models
 		[Required]
 		public string Description { get; set; }
 
-		[Required]
+		[Required(AllowEmptyStrings = true)]
 		public string Proposal { get; set; }
 
 		[Required]
