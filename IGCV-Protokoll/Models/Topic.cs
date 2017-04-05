@@ -27,6 +27,7 @@ namespace IGCV_Protokoll.Models
 			LeftLinks = new List<TopicLink>();
 			RightLinks = new List<TopicLink>();
 			// ReSharper restore DoNotCallOverridableMethodsInConstructor
+			Proposal = "";
 		}
 
 		[Display(Name = "Topic-ID")]
@@ -208,10 +209,14 @@ namespace IGCV_Protokoll.Models
 			if (IsReadOnly)
 				throw new InvalidOperationException("Diese Diskussion ist beendet und kann daher nicht bearbeitet werden.");
 
+			// Ein eventueller Beschlussvorschlag sollte beim Umschaten auf Bericht erhalten bleiben.
+			// ==> Änderungen nur übernehmen, wenn sie tatsächlich Inhalt haben.
+			var p = string.IsNullOrWhiteSpace(updates.Proposal) ? (Proposal ?? "") : updates.Proposal;
+
 			Description = updates.Description;
 			OwnerID = updates.OwnerID;
 			Priority = updates.Priority;
-			Proposal = updates.Proposal == "" ? Proposal : updates.Proposal;
+			Proposal = p;
 			ResubmissionDate = updates.ResubmissionDate;
 			Title = updates.Title;
 			Time = updates.Time;

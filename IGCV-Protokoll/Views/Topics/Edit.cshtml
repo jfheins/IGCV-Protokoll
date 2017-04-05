@@ -114,7 +114,7 @@
 								$(document).ready(function () {
 									$('#reportBtn').trigger('change'); // Einmalig auslösen, falls es ein Bericht ist
 								});
-								
+
 							</script>
 						}
 					</div>
@@ -124,6 +124,7 @@
 		<div class="form-group">
 			@Html.LabelFor(model => model.Proposal, new { @class = "control-label col-md-2" })
 			<div class="col-md-5">
+				<input name="@nameof(Model.Proposal)" type="hidden" value=""> @* Deaktiverte HTML-Elemente senden keine Daten mehr *@
 				@Html.EditorFor(model => model.Proposal, new { htmlAttributes = new { @class = "form-control" } })
 				@Html.ValidationMessageFor(model => model.Proposal, "", new { @class = "text-danger" })
 			</div>

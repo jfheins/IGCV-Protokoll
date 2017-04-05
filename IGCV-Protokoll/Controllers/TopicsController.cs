@@ -361,7 +361,7 @@ namespace IGCV_Protokoll.Controllers
 			Topic topic = db.Topics.Include(t => t.Creator).Single(t => t.ID == input.ID);
 			if (!IsAuthorizedFor(topic))
 				return HTTPStatus(HttpStatusCode.Forbidden, "Sie sind für diesen Vorgang nicht berechtigt!");
-
+			
 			if (input.TopicType == TopicType.Discussion && input.Proposal == string.Empty)
 				ModelState.AddModelError("Proposal", "Das Feld \"Beschlussvorschlag\" ist bei einer Diskussion erforderlich.");
 

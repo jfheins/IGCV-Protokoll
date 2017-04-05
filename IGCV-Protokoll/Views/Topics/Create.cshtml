@@ -160,6 +160,7 @@
 					<h3 class="panel-title">@Html.GetDisplayName(model => model.Proposal)</h3>
 				</div>
 				<div class="panel-body">
+					<input name="@nameof(Model.Proposal)" type="hidden" value=""> @* Deaktiverte HTML-Elemente senden keine Daten mehr *@
 					@Html.EditorFor(model => model.Proposal, new { htmlAttributes = new { @class = "form-control vresize" } })
 					@Html.ValidationMessageFor(model => model.Proposal, "", new { @class = "text-danger" })
 				</div>
