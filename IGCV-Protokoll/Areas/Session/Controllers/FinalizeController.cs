@@ -19,6 +19,8 @@ namespace IGCV_Protokoll.Areas.Session.Controllers
 {
 	public class FinalizeController : SessionBaseController
 	{
+		private byte[] pdfcontent;
+
 		protected override void OnActionExecuting(ActionExecutingContext filterContext)
 		{
 			base.OnActionExecuting(filterContext);
@@ -65,7 +67,7 @@ namespace IGCV_Protokoll.Areas.Session.Controllers
 				var message = "Fehler beim Speichern des SessionReport<br />" + ErrorMessageFromException(e);
 				return HTTPStatus(HttpStatusCode.InternalServerError, message);
 			}
-
+			
 			try
 			{
 				string html;
@@ -73,7 +75,6 @@ namespace IGCV_Protokoll.Areas.Session.Controllers
 				{
 					html = HelperMethods.RenderViewAsString(ControllerContext, "SessionReport", session);
 				}
-				byte[] pdfcontent;
 				using (MiniProfiler.Current.Step("PDF Generierung"))
 				{
 					pdfcontent = HelperMethods.ConvertHTMLToPDF(html);
@@ -141,7 +142,7 @@ namespace IGCV_Protokoll.Areas.Session.Controllers
 
 			try
 			{
-				mailer.SendSessionReport(topics, report);
+				mailer.SendSessionReport(topics, report, pdfcontent);
 			}
 			catch (Exception ex)
 			{
