@@ -327,6 +327,10 @@
     <Compile Include="Migrations\201704051139270_added_topic_type.Designer.cs">
       <DependentUpon>201704051139270_added_topic_type.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201704071115249_added_mail_attach_flag.cs" />
+    <Compile Include="Migrations\201704071115249_added_mail_attach_flag.Designer.cs">
+      <DependentUpon>201704071115249_added_mail_attach_flag.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\ACL.cs" />
     <Compile Include="Models\AclItem.cs" />
     <Compile Include="Models\AdEntity.cs" />
@@ -1180,6 +1184,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201704051139270_added_topic_type.resx">
       <DependentUpon>201704051139270_added_topic_type.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201704071115249_added_mail_attach_flag.resx">
+      <DependentUpon>201704071115249_added_mail_attach_flag.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

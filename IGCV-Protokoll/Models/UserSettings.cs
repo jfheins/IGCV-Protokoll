@@ -13,6 +13,7 @@ namespace IGCV_Protokoll.Models
 		{
 			ColorScheme = ColorScheme.RMV;
 			ReportOccasions = SessionReportOccasions.Always;
+			ReportAttachPDF = false;
 		}
 
 		[DisplayName("Farbschema")]
@@ -20,6 +21,12 @@ namespace IGCV_Protokoll.Models
 
 		[DisplayName("E-Mail Protokolle")]
 		public SessionReportOccasions ReportOccasions { get; set; }
+
+		/// <summary>
+		/// Gibt an, ob an die E-Mail mit dem Sitzungsprotokoll das PDF angehängt werden soll.
+		/// </summary>
+		public bool ReportAttachPDF { get; set; }
+
 
 		[DisplayName("Voreinstellung Rechteverwaltung")]
 		public string AclTreePreset { get; set; }
