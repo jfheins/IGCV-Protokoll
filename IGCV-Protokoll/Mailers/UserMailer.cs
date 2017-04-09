@@ -82,32 +82,33 @@ namespace IGCV_Protokoll.Mailers
 			ViewBag.Report = report;
 			ViewBag.Host = FQDN;
 
-			var mails = new List<MvcMailMessage>();
 
-			var pdfStream = new MemoryStream(pdfReport, false);
-			var pdfAttachment = new Attachment(pdfStream, report.FileName, "application/pdf");
-
-			foreach (var recipient in report.SessionType.Attendees.Where(u => u.IsActive && !string.IsNullOrWhiteSpace(u.EmailAddress)))
+			using (var pdfStream = new MemoryStream(pdfReport, false))
+			using (var pdfAttachment = new Attachment(pdfStream, report.FileName, "application/pdf"))
 			{
-				var isAbsent = !report.PresentUsers.Contains(recipient);
-				if (recipient.Settings.ReportOccasions == SessionReportOccasions.Always
-					|| (recipient.Settings.ReportOccasions == SessionReportOccasions.WhenAbsent && isAbsent))
+				var mails = new List<MvcMailMessage>();
+				foreach (var recipient in report.SessionType.Attendees.Where(u => u.IsActive && !string.IsNullOrWhiteSpace(u.EmailAddress)))
 				{
-					var mail = new MvcMailMessage
+					var isAbsent = !report.PresentUsers.Contains(recipient);
+					if (recipient.Settings.ReportOccasions == SessionReportOccasions.Always
+						|| (recipient.Settings.ReportOccasions == SessionReportOccasions.WhenAbsent && isAbsent))
 					{
-						Subject = $"Eine Sitzung des Typs »{report.SessionType.Name}« wurde durchgeführt",
-						ViewName = "NewSessionReport"
-					};
-					mail.To.Add(recipient.EmailAddress);
-					if (recipient.Settings.ReportAttachPDF)
-						mail.Attachments.Add(pdfAttachment);
+						var mail = new MvcMailMessage
+						{
+							Subject = $"Eine Sitzung des Typs »{report.SessionType.Name}« wurde durchgeführt",
+							ViewName = "NewSessionReport"
+						};
+						mail.To.Add(recipient.EmailAddress);
+						if (recipient.Settings.ReportAttachPDF)
+							mail.Attachments.Add(pdfAttachment);
 
-					PopulateBody(mail, mail.ViewName, mail.MasterName, mail.LinkedResources);
-					mails.Add(mail);
+						PopulateBody(mail, mail.ViewName, mail.MasterName, mail.LinkedResources);
+						mails.Add(mail);
+					}
 				}
+				foreach (var mail in mails)
+					mail.Send();
 			}
-			foreach (var mail in mails)
-				mail.Send();
 		}
 	}
 }
