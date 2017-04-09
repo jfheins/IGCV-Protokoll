@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Validation;
 using System.Linq;
@@ -25,20 +26,43 @@ namespace IGCV_Protokoll.Areas.Session.Controllers.Lists
 	{
 		private readonly TimeSpan _editDuration = TimeSpan.FromMinutes(5);
 		protected DbSet<TModel> _dbSet;
-		private int[] userRoles = new int[0];
+		private IQueryable<TModel> _orderedEntities;
 
 		protected void SetAndFilterEntities(IQueryable<TModel> entities)
 		{
-			// .Contains muss hier explizit aufgerufen werden, sonst kommt ein "Data Provider error 1025"
-			// ReSharper disable once ConvertClosureToMethodGroup
-			Entities = entities.Include(x => x.Acl).Where(x => x.Acl == null || x.Acl.Items.Select(i => i.AdEntityID).Any(y => userRoles.Contains(y)));
-			// userRoles kann im Konstruktor nicht befüllt werden, da noch keine Session vorhanden ist. (Die Rollen werden in dieser gecached)
-			// Dank verzögerter Auswertung kann die Variable hier referenziert und später befüllt werden.
+			_orderedEntities = entities;
 		}
 		protected override void OnActionExecuting(ActionExecutingContext filterContext)
 		{
 			base.OnActionExecuting(filterContext);
-			userRoles = GetRolesForCurrentUser();
+
+			if (Entities != null)
+				return;
+
+			if (_orderedEntities == null)
+				_orderedEntities = _dbSet;
+
+			int[][] roles;
+
+			var session = GetSession();
+			if (session == null)
+			{
+				// Es läuft gerade keine Sitzung, also Individualmodus
+				roles = new[] { GetRolesForCurrentUser() };
+			}
+			else
+			{
+				// Sitzung läuft. Falls die Anwesenden bereits ausgewählt wurden, sollte die Anscht auf die Anwesenden beschränkt werden.
+				// Ansonsten die Ansicht auf die Schnittmenge aller Teilnehmer beschränken.
+				var userCollection = session.PresentUsers.Any() ? session.PresentUsers : session.SessionType.Attendees;
+				roles = userCollection.Select(u => db.GetRolesForUser(u.ID)).ToArray();
+			}
+
+			var entityKeys = _orderedEntities.Include(e => e.Acl.Items.Select(i => i.AdEntity)).Select(e => new {e.ID, e.Acl}).ToList();
+
+			var filteredKeys = (from entity in entityKeys where entity.Acl == null || roles.All(roleArr => entity.Acl.Items.Select(i => i.AdEntityID).Any(roleArr.Contains))
+				select entity.ID).ToArray();
+			Entities = _orderedEntities.Where(e => filteredKeys.Contains(e.ID));
 		}
 
 		/// <summary>
