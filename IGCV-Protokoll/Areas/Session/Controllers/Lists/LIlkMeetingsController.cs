@@ -35,7 +35,7 @@ namespace IGCV_Protokoll.Areas.Session.Controllers.Lists
 		{
 			Debug.Assert(Request.Url != null, "Request.Url != null");
 
-			var IlkMeeting = _dbSet.Find(id);
+			var IlkMeeting = Entities.Single(e => e.ID == id);
 			if (IlkMeeting.GUID == null)
 			{
 				IlkMeeting.GUID = Guid.NewGuid();

@@ -27,7 +27,7 @@ namespace IGCV_Protokoll.Areas.Session.Controllers.Lists
 		{
 			Debug.Assert(Request.Url != null, "Request.Url != null");
 
-			var Event = _dbSet.Find(id);
+			var Event = Entities.Single(e => e.ID == id);
 			if (Event.GUID == null)
 			{
 				Event.GUID = Guid.NewGuid();

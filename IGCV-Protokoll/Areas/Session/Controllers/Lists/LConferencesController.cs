@@ -32,7 +32,7 @@ namespace IGCV_Protokoll.Areas.Session.Controllers.Lists
 		{
 			Debug.Assert(Request.Url != null, "Request.Url != null");
 
-			var conf = _dbSet.Find(id);
+			var conf = Entities.Single(e => e.ID == id);
 			if (conf.GUID == null)
 			{
 				conf.GUID = Guid.NewGuid();
