@@ -80,7 +80,7 @@
 						Items = Model.Comments[topic.ID].OrderBy(c => c.Created).ToList(),
 						AllowDeletion = true,
 						ParentTopicID = topic.ID,
-						ShowCreateForm = !topic.IsReadOnly && !Model.IsLocked[topic.ID]
+						ShowCreateForm = !topic.IsReadOnly && !Model.LockedTopics.Contains(topic.ID)
 					};
 
 					string classA = "collapsed";

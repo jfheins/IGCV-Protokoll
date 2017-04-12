@@ -66,11 +66,9 @@ namespace IGCV_Protokoll.Controllers
 				// Durch jeden LEFT JOIN potenziert sich allerdings die übertragene Datenmenge und die Zeit, die EF braucht, erhöht sich entsprechend.
 				var cutoff = DateTime.Now.AddDays(3);
 				viewModel.Topics = db.FilteredTopics(GetRolesForCurrentUser())
-					.Include(t => t.Lock)
 					.Include(t => t.Owner)
 					.Include(t => t.SessionType)
 					.Include(t => t.TargetSessionType)
-					.Include(t => t.VisibilityOverrides)
 					.Include(t => t.Votes)
 					.Where(t => !t.IsReadOnly)
 					.Where(t => t.ResubmissionDate == null || t.ResubmissionDate < cutoff)
@@ -84,12 +82,13 @@ namespace IGCV_Protokoll.Controllers
 			}
 
 			var topicids = viewModel.Topics.Select(t => t.ID).Distinct().ToArray();
-			viewModel.IsLocked = topicids.ToDictionary(id => id, IsTopicLocked);
 
-			using (MiniProfiler.Current.Step("Unread, Tags"))
+
+			using (MiniProfiler.Current.Step("Unread, Tags, Locks"))
 			{
 				viewModel.UnreadTopics = new HashSet<int>(from u in db.UnreadState where u.UserID == userID && topicids.Contains(u.TopicID) select u.TopicID);
 				viewModel.Tags = (from t in db.TagTopics where topicids.Contains(t.TopicID) select t).ToLookup(t => t.TopicID);
+				viewModel.LockedTopics = new HashSet<int>(from tl in db.TopicLocks where topicids.Contains(tl.TopicID) && tl.Session.ManagerID != userID select tl.TopicID);
 			}
 
 			using (MiniProfiler.Current.Step("Kommentare, Dokumente"))
