@@ -62,14 +62,14 @@ namespace IGCV_Protokoll.Controllers
 
 			using (MiniProfiler.Current.Step("Themen"))
 			{
+				// Die folgenden Includes erzeugen fast alle einen LEFT JOIN. Includes diesen grundsätzlich dazu, weniger Datenbankabfragen abzusetzen und dadurch Zeit zu sparen.
+				// Durch jeden LEFT JOIN potenziert sich allerdings die übertragene Datenmenge und die Zeit, die EF braucht, erhöht sich entsprechend.
 				var cutoff = DateTime.Now.AddDays(3);
 				viewModel.Topics = db.FilteredTopics(GetRolesForCurrentUser())
 					.Include(t => t.Lock)
 					.Include(t => t.Owner)
 					.Include(t => t.SessionType)
-					.Include(t => t.Tags)
 					.Include(t => t.TargetSessionType)
-					.Include(t => t.UnreadBy)
 					.Include(t => t.VisibilityOverrides)
 					.Include(t => t.Votes)
 					.Where(t => !t.IsReadOnly)
@@ -80,10 +80,17 @@ namespace IGCV_Protokoll.Controllers
 					)
 					.OrderByDescending(t => t.Priority)
 					.ThenByDescending(t => t.ValidFrom).ToList();
+				
 			}
 
 			var topicids = viewModel.Topics.Select(t => t.ID).Distinct().ToArray();
 			viewModel.IsLocked = topicids.ToDictionary(id => id, IsTopicLocked);
+
+			using (MiniProfiler.Current.Step("Unread, Tags"))
+			{
+				viewModel.UnreadTopics = new HashSet<int>(from u in db.UnreadState where u.UserID == userID && topicids.Contains(u.TopicID) select u.TopicID);
+				viewModel.Tags = (from t in db.TagTopics where topicids.Contains(t.TopicID) select t).ToLookup(t => t.TopicID);
+			}
 
 			using (MiniProfiler.Current.Step("Kommentare, Dokumente"))
 			{

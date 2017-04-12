@@ -31,7 +31,7 @@
 					</p>
 					<p>Geändert @Html.DisplayFor(model => topic.ValidFrom)</p>
 				</div>
-				@if (topic.IsUnreadBy(ViewBag.CurrentUser.ID))
+				@if (Model.UnreadTopics.Contains(topic.ID))
 				{
 					<span style="color: #D48625; display: inline-block; float: left; font-size: 180%; margin: 2px 16px 0 0;">
 						<span class="glyphicon glyphicon-asterisk"></span>
@@ -45,7 +45,7 @@
 						var htmlattr = ViewBag.CurrentSession != null ? new { target = "_blank" } : null; // Im Sitzungsmodus target=_blank
 					}
 					@Html.ActionLink(topic.Title, "Details", "Topics", new { id = topic.ID, Area = "" }, htmlattr)
-					@foreach (var tag in topic.Tags)
+					@foreach (var tag in Model.Tags[topic.ID])
 					{
 						@Html.DisplayFor(model => tag.Tag)
 					}
@@ -75,10 +75,18 @@
 					</div>
 				}
 				@{
+					var cvm = new CommentListViewModel
+					{
+						Items = Model.Comments[topic.ID].OrderBy(c => c.Created).ToList(),
+						AllowDeletion = true,
+						ParentTopicID = topic.ID,
+						ShowCreateForm = !topic.IsReadOnly && !Model.IsLocked[topic.ID]
+					};
+
 					string classA = "collapsed";
 					string classDiv = "panel-collapse collapse";
 
-					if (topic.Comments.Count < 2 || topic.IsReadOnly) // Sektion ausklappen
+					if (cvm.Items.Count < 2 || topic.IsReadOnly) // Sektion ausklappen
 					{
 						classA = null;
 						classDiv = "panel-collapse collapse in";
@@ -88,17 +96,17 @@
 					<div class="panel-heading panel-collapse-heading" style="position: relative;">
 						<h4 class="panel-title">
 							<a onclick="toggleSection(this, '#comments_@topic.ID');" class="@classA">
-								@if (@topic.Comments.Count == 0)
+								@if (@cvm.Items.Count == 0)
 								{
 									@:Keine Kommentare
 								}
-								else if (@topic.Comments.Count == 1)
+								else if (@cvm.Items.Count == 1)
 								{
 									@:Ein Kommentar
 								}
 								else
 								{
-									@topic.Comments.Count
+									@cvm.Items.Count
 									@:Kommentare
 								}
 								<span class="divlink"></span>
@@ -106,22 +114,14 @@
 						</h4>
 					</div>
 					<div id="comments_@topic.ID" class="@classDiv">
-						@{
-							var cvm = new CommentListViewModel
-							{
-								Items = Model.Comments[topic.ID].OrderBy(c => c.Created).ToList(),
-								AllowDeletion = true,
-								ParentTopicID = topic.ID,
-								ShowCreateForm = !topic.IsReadOnly && !Model.IsLocked[topic.ID]
-							};
-							Html.RenderPartial("~/Views/Comments/_CommentList.cshtml", cvm);
-						}
+						@{ Html.RenderPartial("~/Views/Comments/_CommentList.cshtml", cvm); }
 					</div>
 				</div>
 				<div class="panel-footer">
-					@if (topic.Documents.VisibleDocuments.Any())
+					@{ var dc = Model.Documents[topic.ID]; }
+					@if (dc.VisibleDocuments.Any())
 					{
-						@Html.Action("_List", "Attachments", new {id = topic.Documents.ID, makeList = true, Area = ""})
+						@Html.Action("_List", "Attachments", new {id = dc.ID, makeList = true, Area = ""})
 					}
 					else
 					{
