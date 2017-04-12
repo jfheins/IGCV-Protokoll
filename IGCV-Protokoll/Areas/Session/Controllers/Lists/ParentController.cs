@@ -13,6 +13,7 @@ using Ical.Net.DataTypes;
 using Ical.Net.Serialization.iCalendar.Serializers;
 using IGCV_Protokoll.Models;
 using IGCV_Protokoll.util;
+using StackExchange.Profiling;
 
 namespace IGCV_Protokoll.Areas.Session.Controllers.Lists
 {
@@ -27,6 +28,7 @@ namespace IGCV_Protokoll.Areas.Session.Controllers.Lists
 		private readonly TimeSpan _editDuration = TimeSpan.FromMinutes(5);
 		protected DbSet<TModel> _dbSet;
 		private IQueryable<TModel> _orderedEntities;
+		private List<int> _filteredKeys;
 
 		protected void SetAndFilterEntities(IQueryable<TModel> entities)
 		{
@@ -52,17 +54,18 @@ namespace IGCV_Protokoll.Areas.Session.Controllers.Lists
 			}
 			else
 			{
-				// Sitzung läuft. Falls die Anwesenden bereits ausgewählt wurden, sollte die Anscht auf die Anwesenden beschränkt werden.
-				// Ansonsten die Ansicht auf die Schnittmenge aller Teilnehmer beschränken.
-				var userCollection = session.PresentUsers.Any() ? session.PresentUsers : session.SessionType.Attendees;
-				roles = userCollection.Select(u => db.GetRolesForUser(u.ID)).ToArray();
+				// Sitzung läuft. Die Ansicht sollte auf die Schnittmenge aller Stammteilnehmer beschränkt werden.
+				roles = session.SessionType.Attendees.Select(u => db.GetRolesForUser(u.ID)).ToArray();
 			}
-
-			var entityKeys = _orderedEntities.Include(e => e.Acl.Items.Select(i => i.AdEntity)).Select(e => new {e.ID, e.Acl}).ToList();
-
-			var filteredKeys = (from entity in entityKeys where entity.Acl == null || roles.All(roleArr => entity.Acl.Items.Select(i => i.AdEntityID).Any(roleArr.Contains))
-				select entity.ID).ToArray();
-			Entities = _orderedEntities.Where(e => filteredKeys.Contains(e.ID));
+			using (MiniProfiler.Current.Step("FilteringListKeys"))
+			{
+				var entityKeys =
+					_dbSet.Include(e => e.Acl.Items).Select(e => new { e.ID, noacl = e.Acl == null, aclArr = e.Acl.Items.Select(i => i.AdEntityID) }).ToList();
+				_filteredKeys = (from entity in entityKeys
+								 where entity.noacl || roles.All(roleArr => entity.aclArr.Any(roleArr.Contains))
+								 select entity.ID).ToList();
+			}
+			Entities = _orderedEntities.Where(e => _filteredKeys.Contains(e.ID));
 		}
 
 		/// <summary>
@@ -137,6 +140,7 @@ namespace IGCV_Protokoll.Areas.Session.Controllers.Lists
 				var message = ErrorMessageFromException(e);
 				return HTTPStatus(HttpStatusCode.InternalServerError, message);
 			}
+			_filteredKeys.Add(row.ID); // Da die ACl null ist, darf diese Zeile auf jeden Fall sichtbar sein.
 			return _FetchRow(row.ID);
 		}
 

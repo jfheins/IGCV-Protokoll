@@ -42,7 +42,9 @@ namespace IGCV_Protokoll.Controllers
 		public BaseController()
 		{
 			db.Database.Initialize(false);
+#if DEBUG
 			db.Database.Log = Console.Write;
+#endif
 		}
 
 		/// <summary>
