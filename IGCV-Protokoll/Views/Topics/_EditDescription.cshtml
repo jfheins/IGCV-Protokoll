@@ -5,6 +5,7 @@
 	HttpMethod = "POST",
 	InsertionMode = InsertionMode.ReplaceWith,
 	UpdateTargetId = "description-form",
+	OnFailure = "$('#description-panel .ajaxStatusMessage').text(xhr.responseText);"
 },
 	new
 	{
@@ -19,7 +20,7 @@
 				<p>
 					@if (!Model.IsReadOnly && !Model.IsLocked && ViewBag.IsEditable)
 					{
-						<a onclick=" $('#description-form').submit(); "><i class="glyphicon glyphicon-check"></i></a>
+						<a onclick="$('#description-form').submit();"><i class="glyphicon glyphicon-check"></i></a>
 					}
 				</p>
 			</div>
@@ -36,6 +37,7 @@
 				<div class="pull-right">
 					<button class="btn btn-sm btn-danger form-control" style="width: 10em;" type="button" id="description-abort-btn">Abbrechen</button>
 				</div>
+				<div class="ajaxStatusMessage text-danger"></div>
 			</div>
 		</div>
 	</div>
@@ -55,6 +57,9 @@
 				type: 'POST',
 				success: function(result) {
 					$("#description-form").replaceWith(result);
+				},
+				error: function (xhr, errorType) {
+					$('#description-panel .ajaxStatusMessage').text(xhr.responseText);
 				}
 			}); //end ajax
 		}

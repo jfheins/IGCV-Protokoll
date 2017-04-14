@@ -466,7 +466,7 @@ namespace IGCV_Protokoll.Controllers
 
 			var auth = topic.IsEditableBy(GetCurrentUser(), GetSession());
 			if (!auth.IsAuthorized)
-				throw new TopicLockedException(auth.Reason);
+				return HTTPStatus(HttpStatusCode.InternalServerError, auth.Reason);
 
 			if (description != topic.Description) //Trivialedit verhindern
 			{
@@ -559,7 +559,7 @@ namespace IGCV_Protokoll.Controllers
 
 			var auth = topic.IsEditableBy(GetCurrentUser(), GetSession());
 			if (!auth.IsAuthorized)
-				throw new TopicLockedException(auth.Reason);
+				return HTTPStatus(HttpStatusCode.InternalServerError, auth.Reason);
 
 			if (proposal != topic.Proposal || topic.TopicType == TopicType.Report) //Trivialedit verhindern
 			{
