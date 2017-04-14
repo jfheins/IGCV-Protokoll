@@ -43,6 +43,7 @@
 				<h3 class="panel-title">
 					@{
 						var htmlattr = ViewBag.CurrentSession != null ? new { target = "_blank" } : null; // Im Sitzungsmodus target=_blank
+						var reporttext = topic.TopicType == TopicType.Report ? $" ({TopicType.Report.DisplayName()})" : "";
 					}
 					@Html.ActionLink(topic.Title, "Details", "Topics", new { id = topic.ID, Area = "" }, htmlattr)
 					@foreach (var tag in Model.Tags[topic.ID])
@@ -50,7 +51,7 @@
 						@Html.DisplayFor(model => tag.Tag)
 					}
 				</h3>
-				<p class="panel-title">@topic.SessionType.Name</p>
+				<p class="panel-title">@(topic.SessionType.Name)@(reporttext)</p>
 			</div>
 			<div id="topicContent_@topic.ID" class="topic-content collapse">
 				<div class="panel-body">
