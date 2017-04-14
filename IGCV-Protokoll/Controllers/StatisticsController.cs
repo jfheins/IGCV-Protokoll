@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Web.Mvc;
 using IGCV_Protokoll.Models;
+using IGCV_Protokoll.ViewModels;
 
 namespace IGCV_Protokoll.Controllers
 {
@@ -19,9 +20,9 @@ namespace IGCV_Protokoll.Controllers
 			return PartialView("_Table", GetStats());
 		}
 
-		private Dictionary<string, double> GetStats()
+		private StatisticsViewModels GetStats()
 		{
-			return new Dictionary<string, double>
+			return new StatisticsViewModels
 			{
 				{"Diskutierte Themen", db.Topics.Count()},
 				{"Gefällte Beschlüsse", db.Decisions.Count(d => d.Type == DecisionType.Resolution)},
@@ -36,7 +37,8 @@ namespace IGCV_Protokoll.Controllers
 				},
 				{"Benutzer", db.Users.Count(u => u.IsActive)},
 				{"Anzahl Dokumente", db.Documents.Count()},
-				{"Anzahl Dateien", db.Revisions.Count()}
+				{"Anzahl Dateien", db.Revisions.Count()},
+				{"Gesamtdateigröße", db.Revisions.Sum(r => r.FileSize), "FileSize"}
 			};
 		}
 	}

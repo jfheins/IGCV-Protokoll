@@ -1,4 +1,4 @@
-﻿@model Dictionary<string, double>
+﻿@model IGCV_Protokoll.ViewModels.StatisticsViewModels
 
 <table class="table table-striped">
 	<thead>
@@ -12,14 +12,14 @@
 		</tr>
 	</thead>
 	<tbody>
-		@foreach (var kvp in Model)
+		@foreach (var stat in Model)
 		{
 			<tr>
 				<td>
-					@kvp.Key
+					@stat.Name
 				</td>
 				<td>
-					@kvp.Value
+					@Html.DisplayFor(m => stat.Value, stat.DisplayTemplate)
 				</td>
 			</tr>
 		}

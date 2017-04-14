@@ -557,6 +557,7 @@
     <Compile Include="ViewModels\FilteredAssignments.cs" />
     <Compile Include="ViewModels\FilteredTopics.cs" />
     <Compile Include="ViewModels\SearchResult.cs" />
+    <Compile Include="ViewModels\StatisticsViewModels.cs" />
     <Compile Include="ViewModels\TopicCreate.cs" />
     <Compile Include="ViewModels\TopicEdit.cs" />
     <Compile Include="ViewModels\TopicHistoryViewModel.cs" />
