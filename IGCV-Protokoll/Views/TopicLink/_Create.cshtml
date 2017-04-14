@@ -36,7 +36,7 @@
 	@{
 		var renamed = Model.AvailableTopics.Select(x => new { x.ID, label = x.ID + " " + x.Title, value = x.Title });
 		var json = JsonConvert.SerializeObject(renamed, Formatting.None);
-		// {"ID":0, "label": "0 Diskussionstitel", "value":"Diskussionstitel"}
+		// {"ID":0, "label": "0 Thementitel", "value":"Thementitel"}
 		// Das label wird durchsucht, ID und value werden in den callbacks benötigt
 	}
 

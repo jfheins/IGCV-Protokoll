@@ -134,7 +134,7 @@ namespace IGCV_Protokoll.Models
 		public int CreatorID { get; set; }
 
 		/// <summary>
-		///    Gibt das Datum der letzten Änderung an. Falls der Diskussionspunkt nie geändert wurde, gleicht das Änderungsdatum
+		///    Gibt das Datum der letzten Änderung an. Falls der Themenpunkt nie geändert wurde, gleicht das Änderungsdatum
 		///    der Erstelldatum.
 		/// </summary>
 		[Display(Name = "Geändert")]
@@ -142,7 +142,7 @@ namespace IGCV_Protokoll.Models
 		public DateTime ValidFrom { get; set; }
 
 		/// <summary>
-		/// Dieses Flag wird im Sitzungsmodus. vor der PDF-Generierung gesetzt Die Ausgabe von Diskussionsteilen
+		/// Dieses Flag wird im Sitzungsmodus. vor der PDF-Generierung gesetzt Die Ausgabe von Thementeilen
 		/// sollte dann so erfolgen, dass keine direkte Bearbeitung möglich ist, am Besten eventuelle Links
 		/// komplett weglassen. Bei einem Beschluss bleibt das Flag auf 'true'.
 		/// </summary>
@@ -176,14 +176,14 @@ namespace IGCV_Protokoll.Models
 		internal AuthResult IsEditableBy(User u, ActiveSession s)
 		{
 			if (IsReadOnly)
-				return new AuthResult("Dieser Diskussionspunkt ist nicht bearbeitbar.");
+				return new AuthResult("Dieser Themenpunkt ist nicht bearbeitbar.");
 			if (Lock != null)
 			{
 				// Von einer Sitzung gesperrt
 				if (u.Equals(Lock.Session.Manager)) // Der Punkt ist in einer Sitzung, aber der aktuelle Benutzer ist der Sitzungsleiter
 					return new AuthResult(true);
 
-				return new AuthResult("Dieser Diskussionspunkt ist gesperrt, und nur durch den Sitzungsleiter bearbeitbar.");
+				return new AuthResult("Dieser Themenpunkt ist gesperrt, und nur durch den Sitzungsleiter bearbeitbar.");
 			}
 
 			// Besitzer darf bearbeiten
@@ -191,11 +191,11 @@ namespace IGCV_Protokoll.Models
 				return new AuthResult(true);
 
 			if (s == null)
-				return new AuthResult("Sie können diesen Diskussionspunkt nicht bearbeiten, da sie nicht der Besitzer sind.");
+				return new AuthResult("Sie können diesen Themenpunkt nicht bearbeiten, da sie nicht der Besitzer sind.");
 			if (s.SessionType.ID != SessionTypeID)
 			{
 				return
-					new AuthResult("Sie können diesen Diskussionspunkt nicht bearbeiten, da der Punkt nicht in ihre Sitzung fällt.");
+					new AuthResult("Sie können diesen Themenpunkt nicht bearbeiten, da der Punkt nicht in ihre Sitzung fällt.");
 			}
 
 			// Lock == null && s != null && s.SessionType.ID == SessionTypeID
@@ -207,7 +207,7 @@ namespace IGCV_Protokoll.Models
 		public void IncorporateUpdates(TopicEdit updates)
 		{
 			if (IsReadOnly)
-				throw new InvalidOperationException("Diese Diskussion ist beendet und kann daher nicht bearbeitet werden.");
+				throw new InvalidOperationException("Dieses Thema ist abgeschlossen und kann daher nicht bearbeitet werden.");
 
 			// Ein eventueller Beschlussvorschlag sollte beim Umschaten auf Bericht erhalten bleiben.
 			// ==> Änderungen nur übernehmen, wenn sie tatsächlich Inhalt haben.
@@ -242,6 +242,7 @@ namespace IGCV_Protokoll.Models
 		public virtual ICollection<TopicLink> RightLinks { get; set; }
 		
 		[Display(Name = "Themenart")]
+		// Thema ist der Überbegriff für Diskussion & Bericht. Ein Bericht hat keinen Beschlussvorschlag.
 		public TopicType TopicType { get; set; }
 	}
 

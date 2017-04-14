@@ -283,7 +283,7 @@ namespace IGCV_Protokoll.Controllers
 
 				db.Topics.Add(t);
 
-				// Falls in einer Sitzung eine neue Diskussion erzeugt wird, kann diese der Sitzung zugeschlagen werden.
+				// Falls in einer Sitzung ein neues Thema erzeugt wird, kann dieses der Sitzung zugeschlagen werden.
 				var session = GetSession();
 				if (session != null && session.SessionTypeID == input.SessionTypeID)
 				{

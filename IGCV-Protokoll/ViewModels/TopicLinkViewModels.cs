@@ -17,10 +17,10 @@ namespace IGCV_Protokoll.ViewModels
 
 	public class TopicLinkCreateFormViewModel
 	{
-		[Display(Name ="Diese Diskussion")]
+		[Display(Name ="Dieses Thema")]
 		public MinimalTopicInfoViewModel Left { get; set; }
 
-		[Display(Name = "Diskussion")]
+		[Display(Name = "Anderes Thema")]
 		public int RightTopicID { get; set; }
 		
 		[Display(Name = "Verknüpfungsart")]

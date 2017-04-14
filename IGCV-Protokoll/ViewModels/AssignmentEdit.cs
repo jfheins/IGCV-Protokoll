@@ -29,7 +29,7 @@ namespace IGCV_Protokoll.ViewModels
 		[DisplayFormat(ConvertEmptyStringToNull = false)]
 		public string Description { get; set; }
 
-		[Display(Name = "Diskussion")]
+		[Display(Name = "Thema")]
 		public int TopicID { get; set; }
 
 		[Display(Name = "Besitzer")]

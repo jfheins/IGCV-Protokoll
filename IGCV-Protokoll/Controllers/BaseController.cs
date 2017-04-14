@@ -421,8 +421,8 @@ namespace IGCV_Protokoll.Controllers
 		/// <summary>
 		///    Ermittelt, ob das Thema mit der TopicID gerade gesperrt ist. Hierzu wird jedesmal eine SQL-Abfrage gestellt.
 		/// </summary>
-		/// <param name="topicID">Die TopicID der Diskussion</param>
-		/// <returns>Status der Diskussion</returns>
+		/// <param name="topicID">Die TopicID des Themas</param>
+		/// <returns>Status des Themas</returns>
 		public bool IsTopicLocked(int topicID)
 		{
 			return IsTopicLocked(db.Topics
@@ -434,8 +434,8 @@ namespace IGCV_Protokoll.Controllers
 		/// <summary>
 		///    Ermittelt, ob das Thema gerade gesperrt ist. Hierzu wird jedesmal eine SQL-Abfrage gestellt.
 		/// </summary>
-		/// <param name="t">Die Diskussion, deren Status ermittelt werden soll.</param>
-		/// <returns>Status der Diskussion</returns>
+		/// <param name="t">Das Thema, deren Status ermittelt werden soll.</param>
+		/// <returns>Status des Themas</returns>
 		protected bool IsTopicLocked(Topic t)
 		{
 			var tlock =
@@ -470,9 +470,9 @@ namespace IGCV_Protokoll.Controllers
 		}
 
 		/// <summary>
-		///    Markiert eine Diskussion für den aktuell eingeloggten Benutzer als gelesen.
+		///    Markiert ein Thema für den aktuell eingeloggten Benutzer als gelesen.
 		/// </summary>
-		/// <param name="topic">Die Diskussion</param>
+		/// <param name="topic">Das Thema</param>
 		protected void MarkAsRead(Topic topic)
 		{
 			var item = topic.UnreadBy.FirstOrDefault(u => u.UserID == GetCurrentUserID());

@@ -81,7 +81,7 @@ namespace IGCV_Protokoll.Areas.Session.Controllers
 				}
 				System.IO.File.WriteAllBytes(SessionReport.Directory + report.FileName, pdfcontent);
 			}
-			// Im Fehlerfall müssen die Diskussionen wieder sichtbar werden ==> Readonly = false
+			// Im Fehlerfall müssen die Themen wieder sichtbar werden ==> Readonly = false
 			catch (IOException e)
 			{
 				RevertTopicReadonlyFlag(session.LockedTopics);

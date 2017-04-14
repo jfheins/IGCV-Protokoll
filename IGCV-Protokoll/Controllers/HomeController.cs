@@ -118,7 +118,7 @@ namespace IGCV_Protokoll.Controllers
 		
 
 		/// <summary>
-		///    Diese Methode rendert eine einzige Diskussion und gibt diese zurück.
+		///    Diese Methode rendert ein einzelnes Thema und gibt dieses zurück.
 		/// </summary>
 		/// <param name="id">TopicID</param>
 		public ActionResult _FetchSingleTopic(int id)

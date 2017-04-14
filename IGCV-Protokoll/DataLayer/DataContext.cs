@@ -131,7 +131,7 @@ namespace IGCV_Protokoll.DataLayer
 			// Dokumente bleiben erhalten, der Dokumentencontainer ist dann allerdings verwaist.
 			topic.Documents.Topic = null;
 			topic.Documents.Orphaned = DateTime.Now;
-			topic.Documents.Title = $"Diskussion: {topic.Title}";
+			topic.Documents.Title = $"Thema: {topic.Title}";
 			SaveChanges();
 
 			TopicLinks.Where(link => link.LeftTopicID == topicID || link.RightTopicID == topicID).Delete();

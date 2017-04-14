@@ -46,7 +46,7 @@ namespace IGCV_Protokoll.Models
 		[Required(AllowEmptyStrings = true)]
 		public string Description { get; set; }
 
-		[Display(Name = "Diskussion")]
+		[Display(Name = "Thema")]
 		public int TopicID { get; set; }
 
 		[ForeignKey("TopicID")]

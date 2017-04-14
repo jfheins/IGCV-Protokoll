@@ -20,7 +20,7 @@ namespace IGCV_Protokoll.Models
 
 		//----------------------------------------------------------------------------------------------------
 		// Optional ist ein Topic vorhanden. Falls kein Topic verlinkt ist, gehört dieser Container zu einem Listenelement.
-		[Display(Name = "Diskussion")]
+		[Display(Name = "Thema")]
 		[Index(IsUnique = true)]
 		[ForeignKey("Topic")]
 		public int? TopicID { get; set; }

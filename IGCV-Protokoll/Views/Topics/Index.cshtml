@@ -4,7 +4,7 @@
 	ViewBag.Title = "Übersicht";
 }
 
-@Html.ActionLink("Neue Diskussion", "Create", null, new {@class = "index-action btn btn-primary"})
+<a class="index-action btn btn-primary" href="@Url.Action("Create", "Topics")"><i class="glyphicon glyphicon-plus"></i>&nbsp;&nbsp;Neues Thema</a>
 <h2>@ViewBag.Title</h2>
 
 

@@ -21,7 +21,7 @@ namespace IGCV_Protokoll.ViewModels
 		[DisplayName("Suchbegriff")]
 		public string Searchterm { get; set; }
 
-		[DisplayName("Diskussionen")]
+		[DisplayName("Themen")]
 		public bool SearchTopics { get; set; }
 
 		[DisplayName("Kommentare")]

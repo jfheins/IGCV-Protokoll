@@ -15,7 +15,7 @@ using StackExchange.Profiling;
 namespace IGCV_Protokoll.Controllers
 {
 	/// <summary>
-	///    Die Suche ermöglicht es, auch alte Diskussionen und Beschlüsse wieder zu finden. Suchbegriffe werden standardmäßig
+	///    Die Suche ermöglicht es, auch alte Themen und Beschlüsse wieder zu finden. Suchbegriffe werden standardmäßig
 	///    mit UND verknüpft. Bei jeder Suche wird die Datenbank einmal vollständig durchsucht. Bei zunehmenden
 	///    Performanceproblemen könnten hier zwei Maßahmen eingesetzt werden: 1. Eine stored Proc, die es erspart alle Daten
 	///    aus der DB zum Server zu übertragen. Da momentan aber DB und Server auf derselben Maschine sitzen, nicht
@@ -334,9 +334,9 @@ namespace IGCV_Protokoll.Controllers
 		}
 
 		/// <summary>
-		/// Durchsucht die Kommentare einer Diskussion
+		/// Durchsucht die Kommentare eines Themas
 		/// </summary>
-		/// <param name="topic">Diskussion</param>
+		/// <param name="topic">Thema</param>
 		/// <param name="searchterms">Suchbegriffe</param>
 		/// <param name="resultlist">Ergebnisliste</param>
 		private void SearchComments(Topic topic, Regex[] searchterms, SearchResultList resultlist)
@@ -572,7 +572,7 @@ namespace IGCV_Protokoll.Controllers
 					});
 				}
 			}
-			// Die Dokumente, die Diskussionen zugeordnet sind, wurden oben bereits durchsucht.
+			// Die Dokumente, die Themen zugeordnet sind, wurden oben bereits durchsucht.
 			foreach (var doc in db.FilteredDocumentContainers(roles).Where(dc => dc.TopicID == null).SelectMany(dc => dc.Documents))
 			{
 				if (searchterms.All(pattern => pattern.IsMatch(doc.DisplayName)))

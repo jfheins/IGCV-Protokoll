@@ -61,6 +61,9 @@ else
 	@Html.Action("_List", "LHolidays", new { Area = "Session" })
 }
 
+<div class="well well-sm">
+	Listenzeilen, die seit der letzten Sitzung erstellt oder verändet wurden, sind fett hervorgehoben.
+</div>
 
 @* jsTree ist erforderlich für die ACL Bäume der Listenzeilen *@
 <script src="~/Scripts/jstree.js"></script>

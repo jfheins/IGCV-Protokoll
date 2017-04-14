@@ -11,7 +11,7 @@ namespace IGCV_Protokoll.ViewModels
 	public class FilteredTopics
 	{
 		/// <summary>
-		///    Konstruiert den Filter so, dass alle aktuellen Diskussionen angezeigt werden. Archivierte Diskussionen werden
+		///    Konstruiert den Filter so, dass alle aktuellen Themen angezeigt werden. Archivierte Diskussionen werden
 		///    ausgeblendet.
 		/// </summary>
 		public FilteredTopics()

@@ -20,7 +20,7 @@ namespace IGCV_Protokoll.Models
 
 		[Required]
 		[InverseProperty("Decision")]
-		[DisplayName("Diskussionstitel")]
+		[DisplayName("Thementitel")]
 		public virtual Topic OriginTopic { get; set; }
 	}
 
