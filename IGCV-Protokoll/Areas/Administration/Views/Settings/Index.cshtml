@@ -95,11 +95,19 @@
 				@{ Html.RenderPartial("~/Views/Acl/_AclEditorFor.cshtml", Model.AclTreeVM); }
 				@Html.Hidden("aclPresetTree")
 			</div>
-			<div class="col-md-3">
+			<div class="col-md-4">
 				Hier kann eine benutzerdefinierte Vorbelegung für den Rechtebaum gesetzt werden. Beim Erstellen einer neuen Diskussion kann dann auf Knopfdruck diese Belegung gesetzt werden.
+				<br />
+				<div class="alert alert-info">
+					<p>
+						Ein Rechtebaum ist immer einem Objekt (Thema, Listenzeile oder Dokumentencontainer) zugeordnet. Wenn kein Rechtbaum definiert wird, ist automatisch <strong>Jeder</strong> berechtigt. Dies schließt auch zukünftige Mitarbeiter ein.
+						Werden bei der Festsetzung eines Rechtebaums einzelne Personen angehakt, so sind nur diese Personen berechtigt. Wird jedoch eine ganze Gruppe angehakt (implizit auch durch Anhaken aller Unterknoten) so sind auch zukünftige Mitglieder dieser Gruppe berechtigt.
+					</p>
+					<p>Jeder Berechtigte kann den Rechtebaum setzen oder bearbeiten. Man kann sich selbst die Berechtigung nicht enziehen.</p>
+					<p>Die Zuordnung zwischen Mitarbeitern und Gruppen wird täglich synchronisiert.</p>
+				</div>
 			</div>
 		</div>
-
 		@using (Html.Delayed(null, "Settings-ACLpreset-Editor"))
 		{
 			<script type="text/javascript">
