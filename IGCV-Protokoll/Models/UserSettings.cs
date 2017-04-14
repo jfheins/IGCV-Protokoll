@@ -25,6 +25,7 @@ namespace IGCV_Protokoll.Models
 		/// <summary>
 		/// Gibt an, ob an die E-Mail mit dem Sitzungsprotokoll das PDF angehängt werden soll.
 		/// </summary>
+		[Display(Name = "PDF anhängen")]
 		public bool ReportAttachPDF { get; set; }
 
 

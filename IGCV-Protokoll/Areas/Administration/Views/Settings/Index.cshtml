@@ -18,33 +18,43 @@
 		@if (Enum.GetValues(typeof(ColorScheme)).Length > 1)
 		{
 			<div class="form-group">
-				@Html.LabelFor(model => model.ColorScheme, new {@class = "control-label col-md-2"})
+				@Html.LabelFor(model => model.ColorScheme, new { @class = "control-label col-md-2" })
 				<div class="col-md-2">
-					@Html.EnumDropDownListFor(model => model.ColorScheme, new {@class = "form-control"})
-					@Html.ValidationMessageFor(model => model.ColorScheme, "", new {@class = "text-danger"})
+					@Html.EnumDropDownListFor(model => model.ColorScheme, new { @class = "form-control" })
+					@Html.ValidationMessageFor(model => model.ColorScheme, "", new { @class = "text-danger" })
 				</div>
 			</div>
 		}
 
 		<div class="form-group">
-			@Html.LabelFor(model => model.ReportOccasions, new {@class = "control-label col-md-2"})
+			@Html.LabelFor(model => model.ReportOccasions, new { @class = "control-label col-md-2" })
 			<div class="col-md-2">
-				@Html.EnumDropDownListFor(model => model.ReportOccasions, new {@class = "form-control"})
-				@Html.ValidationMessageFor(model => model.ReportOccasions, "", new {@class = "text-danger"})
+				@Html.EnumDropDownListFor(model => model.ReportOccasions, new { @class = "form-control" })
+				@Html.ValidationMessageFor(model => model.ReportOccasions, "", new { @class = "text-danger" })
 			</div>
 			<div class="col-md-3">
 				Bestimmt die Bedingungen, zu denen das Sitzungsprotokoll im Nachgang per E-Mail verschickt wird.
 			</div>
 		</div>
-		
-		
+
+		<div class="form-group check-box-lg">
+			@Html.LabelFor(model => model.ReportAttachPDF, new { @class = "control-label col-md-2" })
+			<div class="col-md-2">
+				@Html.EditorFor(m => m.ReportAttachPDF, new { htmlAttributes = new { @class = "form-control" } })
+			</div>
+			<div class="col-md-3">
+				Bestimmt, ob beim Versand von Sitzungsprotokollen die volle Version als PDF angehängt wird.
+			</div>
+		</div>
+
+
 		<!-- Listensichtbarkeit -->
 		<div class="form-group check-box-lg">
 			@Html.LabelFor(model => model.ShowEvents, new { @class = "control-label col-md-2" })
 			<div class="col-md-2">
 				@Html.EditorFor(m => m.ShowEvents, new { htmlAttributes = new { @class = "form-control" } })
 			</div>
-			<div class="col-md-3" style="height:0; overflow:visible;">
+			<div class="col-md-3" style="height: 0; overflow: visible;">
 				Diese Optionen dienen dem Ausblenden von Listen. In der Listenansicht werden nur noch die Listen angezeigt, die hier angehakt sind.
 			</div>
 		</div>
@@ -76,8 +86,8 @@
 				@Html.EditorFor(m => m.ShowHolidays, new { htmlAttributes = new { @class = "form-control" } })
 			</div>
 		</div>
-		
-		
+
+
 		<!-- ACL Preset -->
 		<div class="form-group">
 			@Html.LabelFor(model => model.AclTreePreset, new { @class = "control-label col-md-2" })
@@ -89,7 +99,7 @@
 				Hier kann eine benutzerdefinierte Vorbelegung für den Rechtebaum gesetzt werden. Beim Erstellen einer neuen Diskussion kann dann auf Knopfdruck diese Belegung gesetzt werden.
 			</div>
 		</div>
-		
+
 		@using (Html.Delayed(null, "Settings-ACLpreset-Editor"))
 		{
 			<script type="text/javascript">
@@ -107,7 +117,7 @@
 			</div>
 		</div>
 
-		@Html.ValidationSummary(true, "", new {@class = "text-danger"})
+		@Html.ValidationSummary(true, "", new { @class = "text-danger" })
 	</div>
 }
 
