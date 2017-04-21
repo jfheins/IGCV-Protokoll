@@ -72,5 +72,10 @@ namespace IGCV_Protokoll.ViewModels
 		{
 			_results.Sort((a, b) => b.Score.CompareTo(a.Score));
 		}
+
+		public void DeleteInsignificantScoreResults()
+		{
+			_results.RemoveAll(r => r.Score <= 0);
+		}
 	}
 }

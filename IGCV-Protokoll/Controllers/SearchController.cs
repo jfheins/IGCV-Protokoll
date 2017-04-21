@@ -123,6 +123,7 @@ namespace IGCV_Protokoll.Controllers
 			ViewBag.SearchTerm = searchterm;
 			ViewBag.SearchPatterns = searchTerms;
 			results.Sort(); // Absteigend sortieren nach Score
+			results.DeleteInsignificantScoreResults();
 			return View("Results", results);
 		}
 
@@ -458,7 +459,7 @@ namespace IGCV_Protokoll.Controllers
 		
 		/// <summary>
 		///    Durchsucht alle vorhandenen Listen. Jede Liste wird separat durchsucht, und die Treffer ggf. zur Trefferliste
-		///    hinzugefügt. Falsl kein Suchbegriff eingegbeen wurde, werden alle Listeneinträge gefunden.
+		///    hinzugefügt. Falls kein Suchbegriff eingegeben wurde, werden alle Listeneinträge gefunden.
 		/// </summary>
 		/// <param name="searchterms">Die Suchbegriffe, nach denen gesucht wird.</param>
 		/// <param name="resultlist">Die Ergebnisliste, zu der die Ergebnisse hinzugefügt werden.</param>
@@ -468,7 +469,7 @@ namespace IGCV_Protokoll.Controllers
 
 			foreach (var item in db.LEvents.Filtered(roles))
 			{
-				float score = 0.0f;
+				float score = -0.0f;
 				foreach (Regex pattern in searchterms)
 				{
 					var m = pattern.Matches(item.Description);
@@ -508,7 +509,7 @@ namespace IGCV_Protokoll.Controllers
 			// Da ohnehin nur ein feld durchsucht wird, kann die Schleife über die Suchbegriffe mit der .All() Methode verkürzt weren. Negativ: Mehrfache Vorkommen des Suchbegriffs resultieren nicht in einem höheren score.
 			foreach (var item in db.LConferences.Filtered(roles))
 			{
-				if (searchterms.All(pattern => pattern.IsMatch(item.Description)))
+				if (searchterms.Any() && searchterms.All(pattern => pattern.IsMatch(item.Description)))
 				{
 					resultlist.Add(new SearchResult
 					{
@@ -530,7 +531,7 @@ namespace IGCV_Protokoll.Controllers
 
 			foreach (var item in db.LExtensions.Filtered(roles))
 			{
-				if (searchterms.All(pattern => pattern.IsMatch(item.Comment)))
+				if (searchterms.Any() && searchterms.All(pattern => pattern.IsMatch(item.Comment)))
 				{
 					resultlist.Add(new SearchResult
 					{
@@ -575,7 +576,7 @@ namespace IGCV_Protokoll.Controllers
 			// Die Dokumente, die Themen zugeordnet sind, wurden oben bereits durchsucht.
 			foreach (var doc in db.FilteredDocumentContainers(roles).Where(dc => dc.TopicID == null).SelectMany(dc => dc.Documents))
 			{
-				if (searchterms.All(pattern => pattern.IsMatch(doc.DisplayName)))
+				if (searchterms.Any() && searchterms.All(pattern => pattern.IsMatch(doc.DisplayName)))
 				{
 					resultlist.Add(new SearchResult("Dateiname", doc.DisplayName)
 					{
@@ -592,7 +593,7 @@ namespace IGCV_Protokoll.Controllers
 
 			foreach (var item in db.LIlkDays.Filtered(roles))
 			{
-				if (searchterms.All(pattern => pattern.IsMatch(item.Topics)))
+				if (searchterms.Any() && searchterms.All(pattern => pattern.IsMatch(item.Topics)))
 				{
 					resultlist.Add(new SearchResult
 					{
@@ -614,7 +615,7 @@ namespace IGCV_Protokoll.Controllers
 
 			foreach (var item in db.LIlkMeetings.Filtered(roles))
 			{
-				if (searchterms.All(pattern => pattern.IsMatch(item.Comments)))
+				if (searchterms.Any() && searchterms.All(pattern => pattern.IsMatch(item.Comments)))
 				{
 					resultlist.Add(new SearchResult
 					{
@@ -636,7 +637,7 @@ namespace IGCV_Protokoll.Controllers
 
 			foreach (var item in db.LOpenings.Filtered(roles))
 			{
-				if (searchterms.All(pattern => pattern.IsMatch(item.Description) || pattern.IsMatch(item.Project)))
+				if (searchterms.Any() && searchterms.All(pattern => pattern.IsMatch(item.Description) || pattern.IsMatch(item.Project)))
 				{
 					resultlist.Add(new SearchResult
 					{
