@@ -656,6 +656,49 @@ namespace IGCV_Protokoll.Controllers
 					});
 				}
 			}
+
+			foreach (var item in db.LResearchProposal.Filtered(roles))
+			{
+				if (searchterms.Any() && searchterms.All(pattern => pattern.IsMatch(item.Sponsor) || pattern.IsMatch(item.Akronym) || pattern.IsMatch(item.Description)))
+				{
+					resultlist.Add(new SearchResult
+					{
+						ID = item.ID,
+						Score = 6.5f,
+						EntityType = "Listeneintrag",
+						Title = "Forschungsantrag",
+						ActionURL = Url.Content("~/ViewLists#researchProposal_table"),
+						Timestamp = item.LastChanged,
+						Hits = new List<Hit>
+						{
+							Hit.FromProperty(item, x => x.Sponsor),
+							Hit.FromProperty<IlkDay>(x => x.Start, item.Akronym),
+							Hit.FromProperty(item, x => x.Description)
+						}
+					});
+				}
+			}
+
+			foreach (var item in db.LIndustryProject.Filtered(roles))
+			{
+				if (searchterms.Any() && searchterms.All(pattern => pattern.IsMatch(item.Partner) || pattern.IsMatch(item.Name)))
+				{
+					resultlist.Add(new SearchResult
+					{
+						ID = item.ID,
+						Score = 6.5f,
+						EntityType = "Listeneintrag",
+						Title = "Industrieprojekt",
+						ActionURL = Url.Content("~/ViewLists#industryProject_table"),
+						Timestamp = item.LastChanged,
+						Hits = new List<Hit>
+						{
+							Hit.FromProperty(item, x => x.Partner),
+							Hit.FromProperty<IlkDay>(x => x.Start, item.Name),
+						}
+					});
+				}
+			}
 		}
 
 		private static float ScoreMult(int baseScore, int count)
