@@ -152,7 +152,7 @@ namespace IGCV_Protokoll.Models
 		[NotMapped] // Muss bei Bedarf durch den Controller gesetzt werden
 		public bool IsLocked { get; set; }
 
-		public TopicLock Lock { get; set; }
+		public virtual TopicLock Lock { get; set; }
 
 		public virtual ICollection<UnreadState> UnreadBy { get; set; }
 
@@ -180,7 +180,7 @@ namespace IGCV_Protokoll.Models
 			if (Lock != null)
 			{
 				// Von einer Sitzung gesperrt
-				if (u.Equals(Lock.Session.Manager)) // Der Punkt ist in einer Sitzung, aber der aktuelle Benutzer ist der Sitzungsleiter
+				if (s != null && u.Equals(s.Manager) && Lock.Session.ID == s.ID) // Der Punkt ist in einer Sitzung, und der aktuelle Benutzer leitet die Sitzung
 					return new AuthResult(true);
 
 				return new AuthResult("Dieser Themenpunkt ist gesperrt, und nur durch den Sitzungsleiter bearbeitbar.");
@@ -200,8 +200,9 @@ namespace IGCV_Protokoll.Models
 
 			// Lock == null && s != null && s.SessionType.ID == SessionTypeID
 			// Der aktuelle Benutzer ist zwar Sitzungsleiter einer Sitzung, in die dieser Punkt fallen würde.
-			// Er wurde aber beim erstellen der Sitzung nicht erfasst, z.B. weil er nach Sitzungsbeginn erstellt wurde.
-			return new AuthResult("Dieser Punkt ist in ihrer Sitzung nicht enthalten.");
+			// Er wurde aber beim erstellen der Sitzung nicht erfasst, z.B. weil er nach Sitzungsbeginn erstellt wurde
+			// und die Serversession zum Erstellzeitpunkt inaktiv war.
+			return new AuthResult("Dieser Punkt ist in ihrer Sitzung nicht enthalten. (Session abgelaufen / Softwarefehler)");
 		}
 
 		public void IncorporateUpdates(TopicEdit updates)
