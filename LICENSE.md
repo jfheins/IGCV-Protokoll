@@ -1,3 +1,10 @@
+Alle commits bis einschließlich e73f745845359bf5af22d661c6693b2c11a2f097 sind am iwb
+entstanden und liegen unter MIT Lizenz (Lizenztext unten).
+
+Alle nachfolgenden commits sind in selbstständiger Arbeit entstanden, für die
+Lizenzierung ist die Zweckübertragungslehre anzuwenden.
+
+
 The MIT License (MIT)
 
 Copyright (c) 2014 iwb, TU München
